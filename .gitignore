@@ -1,0 +1,6 @@
+*.obj
+*.user
+
+build/
+libpiga/build/
+
