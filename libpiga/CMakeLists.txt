@@ -15,6 +15,7 @@ SET(HDRS
     ${HDR}/Host.hpp
     ${HDR}/GameEvent.hpp
     ${HDR}/Definitions.hpp
+    ${HDR}/GameEventHandler.hpp
 )
 
 SET(SRCS
@@ -24,6 +25,7 @@ SET(SRCS
     ${SRC}/Interface.cpp
     ${SRC}/Host.cpp
     ${SRC}/GameEvent.cpp
+    ${SRC}/GameEventHandler.cpp
 )
 
 add_library(piga ${SRCS} ${HDRS})
