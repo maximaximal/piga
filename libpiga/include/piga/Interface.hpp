@@ -3,6 +3,7 @@
 
 #include <piga/PlayerInput.hpp>
 #include <piga/GameInput.hpp>
+#include <piga/GameEvent.hpp>
 
 namespace piga
 {
@@ -21,7 +22,7 @@ namespace piga
             const PlayerInput& getPlayerInput(int id);
             bool gameInputSet();
 
-
+            bool pollEvent(GameEvent &event);
         private:
             GameInput *externalGameInput = nullptr;
     };

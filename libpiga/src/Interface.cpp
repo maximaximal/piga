@@ -66,4 +66,8 @@ namespace piga
         }
         return false;
     }
+    bool Interface::pollEvent(GameEvent &event)
+    {
+
+    }
 }

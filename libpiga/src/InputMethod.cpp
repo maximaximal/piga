@@ -6,12 +6,19 @@ namespace piga
 {
     void InputMethod::update()
     {
-		//Not set (implemented by child class)
+        setChanged(false);
     }
     bool InputMethod::isActive() const
     {
         boost::shared_lock<boost::shared_mutex> lock(m_activeMutex);
         return m_active;
+    }
+    bool InputMethod::hasChanged()
+    {
+        boost::shared_lock<boost::shared_mutex> lock(m_hasChangedMutex);
+        if(m_hasChanged)
+            return true;
+        return false;
     }
     void InputMethod::setState(bool active)
     {
@@ -19,5 +26,13 @@ namespace piga
         boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
 
         m_active = active;
+        setChanged(true);
+    }
+    void InputMethod::setChanged(bool changed)
+    {
+        boost::upgrade_lock<boost::shared_mutex> lock(m_hasChangedMutex);
+        boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
+
+        m_hasChanged = changed;
     }
 }

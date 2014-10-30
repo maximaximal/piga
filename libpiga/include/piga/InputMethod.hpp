@@ -15,8 +15,19 @@ namespace piga
    	class InputMethod
     {
         public:
+            /**
+             * @brief Has to be implemented by the derived classes.
+             *
+             * The base update() function has to be called at the start of the derived function,
+             * because this function resets the internal hasChanged flag.
+             */
             virtual void update();
             bool isActive() const;
+            /**
+             * @brief Checks if the state has changed since the last update call.
+             * @return
+             */
+            bool hasChanged();
         private:
             /**
              * @brief Sets the internal state of the input (on or off).
@@ -25,9 +36,12 @@ namespace piga
              * This blocks reads from the isActive method until the new state has been set.
              */
             void setState(bool active);
+            void setChanged(bool changed);
             bool m_active = false;
+            bool m_hasChanged = false;
 
             mutable boost::shared_mutex m_activeMutex;
+            mutable boost::shared_mutex m_hasChangedMutex;
     };
 }
 

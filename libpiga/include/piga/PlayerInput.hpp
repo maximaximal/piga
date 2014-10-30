@@ -2,9 +2,10 @@
 #define LIBPIGA_PIGA_PLAYERINPUT_HPP_INCLUDED
 
 #include <map>
-#include <vector>
+#include <queue>
 #include <piga/GameControl.hpp>
 #include <piga/InputMethod.hpp>
+#include <piga/GameEvent.hpp>
 
 namespace piga 
 {
@@ -24,12 +25,17 @@ namespace piga
             virtual ~PlayerInput();
 
             bool getInput(GameControl control) const;
+            bool pollEvent(GameEvent &gameEvent);
+            void setPlayerID(int playerID);
         protected:
             void update();
 
             int setInputMethod(InputMethod *method, GameControl control);
+            void pushGameEvent(const GameEvent &gameEvent);
         private:
             std::map<GameControl, InputMethod*> m_inputMethods;
+            std::queue<GameEvent> m_gameEvents;
+            int m_playerID;
     };
 }
 

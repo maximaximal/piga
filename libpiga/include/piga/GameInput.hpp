@@ -3,8 +3,10 @@
 
 #include <map>
 #include <memory>
+#include <queue>
 
 #include <piga/PlayerInput.hpp>
+#include <piga/GameEvent.hpp>
 
 namespace piga 
 {
@@ -23,6 +25,8 @@ namespace piga
 
             int getPlayerCount();
             const PlayerInput& getPlayerInput(int id);
+
+            bool pollEvent(GameEvent &gameEvent);
         private:
             std::map<int, std::shared_ptr<PlayerInput> > m_playerInputs;
             int m_playerInputIdCounter = 0;

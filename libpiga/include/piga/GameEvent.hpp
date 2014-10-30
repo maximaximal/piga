@@ -13,17 +13,22 @@ namespace piga
     class GameEvent
     {
         public:
-            GameEvent(GameControl control, bool state);
+            GameEvent(GameControl control, bool state, int playerID);
+            GameEvent(const GameEvent &gameEvent);
             virtual ~GameEvent();
 
             bool isActive() const;
             GameControl getControl() const;
+            int getPlayerID() const;
 
             bool operator==(const GameControl &rightControl) const;
+            bool operator==(int playerID) const;
+            void operator=(const GameEvent &right);
             operator bool() const;
         private:
-            const GameControl m_control;
-            const bool m_state;
+            GameControl m_control;
+            bool m_state;
+            int m_playerID;
     };
 }
 
