@@ -17,14 +17,14 @@ namespace piga
 {
     Interface::Interface()
     {
-        cout << PIGA_DEBUG_PRESTRING << "Trying to open the shared memory \"" << Host::getSharedMemoryName() << "\". ";
+        cout << PIGA_DEBUG_PRESTRING << "Trying to open the shared memory \"" << Host::getSharedMemoryName() << "\"." << endl;
         boost::interprocess::managed_shared_memory segment(boost::interprocess::open_only, Host::getSharedMemoryName().c_str());
         cout << "Memory opened!" << endl;
         std::pair<GameInput*, boost::interprocess::managed_shared_memory::size_type> res;
 
-        cout << PIGA_DEBUG_PRESTRING << "Opening the segment \"" << Host::getGameInputInstanceName() << "\".";
+        cout << PIGA_DEBUG_PRESTRING << "Opening the segment \"" << Host::getGameInputInstanceName() << "\"." << endl;
         res = segment.find<GameInput>(Host::getGameInputInstanceName().c_str());
-        cout << " - Segment opened." << endl;
+        cout << "Segment opened." << endl;
 
         if(res.second != 1)
         {
