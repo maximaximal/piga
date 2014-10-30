@@ -2,11 +2,11 @@
 
 namespace piga
 {
-    void GameEventHandler::sendGameEvent(const GameEvent &gameEvent)
+    void GameEventHandler::sendGameEvent(const GameEvent &gameEvent, float frametime)
     {
-        onGameEvent(gameEvent);
+        onGameEvent(gameEvent, frametime);
     }
-    void GameEventHandler::onGameEvent(const GameEvent &gameEvent)
+    void GameEventHandler::onGameEvent(const GameEvent &gameEvent, float frametime)
     {
         //Implemented by the derived class.
     }

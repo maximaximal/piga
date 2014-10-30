@@ -11,10 +11,10 @@ namespace piga
     class GameEventHandler
     {
         public:
-            void sendGameEvent(const GameEvent &gameEvent);
+            void sendGameEvent(const GameEvent &gameEvent, float frametime);
 
         protected:
-            virtual void onGameEvent(const GameEvent &gameEvent);
+            virtual void onGameEvent(const GameEvent &gameEvent, float frametime);
     };
 }
 
