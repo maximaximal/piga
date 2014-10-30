@@ -1,6 +1,8 @@
 project(libpiga)
 cmake_minimum_required(VERSION 2.8)
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
+
 SET(SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 SET(HDR ${CMAKE_CURRENT_SOURCE_DIR}/include/piga/)
 
@@ -35,6 +37,15 @@ find_package(Boost REQUIRED)
 if(${Boost_FOUND})
     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
     target_link_libraries(piga ${Boost_LIBRARIES})
+endif()
+
+# Add sigc++2
+find_package(SigC++ REQUIRED)
+if(${SIGC++_FOUND})
+    target_link_libraries(piga ${SIGC++_LIBRARY})
+    include_directories(${SIGC++_INCLUDE_DIR})
+elseif()
+    message(STATUS "Did not find Sigc++2! Please install it before you try to compile again.")
 endif()
 
 # Activate C++11
