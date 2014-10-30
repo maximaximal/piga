@@ -20,6 +20,8 @@ namespace piga
             int getPlayerCount();
             const PlayerInput& getPlayerInput(int id);
             bool gameInputSet();
+
+
         private:
             GameInput *externalGameInput = nullptr;
     };

@@ -14,6 +14,7 @@ SET(HDRS
     ${HDR}/Interface.hpp
     ${HDR}/Host.hpp
     ${HDR}/GameEvent.hpp
+    ${HDR}/Definitions.hpp
 )
 
 SET(SRCS
