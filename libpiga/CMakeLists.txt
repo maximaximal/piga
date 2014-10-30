@@ -11,12 +11,16 @@ SET(HDRS
     ${HDR}/PlayerInput.hpp
     ${HDR}/GameControl.hpp
     ${HDR}/InputMethod.hpp
+    ${HDR}/Interface.hpp
+    ${HDR}/Host.hpp
 )
 
 SET(SRCS
     ${SRC}/GameInput.cpp
     ${SRC}/PlayerInput.cpp
     ${SRC}/InputMethod.cpp
+    ${SRC}/Interface.cpp
+    ${SRC}/Host.cpp
 )
 
 add_library(piga ${SRCS} ${HDRS})

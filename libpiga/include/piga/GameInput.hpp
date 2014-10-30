@@ -21,7 +21,8 @@ namespace piga
             
             int addPlayerInput(std::shared_ptr<PlayerInput> playerInput);
 
-           	const PlayerInput& getPlayerInput(int id);
+            int getPlayerCount();
+            const PlayerInput& getPlayerInput(int id);
         private:
             std::map<int, std::shared_ptr<PlayerInput> > m_playerInputs;
             int m_playerInputIdCounter = 0;

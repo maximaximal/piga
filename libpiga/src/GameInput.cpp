@@ -23,7 +23,10 @@ namespace piga
         m_playerInputs[m_playerInputIdCounter] = playerInput;
         return m_playerInputIdCounter;
     }
-
+    int GameInput::getPlayerCount()
+    {
+        return m_playerInputs.size();
+    }
     const PlayerInput &GameInput::getPlayerInput(int id)
     {
         if(m_playerInputs.count(id) > 0)
