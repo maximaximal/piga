@@ -30,7 +30,7 @@ namespace piga
     }
     const PlayerInput &GameInput::getPlayerInput(int id)
     {
-        if(m_playerInputs.count(id) > 0)
+        if(m_playerInputs.count(id) == 0)
 			return *(m_playerInputs[id]);
 
         throw std::out_of_range("Player was not set at this ID!");

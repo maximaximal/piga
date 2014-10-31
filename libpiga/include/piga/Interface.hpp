@@ -21,6 +21,7 @@ namespace piga
             int getPlayerCount();
             const PlayerInput& getPlayerInput(int id);
             bool gameInputSet();
+            int addPlayerInput(std::shared_ptr<PlayerInput> playerInput);
 
             bool pollEvent(GameEvent &event);
             bool isSelfhosted();

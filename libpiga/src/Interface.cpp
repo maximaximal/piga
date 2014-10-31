@@ -80,6 +80,14 @@ namespace piga
         }
         return false;
     }
+    int Interface::addPlayerInput(std::shared_ptr<PlayerInput> playerInput)
+    {
+        if(isSelfhosted())
+        {
+            return externalGameInput->addPlayerInput(playerInput);
+        }
+        throw(std::out_of_range("Player inputs can only be added through the interface, if the interface is selfhosted!"));
+    }
     bool Interface::pollEvent(GameEvent &event)
     {
         return externalGameInput->pollEvent(event);
