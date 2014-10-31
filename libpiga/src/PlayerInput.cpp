@@ -48,12 +48,12 @@ namespace piga
     {
 		for(auto &method : m_inputMethods)
         {
-            method.second->update();
             if(method.second->hasChanged())
             {
                 GameEvent event(method.first, method.second->isActive(), m_playerID);
                 pushGameEvent(event);
             }
+            method.second->update();
         }
     }
     int PlayerInput::setInputMethod(InputMethod *method, GameControl control)
