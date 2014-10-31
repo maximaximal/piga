@@ -15,7 +15,7 @@ namespace piga
     class Interface
     {
         public:
-            Interface();
+            Interface(bool selfhosted = false);
             virtual ~Interface();
 
             int getPlayerCount();
@@ -25,6 +25,7 @@ namespace piga
             bool pollEvent(GameEvent &event);
         private:
             GameInput *externalGameInput = nullptr;
+            bool m_selfhosted;
     };
 }
 
