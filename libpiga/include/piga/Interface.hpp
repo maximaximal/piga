@@ -23,6 +23,7 @@ namespace piga
             bool gameInputSet();
 
             bool pollEvent(GameEvent &event);
+            bool isSelfhosted();
         private:
             GameInput *externalGameInput = nullptr;
             bool m_selfhosted;

@@ -82,6 +82,10 @@ namespace piga
     }
     bool Interface::pollEvent(GameEvent &event)
     {
-
+        return externalGameInput->pollEvent(event);
+    }
+    bool Interface::isSelfhosted()
+    {
+        return m_selfhosted;
     }
 }
