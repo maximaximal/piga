@@ -28,7 +28,7 @@ namespace piga
              * @return
              */
             bool hasChanged();
-        private:
+        protected:
             /**
              * @brief Sets the internal state of the input (on or off).
              * @param active Input on / off.
@@ -36,6 +36,7 @@ namespace piga
              * This blocks reads from the isActive method until the new state has been set.
              */
             void setState(bool active);
+        private:
             void setChanged(bool changed);
             bool m_active = false;
             bool m_hasChanged = false;
