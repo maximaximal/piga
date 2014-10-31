@@ -2,7 +2,7 @@
 #define LIBPIGA_PIGA_PLAYERINPUT_HPP_INCLUDED
 
 #include <map>
-#include <queue>
+#include <deque>
 #include <piga/GameControl.hpp>
 #include <piga/InputMethod.hpp>
 #include <piga/GameEvent.hpp>
@@ -34,7 +34,7 @@ namespace piga
             void pushGameEvent(const GameEvent &gameEvent);
         private:
             std::map<GameControl, InputMethod*> m_inputMethods;
-            std::queue<GameEvent> m_gameEvents;
+            std::deque<GameEvent> m_gameEvents;
             int m_playerID;
     };
 }

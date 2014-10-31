@@ -19,10 +19,10 @@ namespace piga
     }
     int GameInput::addPlayerInput(std::shared_ptr<PlayerInput> playerInput)
     {
-        m_playerInputIdCounter++;
         m_playerInputs[m_playerInputIdCounter] = playerInput;
         playerInput->setPlayerID(m_playerInputIdCounter);
-        return m_playerInputIdCounter;
+        m_playerInputIdCounter++;
+        return m_playerInputIdCounter - 1;
     }
     int GameInput::getPlayerCount()
     {

@@ -25,11 +25,8 @@ namespace piga
         boost::upgrade_lock<boost::shared_mutex> lock(m_activeMutex);
         boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
 
-        if(m_active != active)
-        {
-            m_active = active;
-            setChanged(true);
-        }
+        m_active = active;
+        setChanged(true);
     }
     void InputMethod::setChanged(bool changed)
     {

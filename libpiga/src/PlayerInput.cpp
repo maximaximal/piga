@@ -35,7 +35,7 @@ namespace piga
         if(m_gameEvents.size() > 0)
         {
             gameEvent = m_gameEvents.back();
-            m_gameEvents.pop();
+            m_gameEvents.pop_back();
             return true;
         }
         return false;
@@ -62,6 +62,6 @@ namespace piga
     }
     void PlayerInput::pushGameEvent(const GameEvent &gameEvent)
     {
-        m_gameEvents.push(gameEvent);
+        m_gameEvents.push_front(gameEvent);
     }
 }
