@@ -3,12 +3,12 @@
 namespace piga
 {
     GameEvent::GameEvent(GameControl control, bool state, int playerID)
-        : m_control(control), m_state(state)
+        : m_control(control), m_state(state), m_playerID(playerID)
     {
 
     }
     GameEvent::GameEvent(const GameEvent &gameEvent)
-        : m_control(gameEvent.getControl()), m_state(gameEvent.isActive())
+        : m_control(gameEvent.getControl()), m_state(gameEvent.isActive()), m_playerID(gameEvent.getPlayerID())
     {
 
     }
