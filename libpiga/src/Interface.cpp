@@ -96,4 +96,12 @@ namespace piga
     {
         return m_selfhosted;
     }
+    void Interface::update()
+    {
+        if(isSelfhosted())
+        {
+            externalGameInput->update();
+        }
+        throw(std::out_of_range("The interface can only be updated, if the interface is selfhosted!"));
+    }
 }
