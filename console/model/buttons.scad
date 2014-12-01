@@ -26,6 +26,8 @@ module button() {
 module controls_button_dimensions() {
 	translate([-button_diameter/2, 0, 0])
 		color(fontcolor) dimensions(length=button_diameter, line_width=linewidth, DIM_FONTSCALE=fontscale, loc=1);
+	translate([0, 5.25 * m, 0])
+		color(fontcolor) dimensions(length=0.7 * m, line_width=linewidth, DIM_FONTSCALE=fontscale, loc=1);
 	translate([-1,0,0])	
 		rotate(90)
 			color(fontcolor) dimensions(length=3.85 * m, line_width=linewidth, DIM_FONTSCALE=fontscale, loc=0);
@@ -54,7 +56,7 @@ module controls_button_dimensions() {
 		rotate(90) {
 			color(fontcolor) dimensions(length=0.8 * m, line_width=linewidth, DIM_FONTSCALE=fontscale, loc=1);color(fontcolor) line(length=3, width=linewidth, left_arrow=false, right_arrow=false);}}
 	rotate(90)
-		color(fontcolor) line(length=4.2, width=linewidth, left_arrow=false, right_arrow=false);
+		color(fontcolor) line(length=7.2, width=linewidth, left_arrow=false, right_arrow=false);
 	translate([0, 1,0])
 		color(fontcolor) dimensions(length=3.3 * m, line_width=linewidth, DIM_FONTSCALE=fontscale, loc=0);
 	translate([3.6, 1,0])

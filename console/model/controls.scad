@@ -93,9 +93,16 @@ cube([joystick_outer_width,joystick_outer_width,joystick_cover_h] , center=true)
 	translate([joystick_2_x + joystick_outer_width,board_h / 2, -2])
 		buttonset();
 }
+
+	//translate([joystick_1_x + joystick_outer_width,board_h / 2, -2])
+	//	buttonset();
+	//translate([joystick_2_x + joystick_outer_width,board_h / 2, -2])
+	//	buttonset();
+
 	translate([0,0,board_d + 1]) {
 		dimensioning();
 	}
+
 	translate([joystick_1_x + joystick_outer_width,board_h / 2, 2])
 		controls_button_dimensions();
 	translate([joystick_2_x + joystick_outer_width,board_h / 2, 2])
