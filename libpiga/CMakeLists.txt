@@ -17,6 +17,7 @@ SET(HDRS
     ${HDR}/InputMethod.hpp
     ${HDR}/Interface.hpp
     ${HDR}/Host.hpp
+    ${HDR}/Player.hpp
     ${HDR}/GameEvent.hpp
     ${HDR}/Definitions.hpp
     ${HDR}/GameEventHandler.hpp
@@ -28,6 +29,7 @@ SET(SRCS
     ${SRC}/InputMethod.cpp
     ${SRC}/Interface.cpp
     ${SRC}/Host.cpp
+    ${SRC}/Player.cpp
     ${SRC}/GameEvent.cpp
     ${SRC}/GameEventHandler.cpp
 )
