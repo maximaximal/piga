@@ -1,5 +1,5 @@
 *.obj
-*.user
+*.user*
 
 build/
 libpiga/build/

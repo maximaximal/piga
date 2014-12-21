@@ -21,6 +21,7 @@ SET(HDRS
     ${HDR}/GameEvent.hpp
     ${HDR}/Definitions.hpp
     ${HDR}/GameEventHandler.hpp
+    ${HDR}/Renderer.hpp
 )
 
 SET(SRCS
@@ -32,11 +33,12 @@ SET(SRCS
     ${SRC}/Player.cpp
     ${SRC}/GameEvent.cpp
     ${SRC}/GameEventHandler.cpp
+    ${SRC}/Renderer.cpp
 )
 
 add_library(piga ${SRCS} ${HDRS})
 
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system thread)
 
 if(${Boost_FOUND})
     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})

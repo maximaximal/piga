@@ -9,11 +9,15 @@ namespace piga
 {
     Host::Host()
     {
-        createSharedMemory();
+
     }
     Host::~Host()
     {
         deleteSharedMemory();
+    }
+    void Host::init()
+    {
+        createSharedMemory();
     }
     void Host::update()
     {
@@ -33,7 +37,7 @@ namespace piga
     }
     void Host::createSharedMemory()
     {
-        boost::interprocess::managed_shared_memory segment(boost::interprocess::create_only, getSharedMemoryName().c_str(), sizeof(GameInput));
+        boost::interprocess::managed_shared_memory segment(boost::interprocess::create_only, getSharedMemoryName().c_str(), 4096);
         m_gameInput = segment.construct<GameInput>(getGameInputInstanceName().c_str())();
     }
     void Host::deleteSharedMemory()

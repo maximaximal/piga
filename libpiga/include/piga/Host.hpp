@@ -16,6 +16,8 @@ namespace piga
             Host();
             virtual ~Host();
 
+            void init();
+
             void update();
 
             GameInput *getGameInput();
