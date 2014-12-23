@@ -2,6 +2,7 @@
 #define LIBPIGA_PIGA_HOST_HPP_INCLUDED
 
 #include <piga/GameInput.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 namespace piga
 {
@@ -18,9 +19,9 @@ namespace piga
 
             void init();
 
-            void update();
+            void applyFromGameInput(GameInput *gameInput);
 
-            GameInput *getGameInput();
+            void setInput(unsigned int playerID, GameControl control, bool state);
 
             static std::string getSharedMemoryName();
             static std::string getGameInputInstanceName();
@@ -28,7 +29,9 @@ namespace piga
             void createSharedMemory();
             void deleteSharedMemory();
         private:
-            GameInput *m_gameInput = nullptr;
+            //Settings of the physical appearence of the console.
+            unsigned int m_playerCount = 2;
+            unsigned int m_buttonCount = 11;
     };
 }
 

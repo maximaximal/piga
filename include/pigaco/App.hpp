@@ -14,10 +14,18 @@ namespace pigaco
             App();
             virtual ~App();
 
+            void run();
 
+            void update(float frametime);
+
+            bool end();
+        protected:
+            void setEnd(bool state = true);
         private:
             std::shared_ptr<piga::Host> m_host;
 
             std::unique_ptr<Window> m_window;
+
+            bool m_end = false;
     };
 }

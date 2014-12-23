@@ -12,6 +12,11 @@ namespace piga
     {
 
     }
+    GameEvent::GameEvent()
+        : GameEvent(GameControl::ACTION, false, 0)
+    {
+
+    }
     GameEvent::~GameEvent()
     {
 

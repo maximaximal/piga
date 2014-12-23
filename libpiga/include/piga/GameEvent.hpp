@@ -15,6 +15,7 @@ namespace piga
         public:
             GameEvent(GameControl control, bool state, int playerID);
             GameEvent(const GameEvent &gameEvent);
+            GameEvent();
             virtual ~GameEvent();
 
             bool isActive() const;
