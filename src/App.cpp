@@ -26,6 +26,16 @@ namespace pigaco
         LOG(INFO) << "Starting PiGaCo.";
         m_host->init();
 
+        m_playerManager = std::make_shared<piga::PlayerManager>();
+
+        auto player = std::make_shared<piga::Player>(0);
+        player->setName("Unnamed 1 (0)");
+        m_playerManager->set(player, 0);
+
+        player = std::make_shared<piga::Player>(1);
+        player->setName("Unnamed 2 (1)");
+        m_playerManager->set(player, 1);
+
         m_gameInput = std::make_shared<piga::GameInput>();
 
         LOG(INFO) << "Clock-Precision: " << std::chrono::high_resolution_clock::period::den;

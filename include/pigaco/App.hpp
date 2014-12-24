@@ -7,6 +7,7 @@
 #include <piga/Host.hpp>
 #include <piga/GameEventHandler.hpp>
 #include <piga/GameInput.hpp>
+#include <piga/PlayerManager.hpp>
 
 #include <pihud/HudContainer.hpp>
 
@@ -33,6 +34,7 @@ namespace pigaco
         private:
             std::shared_ptr<piga::Host> m_host;
             std::shared_ptr<piga::GameInput> m_gameInput;
+            std::shared_ptr<piga::PlayerManager> m_playerManager;
 
             std::unique_ptr<Window> m_window;
 
