@@ -48,6 +48,8 @@ set(HDRS
     ${HDR}/HealthAndNameDisplay.hpp
     ${HDR}/QueueDisplayWidget.hpp
     ${HDR}/Particle.hpp
+    ${HDR}/Layout.hpp
+    ${HDR}/Layouter.hpp
     ${HDR}/WeHaveAWinnerWidget.hpp
 )
 
