@@ -54,5 +54,8 @@ elseif()
     message(STATUS "Did not find Sigc++2! Please install it before you try to compile again.")
 endif()
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../pihud pihud)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../pihud/include)
+
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

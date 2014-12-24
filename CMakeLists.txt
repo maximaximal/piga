@@ -78,6 +78,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/ ${CMAKE_CURRENT_BINARY_DIR
 add_dependencies(pigaco piga)
 include_directories(${LIBPIGA_INCLUDE_DIRECTORIES})
 target_link_libraries(pigaco piga)
+target_link_libraries(pigaco pihud)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pihud/include)
 
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 -lrt ${CMAKE_CXX_FLAGS}")
