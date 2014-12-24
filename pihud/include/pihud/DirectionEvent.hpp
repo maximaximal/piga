@@ -1,5 +1,7 @@
 #pragma once
 
+#include <piga/GameControl.hpp>
+
 namespace PiH
 {
     enum Direction
@@ -18,6 +20,7 @@ namespace PiH
         public:
             DirectionEvent();
             DirectionEvent(Direction dir);
+            DirectionEvent(piga::GameControl control, bool state);
 
             Direction direction;
 

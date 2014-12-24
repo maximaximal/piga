@@ -26,6 +26,8 @@ namespace pigaco
         LOG(INFO) << "Starting PiGaCo.";
         m_host->init();
 
+        m_gameInput = std::make_shared<piga::GameInput>();
+
         LOG(INFO) << "Clock-Precision: " << std::chrono::high_resolution_clock::period::den;
 
         std::chrono::time_point<std::chrono::high_resolution_clock> frameTimePointPast = std::chrono::high_resolution_clock::now();
@@ -69,6 +71,9 @@ namespace pigaco
     }
     void App::onUpdate(float frametime)
     {
+        m_gameInput->update();
+        m_host->applyFromGameInput(m_gameInput.get());
+
         m_window->glClear();
         SDL_SetRenderDrawColor(m_window->getSDLRenderer(), 0, 0, 0, 0);
         SDL_RenderClear(m_window->getSDLRenderer());
@@ -83,6 +88,10 @@ namespace pigaco
     void App::setEnd(bool state)
     {
         m_end = state;
+    }
+    void App::onGameEvent(const piga::GameEvent &gameEvent, float frametime)
+    {
+        m_hudContainer->onEvent(gameEvent);
     }
 }
 

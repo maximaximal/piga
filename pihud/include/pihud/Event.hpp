@@ -1,5 +1,7 @@
 #pragma once
 
+#include <piga/GameEvent.hpp>
+
 #include <pihud/DirectionEvent.hpp>
 #include <pihud/InputEvent.hpp>
 
@@ -21,6 +23,7 @@ namespace PiH
             Event();
             Event(const DirectionEvent &dirEvent);
             Event(const InputEvent &inputEvent);
+            Event(const piga::GameEvent &gameEvent);
             virtual ~Event();
 
 			EventType type;

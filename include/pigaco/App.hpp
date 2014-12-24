@@ -5,6 +5,8 @@
 #include <SDL2/SDL_events.h>
 
 #include <piga/Host.hpp>
+#include <piga/GameEventHandler.hpp>
+#include <piga/GameInput.hpp>
 
 #include <pihud/HudContainer.hpp>
 
@@ -12,7 +14,7 @@
 
 namespace pigaco
 {
-	class App
+    class App : public piga::GameEventHandler
     {
         public:
             App();
@@ -26,8 +28,11 @@ namespace pigaco
             bool end();
         protected:
             void setEnd(bool state = true);
+            virtual void onGameEvent(const piga::GameEvent &gameEvent, float frametime);
+
         private:
             std::shared_ptr<piga::Host> m_host;
+            std::shared_ptr<piga::GameInput> m_gameInput;
 
             std::unique_ptr<Window> m_window;
 
