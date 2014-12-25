@@ -12,7 +12,9 @@ namespace PiH
             virtual ~Layout();
 
             void setLayouter(const Layouter &layouter);
+            void updateLayout();
         protected:
             Layouter m_layouter;
+            Layouter::LayoutedWidgetsMap m_widgets;
     };
 }

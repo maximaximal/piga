@@ -23,6 +23,8 @@ set(SRCS
     ${SRC}/IconHealthIndicator.cpp
     ${SRC}/HealthAndNameDisplay.cpp
     ${SRC}/Rect.cpp
+    ${SRC}/Layout.cpp
+    ${SRC}/Layouter.cpp
     ${SRC}/QueueDisplayWidget.cpp
     ${SRC}/Particle.cpp
     ${SRC}/ParticleSource.cpp
