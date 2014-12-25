@@ -15,6 +15,8 @@ namespace PiH
             FloatRect& getBoundingBox();
             void setBoundingBox(const FloatRect &box);
             void setPosition(float x, float y);
+            void setWidth(float w);
+            void setHeight(float h);
 
             virtual void onEvent(const Event &e);
             virtual void onUpdate(float frametime);

@@ -28,6 +28,18 @@ namespace PiH
         updateBoundingBox();
         updateParent();
     }
+    void Widget::setWidth(float w)
+    {
+        m_boundingBox.w = w;
+        updateBoundingBox();
+        updateParent();
+    }
+    void Widget::setHeight(float h)
+    {
+        m_boundingBox.h = h;
+        updateBoundingBox();
+        updateParent();
+    }
     void Widget::onEvent(const Event &e)
     {
 
