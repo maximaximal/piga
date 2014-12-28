@@ -4,6 +4,7 @@
 
 #include <pihud/DirectionEvent.hpp>
 #include <pihud/InputEvent.hpp>
+#include <pihud/FocusEvent.hpp>
 
 namespace PiH
 {
@@ -13,6 +14,7 @@ namespace PiH
         Direction,
         Input,
         Mouse,
+        Focus,
 
         _COUNT
     };
@@ -23,6 +25,7 @@ namespace PiH
             Event();
             Event(const DirectionEvent &dirEvent);
             Event(const InputEvent &inputEvent);
+            Event(const FocusEvent &focusEvent);
             Event(const piga::GameEvent &gameEvent);
             virtual ~Event();
 
@@ -32,6 +35,7 @@ namespace PiH
             {
 				DirectionEvent dir;
                 InputEvent input;
+                FocusEvent focus;
             };
     };
 }

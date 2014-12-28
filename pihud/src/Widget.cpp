@@ -20,7 +20,6 @@ namespace PiH
         updateBoundingBox();
         updateParent();
     }
-
     void Widget::setPosition(float x, float y)
     {
         m_boundingBox.x = x;
@@ -39,6 +38,10 @@ namespace PiH
         m_boundingBox.h = h;
         updateBoundingBox();
         updateParent();
+    }
+    bool Widget::isFocused()
+    {
+        return m_focused;
     }
     void Widget::onEvent(const Event &e)
     {

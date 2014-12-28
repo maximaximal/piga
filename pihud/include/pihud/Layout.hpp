@@ -13,8 +13,16 @@ namespace PiH
 
             void setLayouter(const Layouter &layouter);
             void updateLayout();
+            void addWidget(std::shared_ptr<Widget> widget);
+            void removeWidget(std::shared_ptr<Widget> widget);
+
+            virtual void onEvent(const Event &e);
+            virtual void onUpdate(float frametime);
+            virtual void onRender(SDL_Renderer *renderer, const FloatRect &offset);
         protected:
             Layouter m_layouter;
-            Layouter::LayoutedWidgetsMap m_widgets;
+            Layouter::LayoutedWidgets m_widgets;
+
+            virtual void updateBoundingBox();
     };
 }

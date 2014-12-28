@@ -6,9 +6,13 @@
 
 namespace PiH
 {
+    class FocusManager;
+
     class Widget
     {
         public:
+            friend class FocusManager;
+
             Widget(Widget *parent);
             virtual ~Widget();
 
@@ -17,6 +21,7 @@ namespace PiH
             void setPosition(float x, float y);
             void setWidth(float w);
             void setHeight(float h);
+            bool isFocused();
 
             virtual void onEvent(const Event &e);
             virtual void onUpdate(float frametime);
@@ -31,5 +36,6 @@ namespace PiH
             Widget *m_parent;
         private:
             bool m_currentlyUpdating = false;
+            bool m_focused = false;
     };
 }

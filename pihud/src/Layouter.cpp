@@ -16,12 +16,42 @@ namespace PiH
     {
         //Nothing to do
     }
-    void Layouter::setBoxes(LayoutedWidgetsMap &widgets)
+    void Layouter::onUpdate(float frametime)
+    {
+        if(m_widgets != nullptr)
+        {
+			for(auto &widget : *m_widgets)
+			{
+				widget->onUpdate(frametime);
+			}
+        }
+    }
+    void Layouter::onEvent(const Event &e)
+    {
+        if(m_widgets != nullptr)
+        {
+			for(auto &widget : *m_widgets)
+			{
+				widget->onEvent(e);
+			}
+        }
+    }
+    void Layouter::onRender(SDL_Renderer *renderer, const FloatRect &offset)
+    {
+        if(m_widgets != nullptr)
+        {
+			for(auto &widget : *m_widgets)
+			{
+				widget->onRender(renderer, offset);
+			}
+        }
+    }
+    void Layouter::setBoxes(LayoutedWidgets &widgets)
     {
         //Default layout: All child-widgets have the same bounding box like the layouter.
         for(auto &widget : widgets)
         {
-            widget.second->setBoundingBox(getBoundingBox());
+            widget->setBoundingBox(getBoundingBox());
         }
     }
 }

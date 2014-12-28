@@ -16,6 +16,11 @@ namespace PiH
         type = EventType::Input;
         input = inputEvent;
     }
+    Event::Event(const FocusEvent &focusEvent)
+    {
+        type = EventType::Focus;
+        focus = focusEvent;
+    }
     Event::Event(const piga::GameEvent &gameEvent)
     {
         if(gameEvent.getControl() == piga::DOWN
