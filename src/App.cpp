@@ -5,6 +5,10 @@
 
 #include <easylogging++.h>
 
+#include <pigaco/Window.hpp>
+#include <pigaco/DirectoryScanner.hpp>
+#include <pihud/pihud.hpp>
+
 _INITIALIZE_EASYLOGGINGPP
 
 namespace pigaco
@@ -18,6 +22,8 @@ namespace pigaco
     {
         if(m_hudContainer != nullptr)
             delete m_hudContainer;
+
+        PiH::exit();
 
         m_window.reset();
     }
@@ -47,9 +53,16 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), true);
+        m_window->init(glm::ivec2(800, 600), false);
+
+        PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
+        config->setupDefaultConfig();
+        PiH::initialize(config);
 
         m_hudContainer = new PiH::HudContainer(0);
+
+        m_directoryScanner.reset(new DirectoryScanner);
+        m_directoryScanner->scanDirectory("Games");
 
         LOG(INFO) << "Starting the App-Loop.";
 

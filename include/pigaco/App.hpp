@@ -11,10 +11,11 @@
 
 #include <pihud/HudContainer.hpp>
 
-#include <pigaco/Window.hpp>
-
 namespace pigaco
 {
+    class Window;
+    class DirectoryScanner;
+
     class App : public piga::GameEventHandler
     {
         public:
@@ -37,6 +38,7 @@ namespace pigaco
             std::shared_ptr<piga::PlayerManager> m_playerManager;
 
             std::unique_ptr<Window> m_window;
+            std::unique_ptr<DirectoryScanner> m_directoryScanner;
 
             PiH::HudContainer *m_hudContainer = nullptr;
 

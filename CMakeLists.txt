@@ -14,11 +14,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 SET(HDRS
     ${HDR}/App.hpp
     ${HDR}/Window.hpp
+    ${HDR}/DirectoryScanner.hpp
 )
 
 SET(SRCS
     ${SRC}/App.cpp
     ${SRC}/Window.cpp
+    ${SRC}/DirectoryScanner.cpp
 )
 
 add_executable(pigaco ${SRCS} ${HDRS})
@@ -31,7 +33,7 @@ PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf)
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
 TARGET_LINK_LIBRARIES(pigaco ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2TTF_LIBRARIES})
 
-find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 
 if(${Boost_FOUND})
     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})

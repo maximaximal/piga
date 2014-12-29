@@ -22,6 +22,7 @@ SET(HDRS
     ${HDR}/Definitions.hpp
     ${HDR}/GameEventHandler.hpp
     ${HDR}/Renderer.hpp
+    ${HDR}/GameHost.hpp
     ${HDR}/PlayerManager.hpp
 )
 
@@ -35,6 +36,7 @@ SET(SRCS
     ${SRC}/GameEvent.cpp
     ${SRC}/GameEventHandler.cpp
     ${SRC}/Renderer.cpp
+    ${SRC}/GameHost.cpp
     ${SRC}/PlayerManager.cpp
 )
 
