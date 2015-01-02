@@ -25,26 +25,12 @@ namespace piga
         }
         else
         {
+			using namespace boost::interprocess;
             cout << PIGA_DEBUG_PRESTRING << "Trying to open the shared memory \"" << Host::getSharedMemoryName() << "\"." << endl;
-            boost::interprocess::managed_shared_memory segment(boost::interprocess::open_only, Host::getSharedMemoryName().c_str());
-            cout << "Memory opened!" << endl;
-            std::pair<GameInput*, boost::interprocess::managed_shared_memory::size_type> res;
+            shared_memory_object segment(open_only, Host::getSharedMemoryName().c_str(), read_write);
+            cout << PIGA_DEBUG_PRESTRING << "Memory opened!" << endl;
+            cout << PIGA_DEBUG_PRESTRING << "Memory opened - input polling should be working." << endl;
 
-            cout << PIGA_DEBUG_PRESTRING << "Opening the segment \"" << Host::getGameInputInstanceName() << "\"." << endl;
-            res = segment.find<GameInput>(Host::getGameInputInstanceName().c_str());
-            cout << "Segment opened." << endl;
-
-            if(res.second != 1)
-            {
-                //The object is not correct!
-                throw(boost::interprocess::not_found_error);
-            }
-            else
-            {
-                cout << PIGA_DEBUG_PRESTRING << "Shared memory segment opened successfully! The link between PiGa and the application has been established." << endl;
-            }
-
-            externalGameInput = res.first;
         }
     }
     Interface::~Interface()
@@ -90,7 +76,12 @@ namespace piga
     }
     bool Interface::pollEvent(GameEvent &event)
     {
-        return externalGameInput->pollEvent(event);
+        if(isSelfhosted())
+			return externalGameInput->pollEvent(event);
+        else
+        {
+
+        }
     }
     bool Interface::isSelfhosted()
     {
@@ -104,7 +95,18 @@ namespace piga
         }
         else
         {
-            throw(std::out_of_range("The interface can only be updated, if the interface is selfhosted!"));
+			using namespace boost::interprocess;
+			managed_shared_memory shm(open_only, piga::Host::getSharedMemoryName().c_str());
+
+			std::pair<PlayerInputStruct*, std::size_t> p =
+					shm.find<PlayerInputStruct>("PlayerInput");
+
+            GameEvent e;
+
+            for(std::size_t i = 0; i < p.second; ++i)
+            {
+				while(e.first[i].)
+            }
         }
     }
 }

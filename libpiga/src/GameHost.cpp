@@ -2,6 +2,7 @@
 #include <sstream>
 #include <easylogging++.h>
 #include <yaml-cpp/yaml.h>
+#include <boost/filesystem.hpp>
 
 namespace piga
 {
@@ -63,19 +64,29 @@ namespace piga
     {
         if(isValid())
         {
+            if(isRunning())
+            {
+				LOG(WARNING) << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
+						  << "\" is already running!";
+                return;
+            }
 			LOG(INFO) << "Starting program \"" << getConfig(Name) << "\"";
 
+            m_currentPath = boost::filesystem::current_path().string();
+            boost::filesystem::current_path(getConfig(Directory));
+
 			std::stringstream command;
-			command << getConfig(Directory) << "/";
-			command << getConfig(ProgramPath);
+			command << "./" << getConfig(ProgramPath);
 			command << " ";
 			command << getConfig(Parameters);
+            command << " &";
 
 			std::string systemCmd = command.str();
 
 			LOG(INFO) << "Using Command: \"" << systemCmd << "\"";
 
 			system(systemCmd.c_str());
+            m_running = true;
 
 			LOG(INFO) << "======= Command Executed! =======";
         }
@@ -87,11 +98,16 @@ namespace piga
     }
     void GameHost::exit()
     {
-
+		m_running = false;
+		boost::filesystem::current_path(m_currentPath);
     }
     bool GameHost::isValid()
     {
         return m_valid;
+    }
+    bool GameHost::isRunning()
+    {
+        return m_running;
     }
     void GameHost::invalidate(bool state)
     {

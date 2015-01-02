@@ -1,6 +1,7 @@
 #ifndef LIBPIGA_PIGA_INTERFACE_HPP_INCLUDED
 #define LIBPIGA_PIGA_INTERFACE_HPP_INCLUDED
 
+#include <bitset>
 #include <piga/PlayerInput.hpp>
 #include <piga/GameInput.hpp>
 #include <piga/GameEvent.hpp>
@@ -27,8 +28,10 @@ namespace piga
             bool isSelfhosted();
             void update();
         private:
+			std::deque<GameEvent> events;
             GameInput *externalGameInput = nullptr;
             bool m_selfhosted;
+            std::vector<PlayerInputStruct> m_playerInputs;
     };
 }
 

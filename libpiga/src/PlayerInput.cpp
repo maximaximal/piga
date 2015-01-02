@@ -64,4 +64,52 @@ namespace piga
     {
         m_gameEvents.push_front(gameEvent);
     }
+
+    void PlayerInputStruct::fromGameEvent(GameEvent &e)
+    {
+        fromGameEvent(e.getControl(), (bool) e);
+    }
+    void PlayerInputStruct::fromGameEvent(const GameControl &control, bool state)
+    {
+        switch(control)
+        {
+            case GameControl::ACTION:
+                action = state;
+                break;
+            case GameControl::UP:
+                if(state)
+                    up = 100000;
+                else
+                    up = 0;
+                break;
+            case GameControl::DOWN:
+                if(state)
+                    down = 100000;
+                else
+                    down = 0;
+                break;
+            case GameControl::LEFT:
+                if(state)
+                    left = 100000;
+                else
+                    left = 0;
+                break;
+            case GameControl::RIGHT:
+                if(state)
+                    right = 100000;
+                else
+                    right = 0;
+                break;
+        }
+    }
+    bool PlayerInputStruct::pollEvents(PlayerInputStruct &oldInputs, GameEvent &e)
+    {
+        if(oldInputs.action != action)
+        {
+            e.setControl(GameControl::ACTION);
+            e.setState(action);
+            return true;
+        }
+        return false;
+    }
 }

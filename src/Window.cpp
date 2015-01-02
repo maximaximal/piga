@@ -61,7 +61,7 @@ namespace pigaco
         if(fullscreen)
             flags = flags | SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-		m_window = SDL_CreateWindow("BomberPi", 100, 100, windowSize.x, windowSize.y, flags);
+		m_window = SDL_CreateWindow("PiGaCo - Console Host", 100, 100, windowSize.x, windowSize.y, flags);
 		if(m_window == nullptr)
 		{
 			LOG(FATAL) << "SDL_CreateWindow failed! Error: " << SDL_GetError();

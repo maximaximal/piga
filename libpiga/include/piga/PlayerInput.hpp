@@ -12,6 +12,29 @@ namespace piga
     class GameInput;
 
     /**
+     * @brief The PlayerInputStruct struct provides a interface format for shred memory.
+     *
+     * The direction maximum is 100000, minimum is 0.
+     */
+    struct PlayerInputStruct
+    {
+        int up = 0;
+        int down = 0;
+        int left = 0;
+        int right = 0;
+        bool action = false;
+    	bool button1 = false;
+        bool button2 = false;
+        bool button3 = false;
+        bool button4 = false;
+        bool button5 = false;
+        bool button6 = false;
+        void fromGameEvent(GameEvent &e);
+        void fromGameEvent(const GameControl &control, bool state);
+        bool pollEvents(PlayerInputStruct &oldInputs, GameEvent &e);
+    };
+
+    /**
      * @brief The PlayerInput class holds the inputs of a player.
      *
      * The update method cannot be called by the program, it has to be called by the GameInput class.

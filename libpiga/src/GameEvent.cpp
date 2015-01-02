@@ -33,6 +33,14 @@ namespace piga
     {
         return m_playerID;
     }
+    void GameEvent::setControl(GameControl control)
+    {
+        m_control = control;
+    }
+    void GameEvent::setState(bool state)
+    {
+        m_state = state;
+    }
     bool GameEvent::operator==(const GameControl &rightControl) const
     {
         if(getControl() == rightControl)

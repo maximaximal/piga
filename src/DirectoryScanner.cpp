@@ -16,6 +16,7 @@ namespace pigaco
     }
     void DirectoryScanner::scanDirectory(const std::string &dir)
     {
+        m_directory = dir;
         LOG(INFO) << "Scanning directory \"" << dir << "\".";
         if(!fs::exists(dir))
         {
@@ -41,6 +42,7 @@ namespace pigaco
     {
         std::shared_ptr<piga::GameHost> gameHost = std::make_shared<piga::GameHost>();
         gameHost->loadFromDirectory(dir);
+        m_games[dir] = gameHost;
     }
     DirectoryScanner::GameMap &DirectoryScanner::getGames()
     {
@@ -51,6 +53,17 @@ namespace pigaco
 		if(m_games.count(dir) > 0)
         {
             return m_games[dir];
+        }
+        if(m_games.count(m_directory + "/" + dir) > 0)
+        {
+            return m_games[m_directory + "/" + dir];
+        }
+        for(auto &game : m_games)
+        {
+            if(game.second->getConfig(piga::GameHost::Name) == dir)
+            {
+                return game.second;
+            }
         }
         LOG(FATAL) << "Game in \"" << dir << "\" not found! Returning the first game.";
         return (*m_games.begin()).second;

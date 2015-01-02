@@ -32,6 +32,7 @@ namespace piga
             void exit();
 
             bool isValid();
+            bool isRunning();
             void invalidate(bool state = false);
 
             const std::string& getConfig(ConfigValue id);
@@ -40,6 +41,8 @@ namespace piga
             std::map<ConfigValue, std::string> m_config;
             std::shared_ptr<Host> m_host;
             bool m_valid = true;
+            bool m_running = false;
+            std::string m_currentPath;
     };
 }
 

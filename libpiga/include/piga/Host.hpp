@@ -6,6 +6,8 @@
 
 namespace piga
 {
+    class GameHost;
+
     /**
      * @brief The Host class hosts the controls for all applications running on piga.
      *
@@ -23,6 +25,8 @@ namespace piga
 
             void setInput(unsigned int playerID, GameControl control, bool state);
 
+            void setCurrentGameHost(std::shared_ptr<GameHost> gameHost);
+
             static std::string getSharedMemoryName();
             static std::string getGameInputInstanceName();
         protected:
@@ -32,6 +36,7 @@ namespace piga
             //Settings of the physical appearence of the console.
             unsigned int m_playerCount = 2;
             unsigned int m_buttonCount = 11;
+            std::shared_ptr<GameHost> m_currentGameHost;
     };
 }
 

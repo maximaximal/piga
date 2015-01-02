@@ -21,6 +21,8 @@ namespace piga
             bool isActive() const;
             GameControl getControl() const;
             int getPlayerID() const;
+            void setControl(GameControl control);
+            void setState(bool state);
 
             bool operator==(const GameControl &rightControl) const;
             bool operator==(int playerID) const;

@@ -90,7 +90,14 @@ namespace pigaco
     }
     void App::onEvent(const SDL_Event &e, float frametime)
     {
-
+		if(e.type == SDL_KEYDOWN)
+        {
+            if(e.key.keysym.scancode == SDL_SCANCODE_B)
+            {
+                if(!m_directoryScanner->getGame("BomberPi")->isRunning())
+					m_directoryScanner->getGame("BomberPi")->start();
+            }
+        }
     }
     void App::onUpdate(float frametime)
     {

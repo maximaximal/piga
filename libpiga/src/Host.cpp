@@ -1,5 +1,6 @@
 #include <piga/Host.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace piga
 {
@@ -18,33 +19,30 @@ namespace piga
     void Host::applyFromGameInput(GameInput *gameInput)
     {
         using namespace boost::interprocess;
-        shared_memory_object object(open_only,
-                                    getSharedMemoryName().c_str(),
-                                    read_write);
+        managed_shared_memory shm(open_only, getSharedMemoryName().c_str());
 
+        std::pair<PlayerInputStruct*, std::size_t> p =
+                shm.find<PlayerInputStruct>("PlayerInput");
 
         GameEvent event;
         while(gameInput->pollEvent(event))
         {
-            mapped_region region(object, read_write,
-                                 event.getPlayerID() + static_cast<unsigned int>(event.getControl()),
-                                 1);
-
-            std::memset(region.get_address(),
-                        event, 1);
+            p.first[event.getPlayerID()].fromGameEvent(event);
         }
     }
     void Host::setInput(unsigned int playerID, GameControl control, bool state)
     {
         using namespace boost::interprocess;
-        shared_memory_object object(open_only,
-                                    getSharedMemoryName().c_str(),
-                                    read_write);
+        managed_shared_memory shm(open_only, getSharedMemoryName().c_str());
 
-        mapped_region region(object, read_write, playerID + static_cast<unsigned int>(control), 1);
+        std::pair<PlayerInputStruct*, std::size_t> p =
+                shm.find<PlayerInputStruct>("PlayerInput");
 
-        std::memset(region.get_address(),
-                    state, 1);
+        p.first[playerID].fromGameEvent(control, state);
+    }
+    void Host::setCurrentGameHost(std::shared_ptr<GameHost> gameHost)
+    {
+        m_currentGameHost = gameHost;
     }
     std::string Host::getSharedMemoryName()
     {
@@ -58,17 +56,14 @@ namespace piga
     {
         using namespace boost::interprocess;
 
-        shared_memory_object object(open_or_create,
-                                    getSharedMemoryName().c_str(),
-                                    read_write);
+        managed_shared_memory shm(open_or_create,
+                                  getSharedMemoryName().c_str(),
+                                  1024);
 
-        unsigned int inputSize = m_playerCount * (unsigned int) ((m_buttonCount / 8.f) + 0.5);
-
-        object.truncate(inputSize);
-
-        mapped_region region(object, read_write);
-
-        std::memset(region.get_address(), region.get_size(), 0);
+        for(std::size_t i = 1; i < m_playerCount; ++i)
+        {
+			shm.construct<PlayerInputStruct>("PlayerInput")[m_playerCount]();
+        }
     }
     void Host::deleteSharedMemory()
     {
