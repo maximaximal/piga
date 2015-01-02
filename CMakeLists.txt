@@ -83,6 +83,8 @@ target_link_libraries(pigaco piga)
 target_link_libraries(pigaco pihud)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pihud/include)
 
+add_custom_command(TARGET pigaco POST_BUILD COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/distributor.py ${CMAKE_CURRENT_BINARY_DIR}/dist)
+
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 -lrt ${CMAKE_CXX_FLAGS}")
 
