@@ -1,4 +1,6 @@
 #include <piga/Host.hpp>
+#include <piga/Status.hpp>
+#include <piga/GameHost.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -19,7 +21,7 @@ namespace piga
     void Host::applyFromGameInput(GameInput *gameInput)
     {
         using namespace boost::interprocess;
-        managed_shared_memory shm(open_only, getSharedMemoryName().c_str());
+        managed_shared_memory shm(open_only, getInputSharedMemoryName());
 
         std::pair<PlayerInputStruct*, std::size_t> p =
                 shm.find<PlayerInputStruct>("PlayerInput");
@@ -33,7 +35,7 @@ namespace piga
     void Host::setInput(unsigned int playerID, GameControl control, bool state)
     {
         using namespace boost::interprocess;
-        managed_shared_memory shm(open_only, getSharedMemoryName().c_str());
+        managed_shared_memory shm(open_only, getInputSharedMemoryName());
 
         std::pair<PlayerInputStruct*, std::size_t> p =
                 shm.find<PlayerInputStruct>("PlayerInput");
@@ -43,14 +45,55 @@ namespace piga
     void Host::setCurrentGameHost(std::shared_ptr<GameHost> gameHost)
     {
         m_currentGameHost = gameHost;
+        if(m_currentGameHost->isRunning())
+        {
+            using namespace boost::interprocess;
+            managed_shared_memory shm(open_only, getStatusSharedMemoryName());
+
+            std::pair<Status*, std::size_t> p =
+                    shm.find<Status>("Status");
+
+            Status *status = p.first;
+
+            status->setRunning(true);
+        }
     }
-    std::string Host::getSharedMemoryName()
+    bool Host::gameIsRunning()
+    {
+        using namespace boost::interprocess;
+        managed_shared_memory shm(open_only, getStatusSharedMemoryName());
+
+        std::pair<Status*, std::size_t> p =
+                shm.find<Status>("Status");
+
+        Status *status = p.first;
+
+        if(m_currentGameHost)
+        {
+            if(m_currentGameHost->isRunning())
+            {
+                if(!status->isRunning())
+                {
+                    m_currentGameHost->setRunning(false);
+                }
+            }
+            else
+            {
+                if(status->isRunning())
+                {
+                    m_currentGameHost->setRunning(true);
+                }
+            }
+        }
+        return status->isRunning();
+    }
+    const char *Host::getInputSharedMemoryName()
     {
         return "PiGa_GameInterface";
     }
-    std::string Host::getGameInputInstanceName()
+    const char *Host::getStatusSharedMemoryName()
     {
-        return "GameInputInstance";
+        return "PiGa_GameStatus";
     }
     void Host::createSharedMemory()
     {
@@ -58,17 +101,24 @@ namespace piga
 
         deleteSharedMemory();
 
-        managed_shared_memory shm(open_or_create,
-                                  getSharedMemoryName().c_str(),
+        managed_shared_memory shm_input(create_only,
+                                  getInputSharedMemoryName(),
                                   1024);
 
         for(std::size_t i = 1; i < m_playerCount; ++i)
         {
-			shm.construct<PlayerInputStruct>("PlayerInput")[m_playerCount]();
+            shm_input.construct<PlayerInputStruct>("PlayerInput")[m_playerCount]();
         }
+
+        managed_shared_memory shm_status(create_only,
+                                  getStatusSharedMemoryName(),
+                                  1024);
+
+        shm_status.construct<Status>("Status")[1](false);
     }
     void Host::deleteSharedMemory()
     {
-        boost::interprocess::shared_memory_object::remove(getSharedMemoryName().c_str());
+        boost::interprocess::shared_memory_object::remove(getInputSharedMemoryName());
+        boost::interprocess::shared_memory_object::remove(getStatusSharedMemoryName());
     }
 }

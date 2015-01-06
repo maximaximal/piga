@@ -95,7 +95,10 @@ namespace pigaco
             if(e.key.keysym.scancode == SDL_SCANCODE_B)
             {
                 if(!m_directoryScanner->getGame("BomberPi")->isRunning())
-					m_directoryScanner->getGame("BomberPi")->start();
+                {
+                    m_directoryScanner->getGame("BomberPi")->start();
+                    m_host->setCurrentGameHost(m_directoryScanner->getGame("BomberPi"));
+                }
             }
 
             if(e.key.keysym.scancode == SDL_SCANCODE_W)
@@ -122,6 +125,8 @@ namespace pigaco
 
         SDL_GL_SwapWindow(m_window->getSDLWindow());
         SDL_RenderPresent(m_window->getSDLRenderer());
+
+        LOG_EVERY_N(60, INFO) << "Is game running: " << m_host->gameIsRunning();
     }
     bool App::end()
     {

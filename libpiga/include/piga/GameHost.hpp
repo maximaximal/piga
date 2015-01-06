@@ -34,6 +34,7 @@ namespace piga
             bool isValid();
             bool isRunning();
             void invalidate(bool state = false);
+            void setRunning(bool state);
 
             const std::string& getConfig(ConfigValue id);
             void setConfig(ConfigValue id, const std::string &value);

@@ -27,8 +27,10 @@ namespace piga
 
             void setCurrentGameHost(std::shared_ptr<GameHost> gameHost);
 
-            static std::string getSharedMemoryName();
-            static std::string getGameInputInstanceName();
+            bool gameIsRunning();
+
+            static const char* getInputSharedMemoryName();
+            static const char* getStatusSharedMemoryName();
         protected:
             void createSharedMemory();
             void deleteSharedMemory();

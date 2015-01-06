@@ -8,6 +8,7 @@
 #include <piga/GameInput.hpp>
 #include <piga/Host.hpp>
 #include <piga/Definitions.hpp>
+#include <piga/Status.hpp>
 #include <iostream>
 
 using std::cout;
@@ -26,21 +27,33 @@ namespace piga
         else
         {
 			using namespace boost::interprocess;
-            cout << PIGA_DEBUG_PRESTRING << "Trying to open the shared memory \"" << Host::getSharedMemoryName() << "\"." << endl;
-            shared_memory_object segment(open_only, Host::getSharedMemoryName().c_str(), read_write);
+            cout << PIGA_DEBUG_PRESTRING << "Trying to open the shared memory \"" << Host::getInputSharedMemoryName() << "\"." << endl;
+            shared_memory_object shm_input(open_only, Host::getInputSharedMemoryName(), read_write);
             cout << PIGA_DEBUG_PRESTRING << "Memory opened!" << endl;
             cout << PIGA_DEBUG_PRESTRING << "Memory opened - input polling should be working." << endl;
-
         }
     }
     Interface::~Interface()
     {
-        cout << PIGA_DEBUG_PRESTRING << "Interface closed." << endl;
         if(m_selfhosted)
         {
             delete externalGameInput;
             cout << PIGA_DEBUG_PRESTRING << "Selfhosted GameInput instance deleted." << endl;
         }
+        else
+        {
+            using namespace boost::interprocess;
+            managed_shared_memory shm_status(open_only, piga::Host::getStatusSharedMemoryName());
+
+            std::pair<piga::Status*, std::size_t> p =
+                    shm_status.find<piga::Status>("Status");
+
+            piga::Status *status = p.first;
+
+            status->setRunning(false);
+            cout << PIGA_DEBUG_PRESTRING << "Status set to not running." << endl;
+        }
+        cout << PIGA_DEBUG_PRESTRING << "Interface closed." << endl;
     }
     int Interface::getPlayerCount()
     {
@@ -105,7 +118,7 @@ namespace piga
         else
         {
 			using namespace boost::interprocess;
-			managed_shared_memory shm(open_only, piga::Host::getSharedMemoryName().c_str());
+            managed_shared_memory shm(open_only, piga::Host::getInputSharedMemoryName());
 
 			std::pair<PlayerInputStruct*, std::size_t> p =
 					shm.find<PlayerInputStruct>("PlayerInput");
@@ -124,6 +137,19 @@ namespace piga
                     events.push_back(e);
                 }
             }
+        }
+    }
+    void Interface::logToStatus(const std::string &message)
+    {
+        if(m_selfhosted)
+        {
+            using namespace boost::interprocess;
+            managed_shared_memory shm(open_only, piga::Host::getStatusSharedMemoryName());
+
+            std::pair<piga::Status*, std::size_t> p =
+                    shm.find<piga::Status>("Status");
+
+            piga::Status *status = p.first;
         }
     }
 }

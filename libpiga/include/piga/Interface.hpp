@@ -27,6 +27,7 @@ namespace piga
             bool pollEvent(GameEvent &event);
             bool isSelfhosted();
             void update();
+            void logToStatus(const std::string &message);
         private:
 			std::deque<GameEvent> events;
             GameInput *externalGameInput = nullptr;

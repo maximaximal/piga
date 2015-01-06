@@ -88,7 +88,9 @@ namespace piga
 			system(systemCmd.c_str());
             m_running = true;
 
-			LOG(INFO) << "======= Command Executed! =======";
+            boost::filesystem::current_path(m_currentPath);
+
+            LOG(INFO) << "======= Command Executed! =======";
         }
         else
         {
@@ -99,7 +101,6 @@ namespace piga
     void GameHost::exit()
     {
 		m_running = false;
-		boost::filesystem::current_path(m_currentPath);
     }
     bool GameHost::isValid()
     {
@@ -112,6 +113,10 @@ namespace piga
     void GameHost::invalidate(bool state)
     {
         m_valid = state;
+    }
+    void GameHost::setRunning(bool state)
+    {
+        m_running = state;
     }
     const std::string &GameHost::getConfig(GameHost::ConfigValue id)
     {
