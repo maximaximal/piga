@@ -1,15 +1,15 @@
 //
-//  Easylogging++ v9.75
+//  Easylogging++ v9.77
 //  Single-header only, cross-platform logging library for C++ applications
 //
 //  Copyright (c) 2014 Majid Khan
 //
 //  This library is released under the MIT Licence.
-//  http://www.easylogging.org/licence.php
+//  https://raw.githubusercontent.com/easylogging/easyloggingpp/master/LICENCE
 //
 //  support@easylogging.org
-//  http://easylogging.org
 //  https://github.com/easylogging/easyloggingpp
+//  http://muflihun.com
 //
 #ifndef EASYLOGGINGPP_H  // NOLINT
 #define EASYLOGGINGPP_H
@@ -208,9 +208,14 @@
 #else
 #   define ELPP_FINAL final
 #endif  // _ELPP_COMPILER_INTEL || (_ELPP_GCC_VERSION < 40702)
-#if defined(_ELPP_THREAD_SAFE)
+#if defined(_ELPP_EXPERIMENTAL_ASYNC)
+#   define _ELPP_ASYNC_LOGGING 1
+#else
+#   define _ELPP_ASYNC_LOGGING 0
+#endif  // defined(_ELPP_EXPERIMENTAL_ASYNC)
+#if defined(_ELPP_THREAD_SAFE) || _ELPP_ASYNC_LOGGING
 #   define _ELPP_THREADING_ENABLED 1
-#endif  // defined(_ELPP_THREAD_SAFE)
+#endif  // defined(_ELPP_THREAD_SAFE) || _ELPP_ASYNC_LOGGING
 // Function macro _ELPP_FUNC
 #undef _ELPP_FUNC
 #if _ELPP_COMPILER_MSVC  // Visual C++
@@ -289,6 +294,9 @@
 #include <cstdarg>
 #if defined(_ELPP_UNICODE)
 #   include <locale>
+#   if _ELPP_OS_WINDOWS
+#      include <codecvt>
+#   endif // _ELPP_OS_WINDOWS
 #endif  // defined(_ELPP_UNICODE)
 #if _ELPP_STACKTRACE
 #   include <cxxabi.h>
@@ -328,6 +336,13 @@
 #      endif  // _ELPP_OS_UNIX
 #   endif  // _ELPP_USE_STD_THREADING
 #endif  // _ELPP_THREADING_ENABLED
+#if _ELPP_ASYNC_LOGGING
+#   include <unistd.h> // for usleep - make more flexible
+#   include <pthread.h>
+#   include <thread>
+#   include <queue>
+#   include <condition_variable>
+#endif  // _ELPP_ASYNC_LOGGING 
 #if defined(_ELPP_STL_LOGGING)
 // For logging STL based templates
 #   include <list>
@@ -397,6 +412,10 @@ class PErrorWriter;
 class LogDispatcher;
 class DefaultLogBuilder;
 class DefaultLogDispatchCallback;
+#if _ELPP_ASYNC_LOGGING
+class AsyncLogDispatchCallback;
+class AsyncDispatchWorker;
+#endif // _ELPP_ASYNC_LOGGING
 class DefaultPerformanceTrackingCallback;
 }  // namespace base
 }  // namespace el
@@ -687,7 +706,9 @@ enum class LoggingFlag : base::type::EnumType {
     /// @brief Creates logger automatically when not available
     CreateLoggerAutomatically = 4096,
     /// @brief Adds spaces b/w logs that separated by left-shift operator
-    AutoSpacing = 8192
+    AutoSpacing = 8192,
+	/// @brief Preserves time format and does not convert it to sec, hour etc (performance tracking only)
+	FixedTimeFormat = 16384
 };
 namespace base {
 /// @brief Namespace containing constants used internally.
@@ -730,8 +751,8 @@ namespace consts {
     static const char* kMonths[12]                      =      { "January", "February", "March", "Apri", "May", "June", "July", "August",
             "September", "October", "November", "December" };
     static const char* kMonthsAbbrev[12]                =      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-    static const char* kDefaultDateTimeFormat           =      "%d/%M/%Y %H:%m:%s,%g";
-    static const char* kDefaultDateTimeFormatInFilename =      "%d-%M-%Y_%H-%m";
+    static const char* kDefaultDateTimeFormat           =      "%Y-%M-%d %H:%m:%s,%g";
+    static const char* kDefaultDateTimeFormatInFilename =      "%Y-%M-%d_%H-%m";
     static const int kYearBase                          =      1900;
     static const char* kAm                              =      "AM";
     static const char* kPm                              =      "PM";
@@ -985,6 +1006,10 @@ static inline std::string getCurrentThreadId(void) {
 #      endif  // (_ELPP_OS_WINDOWS)
     return ss.str();
 }
+static inline void sleep(int) {
+    // Implement this as this is part of experimental async so this would
+    // not stop us releasing new versions
+}
 typedef base::threading::internal::Mutex Mutex;
 typedef base::threading::internal::ScopedLock<base::threading::Mutex> ScopedLock;
 #   else
@@ -993,6 +1018,11 @@ static inline std::string getCurrentThreadId(void) {
     std::stringstream ss;
     ss << std::this_thread::get_id();
     return ss.str();
+}
+static inline void sleep(int) {
+    // Implement this as this is part of experimental async so this would
+    // not stop us releasing new versions
+    // std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 typedef std::mutex Mutex;
 typedef std::lock_guard<std::mutex> ScopedLock;
@@ -1022,6 +1052,7 @@ private:
 static inline std::string getCurrentThreadId(void) {
     return std::string();
 }
+static inline void sleep(int) {}
 typedef base::threading::internal::NoMutex Mutex;
 typedef base::threading::internal::NoScopedLock<base::threading::Mutex> ScopedLock;
 #endif  // _ELPP_THREADING_ENABLED
@@ -1048,6 +1079,10 @@ public:
             base::type::fstream_t::out | base::type::fstream_t::app);
 #if defined(_ELPP_UNICODE)
         std::locale elppUnicodeLocale("");
+#if _ELPP_OS_WINDOWS
+        std::locale elppUnicodeLocaleWindows(elppUnicodeLocale, new std::codecvt_utf8_utf16<wchar_t>);
+        elppUnicodeLocale = elppUnicodeLocaleWindows;
+#endif
         fs->imbue(elppUnicodeLocale);
 #endif  // defined(_ELPP_UNICODE)
         if (fs->is_open()) {
@@ -2422,7 +2457,9 @@ public:
     /// @return True if successfully parsed, false otherwise. You may define '_ELPP_DEBUG_ASSERT_FAILURE' to make sure you
     ///         do not proceed without successful parse.
     inline bool parseFromFile(const std::string& configurationFile, Configurations* base = nullptr) {
-        bool assertionPassed = false;
+		// We initial assertion with true because if we have assertion diabled, we want to pass this
+		// check and if assertion is enabled we will have values re-assigned any way.
+        bool assertionPassed = true;
         ELPP_ASSERT((assertionPassed = base::utils::File::pathExists(configurationFile.c_str(), true)),
                 "Configuration file [" << configurationFile << "] does not exist!");
         if (!assertionPassed) {
@@ -3309,9 +3346,6 @@ class LogBuilder : base::NoCopy {
 public:
     virtual ~LogBuilder(void) { ELPP_INTERNAL_INFO(3, "Destroying log builder...")}
     virtual base::type::string_t build(const LogMessage* logMessage, bool appendNewLine) const = 0;
-private:
-    friend class el::base::DefaultLogDispatchCallback;
-
     void convertToColoredOutput(base::type::string_t* logLine, Level level) {
         if (!base::utils::s_termSupportsColor) return;
         const base::type::char_t* resetColor = ELPP_LITERAL("\x1b[0m");
@@ -3320,6 +3354,8 @@ private:
         else if (level == Level::Warning)
             *logLine = ELPP_LITERAL("\x1b[33m") + *logLine + resetColor;
     }
+private:
+    friend class el::base::DefaultLogDispatchCallback;
 };
 typedef std::shared_ptr<LogBuilder> LogBuilderPtr;
 /// @brief Represents a logger holding ID and configurations we need to write logs
@@ -3443,6 +3479,20 @@ public:
         });
     }
 
+    inline void flush(Level level, base::type::fstream_t* fs) {
+        if (fs == nullptr && m_typedConfigurations->toFile(level)) {
+            fs = m_typedConfigurations->fileStream(level);
+        }
+        if (fs != nullptr) {
+            fs->flush();
+            m_unflushedCount.find(level)->second = 0;
+        }
+    }
+
+    inline bool isFlushNeeded(Level level) {
+        return ++m_unflushedCount.find(level)->second >= m_typedConfigurations->logFlushThreshold(level);
+    }
+
     inline LogBuilder* logBuilder(void) const {
         return m_logBuilder.get();
     }
@@ -3526,20 +3576,6 @@ private:
 
     inline base::type::stringstream_t& stream(void) {
         return m_stream;
-    }
-
-    inline void flush(Level level, base::type::fstream_t* fs) {
-        if (fs == nullptr && m_typedConfigurations->toFile(level)) {
-            fs = m_typedConfigurations->fileStream(level);
-        }
-        if (fs != nullptr) {
-            fs->flush();
-            m_unflushedCount.find(level)->second = 0;
-        }
-    }
-
-    inline bool isFlushNeeded(Level level) {
-        return ++m_unflushedCount.find(level)->second >= m_typedConfigurations->logFlushThreshold(level);
     }
 
     void resolveLoggerFormatSpec(void) const {
@@ -3797,14 +3833,74 @@ private:
     base::type::string_t m_message;
 };
 namespace base {
+#if _ELPP_ASYNC_LOGGING
+class AsyncLogItem {
+public:
+    explicit AsyncLogItem(const LogMessage& logMessage, const LogDispatchData& data, const base::type::string_t& logLine)
+        : m_logMessage(logMessage), m_dispatchData(data), m_logLine(logLine) {}
+    virtual ~AsyncLogItem() {}
+    inline LogMessage* logMessage(void) { return &m_logMessage; }
+    inline LogDispatchData* data(void) { return &m_dispatchData; }
+    inline base::type::string_t logLine(void) { return m_logLine; }
+private:
+    LogMessage m_logMessage;
+    LogDispatchData m_dispatchData;
+    base::type::string_t m_logLine;
+};
+class AsyncLogQueue : public base::threading::ThreadSafe {
+public:
+    virtual ~AsyncLogQueue() {
+        ELPP_INTERNAL_INFO(6, "~AsyncLogQueue");
+    }
+    
+    inline AsyncLogItem next(void) {
+        base::threading::ScopedLock scopedLock(lock());
+        AsyncLogItem result = m_queue.front();
+        m_queue.pop();
+        return result;
+    }
+    
+    inline void push(const AsyncLogItem& item) {
+        base::threading::ScopedLock scopedLock(lock());
+        m_queue.push(item);
+    }
+    inline void pop(void) {
+        base::threading::ScopedLock scopedLock(lock());
+        m_queue.pop();
+    }
+    inline AsyncLogItem front(void) {
+        base::threading::ScopedLock scopedLock(lock());
+        return m_queue.front();
+    }
+    inline bool empty(void) {
+        base::threading::ScopedLock scopedLock(lock());
+        return m_queue.empty();
+    }
+private:
+    std::queue<AsyncLogItem> m_queue;
+};
+class IWorker {
+public:
+    virtual ~IWorker() {}
+    virtual void start() = 0;
+};
+#endif // _ELPP_ASYNC_LOGGING
 /// @brief Easylogging++ management storage
 class Storage : base::NoCopy, public base::threading::ThreadSafe {
 public:
+#if _ELPP_ASYNC_LOGGING
+    Storage(const LogBuilderPtr& defaultLogBuilder, base::IWorker* asyncDispatchWorker) :
+#else
     explicit Storage(const LogBuilderPtr& defaultLogBuilder) :
+#endif  // _ELPP_ASYNC_LOGGING
         m_registeredHitCounters(new base::RegisteredHitCounters()),
         m_registeredLoggers(new base::RegisteredLoggers(defaultLogBuilder)),
         m_flags(0x0),
         m_vRegistry(new base::VRegistry(0, &m_flags)),
+#if _ELPP_ASYNC_LOGGING
+        m_asyncLogQueue(new base::AsyncLogQueue()),
+        m_asyncDispatchWorker(asyncDispatchWorker),
+#endif  // _ELPP_ASYNC_LOGGING
         m_preRollOutCallback(base::defaultPreRollOutCallback) {
         // Register default logger
         m_registeredLoggers->get(std::string(base::consts::kDefaultLoggerId));
@@ -3819,16 +3915,36 @@ public:
         sysLogLogger->reconfigure();
 #else
         _ELPP_UNUSED(base::consts::kSysLogLoggerId);
-#endif  //  defined(_ELPP_SYSLOG)
+#endif //  defined(_ELPP_SYSLOG)
         addFlag(LoggingFlag::AllowVerboseIfModuleNotSpecified);
+#if _ELPP_ASYNC_LOGGING
+        installLogDispatchCallback<base::AsyncLogDispatchCallback>(std::string("AsyncLogDispatchCallback"));
+#else
         installLogDispatchCallback<base::DefaultLogDispatchCallback>(std::string("DefaultLogDispatchCallback"));
-        installPerformanceTrackingCallback<base::DefaultPerformanceTrackingCallback>(std::string("DefaultPerformanceTrackingCallback"));
-        ELPP_INTERNAL_INFO(1, "Easylogging++ has been initialized");
+#endif  // _ELPP_ASYNC_LOGGING
+            installPerformanceTrackingCallback<base::DefaultPerformanceTrackingCallback>(std::string("DefaultPerformanceTrackingCallback"));
+            ELPP_INTERNAL_INFO(1, "Easylogging++ has been initialized");
+#if _ELPP_ASYNC_LOGGING
+        m_asyncDispatchWorker->start();
+#endif  // _ELPP_ASYNC_LOGGING
     }
 
     virtual ~Storage(void) {
+        ELPP_INTERNAL_INFO(4, "Destroying storage");
+#if _ELPP_ASYNC_LOGGING
+        ELPP_INTERNAL_INFO(5, "Replacing log dispatch callback to synchronous");
+        uninstallLogDispatchCallback<base::AsyncLogDispatchCallback>(std::string("AsyncLogDispatchCallback"));
+        installLogDispatchCallback<base::DefaultLogDispatchCallback>(std::string("DefaultLogDispatchCallback"));
+        ELPP_INTERNAL_INFO(5, "Destroying asyncDispatchWorker");
+        base::utils::safeDelete(m_asyncDispatchWorker);
+        ELPP_INTERNAL_INFO(5, "Destroying asyncLogQueue");
+        base::utils::safeDelete(m_asyncLogQueue);
+#endif  // _ELPP_ASYNC_LOGGING
+        ELPP_INTERNAL_INFO(5, "Destroying registeredHitCounters");
         base::utils::safeDelete(m_registeredHitCounters);
+        ELPP_INTERNAL_INFO(5, "Destroying registeredLoggers");
         base::utils::safeDelete(m_registeredLoggers);
+        ELPP_INTERNAL_INFO(5, "Destroying vRegistry");
         base::utils::safeDelete(m_vRegistry);
     }
 
@@ -3851,10 +3967,16 @@ public:
     inline base::RegisteredLoggers* registeredLoggers(void) const {
         return m_registeredLoggers;
     }
-
+    
     inline base::VRegistry* vRegistry(void) const {
         return m_vRegistry;
     }
+
+#if _ELPP_ASYNC_LOGGING
+    inline base::AsyncLogQueue* asyncLogQueue(void) const {
+        return m_asyncLogQueue;
+    }
+#endif  // _ELPP_ASYNC_LOGGING
 
     inline const base::utils::CommandLineArgs* commandLineArgs(void) const {
         return &m_commandLineArgs;
@@ -3958,6 +4080,10 @@ private:
     base::RegisteredLoggers* m_registeredLoggers;
     base::type::EnumType m_flags;
     base::VRegistry* m_vRegistry;
+#if _ELPP_ASYNC_LOGGING
+    base::AsyncLogQueue* m_asyncLogQueue;
+    base::IWorker* m_asyncDispatchWorker;
+#endif  // _ELPP_ASYNC_LOGGING
     base::utils::CommandLineArgs m_commandLineArgs;
     PreRollOutCallback m_preRollOutCallback;
     std::map<std::string, base::type::LogDispatchCallbackPtr> m_logDispatchCallbacks;
@@ -4010,7 +4136,9 @@ private:
 
     template <typename T, typename TPtr>
     inline void uninstallCallback(const std::string& id, std::map<std::string, TPtr>* mapT) {
-        mapT->erase(id);
+        if (mapT->find(id) != mapT->end()) {
+            mapT->erase(id);
+        }
     }
 
     template <typename T, typename TPtr>
@@ -4088,6 +4216,147 @@ private:
 #endif  // defined(_ELPP_SYSLOG)
     }
 };
+#if _ELPP_ASYNC_LOGGING
+class AsyncLogDispatchCallback : public LogDispatchCallback {
+protected:
+    void handle(const LogDispatchData* data) {
+        base::type::string_t logLine = data->logMessage()->logger()->logBuilder()->build(data->logMessage(), data->dispatchAction() == base::DispatchAction::NormalLog);
+        if (data->dispatchAction() == base::DispatchAction::NormalLog && data->logMessage()->logger()->typedConfigurations()->toStandardOutput(data->logMessage()->level())) {
+            if (ELPP->hasFlag(LoggingFlag::ColoredTerminalOutput))
+                data->logMessage()->logger()->logBuilder()->convertToColoredOutput(&logLine, data->logMessage()->level());
+            ELPP_COUT << ELPP_COUT_LINE(logLine);
+        }
+        // Save resources and only queue if we want to write to file otherwise just ignore handler
+        if (data->logMessage()->logger()->typedConfigurations()->toFile(data->logMessage()->level())) {
+            //ELPP_INTERNAL_INFO(9, "Adding message to queue");
+            //TODO: use std::move?
+            ELPP->asyncLogQueue()->push(AsyncLogItem(*(data->logMessage()), *data, logLine));
+        }
+    }
+};
+class AsyncDispatchWorker : public base::IWorker, public base::threading::ThreadSafe {
+public:
+    AsyncDispatchWorker() {
+        setContinueRunning(false);
+    }
+
+    virtual ~AsyncDispatchWorker() {
+        setContinueRunning(false);
+        //pthread_cancel(m_thread);
+        ELPP_INTERNAL_INFO(6, "Stopping dispatch worker - Cleaning log queue");
+        clean();
+        ELPP_INTERNAL_INFO(6, "Log queue cleaned");
+    }
+
+    inline bool clean() {
+        std::mutex m;
+        std::unique_lock<std::mutex> lk(m);
+        cv.wait(lk, []{ return !ELPP->asyncLogQueue()->empty(); });
+        emptyQueue();
+        lk.unlock();
+        cv.notify_one();
+        return ELPP->asyncLogQueue()->empty();
+    }
+
+    inline void emptyQueue() {
+        while (!ELPP->asyncLogQueue()->empty()) {
+            AsyncLogItem data = ELPP->asyncLogQueue()->next();
+            handle(&data);
+            usleep(100);
+        }
+    }
+    
+    virtual inline void start() {
+        // Works across all platforms?
+        // Part of experimental async so this would not stop us releasing new versions
+        base::threading::sleep(5000); // Wait extra few seconds
+        setContinueRunning(true);
+        pthread_create(&m_thread, NULL, &AsyncDispatchWorker::runner, this);
+        pthread_join(m_thread, 0);
+        //std::thread t1(&AsyncDispatchWorker::runner, this);
+        //t1.join();
+    }
+
+    void handle(AsyncLogItem* logItem) {
+        LogDispatchData* data = logItem->data();
+        LogMessage* logMessage = logItem->logMessage();
+        Logger* logger = logMessage->logger();
+        base::TypedConfigurations* conf = logger->typedConfigurations();
+        base::type::string_t logLine = logItem->logLine();
+        if (data->dispatchAction() == base::DispatchAction::NormalLog) {
+            if (conf->toFile(logMessage->level())) {
+                base::type::fstream_t* fs = conf->fileStream(logMessage->level());
+                if (fs != nullptr) {
+                    fs->write(logLine.c_str(), logLine.size());
+                    if (fs->fail()) {
+                        ELPP_INTERNAL_ERROR("Unable to write log to file ["
+                            << conf->filename(logMessage->level()) << "].\n"
+                                << "Few possible reasons (could be something else):\n" << "      * Permission denied\n"
+                                << "      * Disk full\n" << "      * Disk is not writable", true);
+                    } else {
+                        if (ELPP->hasFlag(LoggingFlag::ImmediateFlush) || (logger->isFlushNeeded(logMessage->level()))) {
+                            logger->flush(logMessage->level(), fs);
+                        }
+                    }
+                } else {
+                    ELPP_INTERNAL_ERROR("Log file for [" << LevelHelper::convertToString(logMessage->level()) << "] "
+                        << "has not been configured but [TO_FILE] is configured to TRUE. [Logger ID: " << logger->id() << "]", false);
+                }
+            }
+        }
+#   if defined(_ELPP_SYSLOG)
+        else if (data->dispatchAction() == base::DispatchAction::SysLog) {
+            // Determine syslog priority
+            int sysLogPriority = 0;
+            if (logMessage->level() == Level::Fatal)
+                sysLogPriority = LOG_EMERG;
+            else if (logMessage->level() == Level::Error)
+                sysLogPriority = LOG_ERR;
+            else if (logMessage->level() == Level::Warning)
+                sysLogPriority = LOG_WARNING;
+            else if (logMessage->level() == Level::Info)
+                sysLogPriority = LOG_INFO;
+            else if (logMessage->level() == Level::Debug)
+                sysLogPriority = LOG_DEBUG;
+            else
+                sysLogPriority = LOG_NOTICE;
+#      if defined(_ELPP_UNICODE)
+            char* line = base::utils::Str::wcharPtrToCharPtr(logLine.c_str());
+            syslog(sysLogPriority, "%s", line);
+            free(line);
+#      else
+            syslog(sysLogPriority, "%s", logLine.c_str());
+#      endif
+        }
+#   endif  // defined(_ELPP_SYSLOG)
+    }
+
+    void run() {
+        while (continueRunning()) {
+            emptyQueue();
+            base::threading::sleep(1); // Wait extra few seconds
+        }
+    }
+
+    static void* runner(void *context) {
+        static_cast<AsyncDispatchWorker*>(context)->run();
+        return NULL;
+    }
+    
+    void setContinueRunning(bool value) {
+        base::threading::ScopedLock scopedLock(m_continueRunningMutex);
+        m_continueRunning = value;
+    }
+    bool continueRunning(void) {
+        return m_continueRunning;
+    }
+private:
+    pthread_t m_thread;
+    std::condition_variable cv;
+    bool m_continueRunning;
+    base::threading::Mutex m_continueRunningMutex;
+};
+#endif  // _ELPP_ASYNC_LOGGING
 }  // namespace base
 namespace base {
 class DefaultLogBuilder : public LogBuilder {
@@ -5051,9 +5320,7 @@ public:
         if (m_enabled) {
             base::threading::ScopedLock scopedLock(lock());
             base::utils::DateTime::gettimeofday(&m_endTime);            
-            base::type::string_t formattedTime = m_hasChecked ? base::utils::DateTime::formatTime(
-                    base::utils::DateTime::getTimeDifference(m_endTime, m_lastCheckpointTime, m_timestampUnit), 
-                    m_timestampUnit) : ELPP_LITERAL("");
+            base::type::string_t formattedTime = m_hasChecked ? getFormattedTimeTaken(m_lastCheckpointTime) : ELPP_LITERAL("");
             PerformanceTrackingData data(PerformanceTrackingData::DataType::Checkpoint);
             data.init(this);
             data.m_checkpointId = id;
@@ -5098,9 +5365,19 @@ private:
     friend class el::PerformanceTrackingData;
     friend class base::DefaultPerformanceTrackingCallback;
 
-    const base::type::string_t getFormattedTimeTaken() const {
+    const inline base::type::string_t getFormattedTimeTaken() const {
+		return getFormattedTimeTaken(m_startTime);
+    }
+	
+    const base::type::string_t getFormattedTimeTaken(struct timeval startTime) const {
+		if (ELPP->hasFlag(LoggingFlag::FixedTimeFormat)) {
+			base::type::stringstream_t ss;
+			ss << base::utils::DateTime::getTimeDifference(m_endTime,
+                startTime, m_timestampUnit) << " " << base::consts::kTimeFormats[static_cast<base::type::EnumType>(m_timestampUnit)].unit;
+			return ss.str();
+		}
         return base::utils::DateTime::formatTime(base::utils::DateTime::getTimeDifference(m_endTime,
-                m_startTime, m_timestampUnit), m_timestampUnit);
+                startTime, m_timestampUnit), m_timestampUnit);
     }
 
     virtual inline void log(el::base::type::ostream_t& os) const {
@@ -5673,9 +5950,9 @@ public:
 class VersionInfo : base::StaticClass {
 public:
    /// @brief Current version number
-    static inline const std::string version(void) { return std::string("9.75"); }
+    static inline const std::string version(void) { return std::string("9.77"); }
    /// @brief Release date of current version
-    static inline const std::string releaseDate(void) { return std::string("06-08-2014 1303hrs"); }
+    static inline const std::string releaseDate(void) { return std::string("21-11-2014 0915hrs"); }
 };
 }  // namespace el
 #undef VLOG_IS_ON
@@ -6198,6 +6475,7 @@ public:
 #undef CCHECK_GT
 #undef CCHECK_LE
 #undef CCHECK_GE
+#undef CCHECK_BOUNDS
 #undef CCHECK_NOTNULL
 #undef CCHECK_STRCASEEQ
 #undef CCHECK_STRCASENE
@@ -6209,6 +6487,7 @@ public:
 #undef CHECK_GT
 #undef CHECK_LE
 #undef CHECK_GE
+#undef CHECK_BOUNDS
 #undef CHECK_NOTNULL
 #undef CHECK_STRCASEEQ
 #undef CHECK_STRCASENE
@@ -6222,12 +6501,14 @@ public:
 #define CCHECK_GT(a, b, ...) CCHECK(a > b, __VA_ARGS__)
 #define CCHECK_LE(a, b, ...) CCHECK(a <= b, __VA_ARGS__)
 #define CCHECK_GE(a, b, ...) CCHECK(a >= b, __VA_ARGS__)
+#define CCHECK_BOUNDS(val, min, max, ...) CCHECK(val >= min && val <= max, __VA_ARGS__)
 #define CHECK_EQ(a, b) CCHECK_EQ(a, b, _CURRENT_FILE_LOGGER_ID)
 #define CHECK_NE(a, b) CCHECK_NE(a, b, _CURRENT_FILE_LOGGER_ID)
 #define CHECK_LT(a, b) CCHECK_LT(a, b, _CURRENT_FILE_LOGGER_ID)
 #define CHECK_GT(a, b) CCHECK_GT(a, b, _CURRENT_FILE_LOGGER_ID)
 #define CHECK_LE(a, b) CCHECK_LE(a, b, _CURRENT_FILE_LOGGER_ID)
 #define CHECK_GE(a, b) CCHECK_GE(a, b, _CURRENT_FILE_LOGGER_ID)
+#define CHECK_BOUNDS(val, min, max) CCHECK_BOUNDS(val, min, max, _CURRENT_FILE_LOGGER_ID)
 namespace el {
 namespace base {
 namespace utils {
@@ -6260,6 +6541,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggers, ...) {
 #undef DCCHECK_GT
 #undef DCCHECK_LE
 #undef DCCHECK_GE
+#undef DCCHECK_BOUNDS
 #undef DCCHECK_NOTNULL
 #undef DCCHECK_STRCASEEQ
 #undef DCCHECK_STRCASENE
@@ -6271,6 +6553,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggers, ...) {
 #undef DCHECK_GT
 #undef DCHECK_LE
 #undef DCHECK_GE
+#undef DCHECK_BOUNDS_
 #undef DCHECK_NOTNULL
 #undef DCHECK_STRCASEEQ
 #undef DCHECK_STRCASENE
@@ -6282,6 +6565,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggers, ...) {
 #define DCCHECK_GT(a, b, ...) if (_ELPP_DEBUG_LOG) CCHECK_GT(a, b, __VA_ARGS__)
 #define DCCHECK_LE(a, b, ...) if (_ELPP_DEBUG_LOG) CCHECK_LE(a, b, __VA_ARGS__)
 #define DCCHECK_GE(a, b, ...) if (_ELPP_DEBUG_LOG) CCHECK_GE(a, b, __VA_ARGS__)
+#define DCCHECK_BOUNDS(val, min, max, ...) if (_ELPP_DEBUG_LOG) CCHECK_BOUNDS(val, min, max, __VA_ARGS__)
 #define DCCHECK_NOTNULL(ptr, ...) if (_ELPP_DEBUG_LOG) CCHECK_NOTNULL(ptr, __VA_ARGS__)
 #define DCCHECK_STREQ(str1, str2, ...) if (_ELPP_DEBUG_LOG) CCHECK_STREQ(str1, str2, __VA_ARGS__)
 #define DCCHECK_STRNE(str1, str2, ...) if (_ELPP_DEBUG_LOG) CCHECK_STRNE(str1, str2, __VA_ARGS__)
@@ -6295,6 +6579,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggers, ...) {
 #define DCHECK_GT(a, b) DCCHECK_GT(a, b, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_LE(a, b) DCCHECK_LE(a, b, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_GE(a, b) DCCHECK_GE(a, b, _CURRENT_FILE_LOGGER_ID)
+#define DCHECK_BOUNDS(val, min, max) DCCHECK_BOUNDS(val, min, max, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_NOTNULL(ptr) DCCHECK_NOTNULL(ptr, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_STREQ(str1, str2) DCCHECK_STREQ(str1, str2, _CURRENT_FILE_LOGGER_ID)
 #define DCHECK_STRNE(str1, str2) DCCHECK_STRNE(str1, str2, _CURRENT_FILE_LOGGER_ID)
@@ -6316,8 +6601,15 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggers, ...) {
         el::base::debug::CrashHandler elCrashHandler(_ELPP_USE_DEF_CRASH_HANDLER);\
     }
 
-#define _INITIALIZE_EASYLOGGINGPP\
-    _ELPP_INIT_EASYLOGGINGPP(new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder())))
+#if _ELPP_ASYNC_LOGGING
+#   define _INITIALIZE_EASYLOGGINGPP\
+       _ELPP_INIT_EASYLOGGINGPP(new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder()),\
+                                                          new el::base::AsyncDispatchWorker()))\
+       
+#else
+#   define _INITIALIZE_EASYLOGGINGPP\
+       _ELPP_INIT_EASYLOGGINGPP(new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder())))
+#endif  // _ELPP_ASYNC_LOGGING
 #define _INITIALIZE_NULL_EASYLOGGINGPP\
     _ELPP_INITI_BASIC_DECLR\
     namespace el {\

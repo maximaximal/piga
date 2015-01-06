@@ -42,7 +42,7 @@ namespace PiH
 
             int m_currentHealth = 0;
             int m_maximumHealth = 0;
-            Direction m_sideOfIcons;
+            Direction m_sideOfIcons = LEFT;
             std::vector<std::unique_ptr<Image> > m_icons;
             std::shared_ptr<Texture> m_texture;
             IntRect m_fullIcon;

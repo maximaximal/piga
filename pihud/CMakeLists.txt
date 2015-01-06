@@ -63,7 +63,7 @@ set(HDRS
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(${PROJECT_NAME} ${SRCS} ${HDRS})
+add_library(${PROJECT_NAME} SHARED ${SRCS} ${HDRS})
 
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

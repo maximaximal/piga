@@ -97,6 +97,18 @@ namespace pigaco
                 if(!m_directoryScanner->getGame("BomberPi")->isRunning())
 					m_directoryScanner->getGame("BomberPi")->start();
             }
+
+            if(e.key.keysym.scancode == SDL_SCANCODE_W)
+            {
+                m_host->setInput(0, piga::GameControl::UP, true);
+            }
+        }
+        if(e.type == SDL_KEYUP)
+        {
+            if(e.key.keysym.scancode == SDL_SCANCODE_W)
+            {
+                m_host->setInput(0, piga::GameControl::UP, false);
+            }
         }
     }
     void App::onUpdate(float frametime)

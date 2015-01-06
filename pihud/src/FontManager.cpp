@@ -1,14 +1,18 @@
 #include <pihud/FontManager.hpp>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 namespace PiH
 {
     FontManager::FontManager()
     {
-
+        cout << "TEST" << endl;
     }
     FontManager::~FontManager()
     {
-
+        destroy();
     }
     std::shared_ptr<Font> FontManager::load(const std::string &fontPath)
     {
@@ -46,5 +50,18 @@ namespace PiH
             }
         }
         return false;
+    }
+    void FontManager::destroy()
+    {
+        for(auto font : m_fonts)
+        {
+            if(!font.second.expired())
+            {
+                auto sharedFont = font.second.lock();
+                sharedFont->destroy();
+                sharedFont.reset();
+            }
+        }
+        m_fonts.clear();
     }
 }

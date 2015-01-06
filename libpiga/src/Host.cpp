@@ -56,6 +56,8 @@ namespace piga
     {
         using namespace boost::interprocess;
 
+        deleteSharedMemory();
+
         managed_shared_memory shm(open_or_create,
                                   getSharedMemoryName().c_str(),
                                   1024);

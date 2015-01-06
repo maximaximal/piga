@@ -40,9 +40,9 @@ SET(SRCS
     ${SRC}/PlayerManager.cpp
 )
 
-add_library(piga ${SRCS} ${HDRS})
+add_library(piga SHARED ${SRCS} ${HDRS})
 
-find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 
 if(${Boost_FOUND})
     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
@@ -58,6 +58,7 @@ elseif()
     message(STATUS "Did not find Sigc++2! Please install it before you try to compile again.")
 endif()
 
+add_dependencies(piga pihud)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../pihud pihud)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../pihud/include)
 

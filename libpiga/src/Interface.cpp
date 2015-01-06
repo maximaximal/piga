@@ -80,7 +80,16 @@ namespace piga
 			return externalGameInput->pollEvent(event);
         else
         {
-
+            if(events.size() > 0)
+            {
+                event = events.front();
+                events.pop_front();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
     bool Interface::isSelfhosted()
@@ -103,9 +112,17 @@ namespace piga
 
             GameEvent e;
 
+            if(m_playerInputs.size() != p.second)
+            {
+                m_playerInputs.resize(p.second);
+            }
+
             for(std::size_t i = 0; i < p.second; ++i)
             {
-				while(e.first[i].)
+                while(p.first[i].pollEvents(m_playerInputs[i], e))
+                {
+                    events.push_back(e);
+                }
             }
         }
     }

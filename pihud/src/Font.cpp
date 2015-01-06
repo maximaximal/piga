@@ -13,10 +13,7 @@ namespace PiH
     }
     Font::~Font()
     {
-     	if(m_font != nullptr)
-        {
-            TTF_CloseFont(m_font);
-        }
+        destroy();
     }
     void Font::load(const std::string &fontPath)
     {
@@ -28,8 +25,10 @@ namespace PiH
         }
 
         m_ptSize = ptSize;
+        m_fontID = fontPath;
+        m_fontPath = fontPath.substr(0, fontPath.find(":"));
 
-        m_font = TTF_OpenFont(fontPath.substr(0, fontPath.find(":")).c_str(), ptSize);
+        m_font = TTF_OpenFont(m_fontPath.c_str(), ptSize);
         if(!m_font)
         {
             cout << "Error opening font! (TTF_OpenFont Error: " << TTF_GetError() << endl;
@@ -43,5 +42,13 @@ namespace PiH
     int Font::getPtSize()
     {
         return m_ptSize;
+    }
+    void Font::destroy()
+    {
+        if(m_font != nullptr)
+        {
+            TTF_CloseFont(m_font);
+            m_font = nullptr;
+        }
     }
 }
