@@ -25,6 +25,9 @@ SET(HDRS
     ${HDR}/GameHost.hpp
     ${HDR}/Status.hpp
     ${HDR}/PlayerManager.hpp
+
+    ${HDR}/Events/GameInput.hpp
+    ${HDR}/Events/TextInput.hpp
 )
 
 SET(SRCS
@@ -40,6 +43,9 @@ SET(SRCS
     ${SRC}/GameHost.cpp
     ${SRC}/Status.cpp
     ${SRC}/PlayerManager.cpp
+
+    ${SRC}/Events/GameInput.cpp
+    ${SRC}/Events/TextInput.cpp
 )
 
 add_library(piga SHARED ${SRCS} ${HDRS})

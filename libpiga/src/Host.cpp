@@ -29,7 +29,7 @@ namespace piga
         GameEvent event;
         while(gameInput->pollEvent(event))
         {
-            p.first[event.getPlayerID()].fromGameEvent(event);
+            p.first[event.playerID()].fromGameEvent(event);
         }
     }
     void Host::setInput(unsigned int playerID, GameControl control, bool state)

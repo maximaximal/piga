@@ -3,6 +3,9 @@
 
 #include <piga/GameControl.hpp>
 
+#include <piga/Events/GameInput.hpp>
+#include <piga/Events/TextInput.hpp>
+
 namespace piga
 {
     /**
@@ -13,25 +16,38 @@ namespace piga
     class GameEvent
     {
         public:
-            GameEvent(GameControl control, bool state, int playerID);
+            enum GameEventType {
+                GameInput,
+                TextInput,
+                Undefined,
+
+                _COUNT
+            };
+
+
             GameEvent(const GameEvent &gameEvent);
-            GameEvent();
+            GameEvent(int playerID = 0);
+            GameEvent(int playerID, const event::GameInput &gameInput);
+            GameEvent(int playerID, const event::TextInput &textInput);
             virtual ~GameEvent();
 
-            bool isActive() const;
-            GameControl getControl() const;
-            int getPlayerID() const;
-            void setControl(GameControl control);
-            void setState(bool state);
+            void setPlayerID(int playerID);
+            int playerID() const;
+            GameEventType type() const;
 
-            bool operator==(const GameControl &rightControl) const;
-            bool operator==(int playerID) const;
-            void operator=(const GameEvent &right);
-            operator bool() const;
+            union
+            {
+                event::GameInput gameInput;
+                event::TextInput textInput;
+            };
+
+            GameEvent& operator=(const GameEvent &otherEvent);
+
+            void operator=(const event::GameInput &gameInput);
+            void operator=(const event::TextInput &textInput);
         private:
-            GameControl m_control;
-            bool m_state;
             int m_playerID;
+            GameEventType m_type;
     };
 }
 

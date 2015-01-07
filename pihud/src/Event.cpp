@@ -23,13 +23,17 @@ namespace PiH
     }
     Event::Event(const piga::GameEvent &gameEvent)
     {
-        if(gameEvent.getControl() == piga::DOWN
-                || gameEvent.getControl() == piga::LEFT
-                || gameEvent.getControl() == piga::RIGHT
-                || gameEvent.getControl() == piga::UP)
+        if(gameEvent.type() == piga::GameEvent::GameInput)
+        {
+
+        }
+        if(gameEvent.gameInput.control() == piga::DOWN
+                || gameEvent.gameInput.control() == piga::LEFT
+                || gameEvent.gameInput.control() == piga::RIGHT
+                || gameEvent.gameInput.control() == piga::UP)
         {
             type = EventType::Direction;
-            dir = DirectionEvent(gameEvent.getControl(), gameEvent);
+            dir = DirectionEvent(gameEvent.gameInput.control(), gameEvent.gameInput.state());
         }
     }
     Event::~Event()

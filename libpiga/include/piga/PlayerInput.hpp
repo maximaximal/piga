@@ -7,6 +7,8 @@
 #include <piga/InputMethod.hpp>
 #include <piga/GameEvent.hpp>
 
+#include <boost/interprocess/detail/atomic.hpp>
+
 namespace piga 
 {
     class GameInput;
@@ -16,22 +18,53 @@ namespace piga
      *
      * The direction maximum is 100000, minimum is 0.
      */
-    struct PlayerInputStruct
+    class PlayerInputStruct
     {
-        int up = 0;
-        int down = 0;
-        int left = 0;
-        int right = 0;
-        bool action = false;
-    	bool button1 = false;
-        bool button2 = false;
-        bool button3 = false;
-        bool button4 = false;
-        bool button5 = false;
-        bool button6 = false;
-        void fromGameEvent(GameEvent &e);
-        void fromGameEvent(const GameControl &control, bool state);
-        bool pollEvents(PlayerInputStruct &oldInputs, GameEvent &e);
+        public:
+            PlayerInputStruct();
+            virtual ~PlayerInputStruct();
+
+            void fromGameEvent(GameEvent &e);
+            void fromGameEvent(const GameControl &control, bool state);
+            bool pollEvents(PlayerInputStruct &oldInputs, GameEvent &e);
+
+            void setUp(int val);
+            void setDown(int val);
+            void setLeft(int val);
+            void setRight(int val);
+            void setAction(bool state);
+            void setButton1(bool state);
+            void setButton2(bool state);
+            void setButton3(bool state);
+            void setButton4(bool state);
+            void setButton5(bool state);
+            void setButton6(bool state);
+
+            int up();
+            int down();
+            int left();
+            int right();
+            bool action();
+            bool button1();
+            bool button2();
+            bool button3();
+            bool button4();
+            bool button5();
+            bool button6();
+        private:
+            void setLikeBoolean(volatile boost::uint32_t *number, bool state);
+            bool getLikeBoolean(volatile boost::uint32_t *number);
+            volatile boost::uint32_t m_up = 0;
+            volatile boost::uint32_t m_down = 0;
+            volatile boost::uint32_t m_left = 0;
+            volatile boost::uint32_t m_right = 0;
+            volatile boost::uint32_t m_action = 0;
+            volatile boost::uint32_t m_button1 = 0;
+            volatile boost::uint32_t m_button2 = 0;
+            volatile boost::uint32_t m_button3 = 0;
+            volatile boost::uint32_t m_button4 = 0;
+            volatile boost::uint32_t m_button5 = 0;
+            volatile boost::uint32_t m_button6 = 0;
     };
 
     /**

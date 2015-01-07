@@ -2,18 +2,22 @@
 
 namespace piga
 {
-    GameEvent::GameEvent(GameControl control, bool state, int playerID)
-        : m_control(control), m_state(state), m_playerID(playerID)
-    {
-
-    }
     GameEvent::GameEvent(const GameEvent &gameEvent)
-        : m_control(gameEvent.getControl()), m_state(gameEvent.isActive()), m_playerID(gameEvent.getPlayerID())
+    {
+        (*this) = gameEvent;
+    }
+    GameEvent::GameEvent(int playerID)
+        : m_playerID(playerID), m_type(GameEventType::Undefined)
     {
 
     }
-    GameEvent::GameEvent()
-        : GameEvent(GameControl::ACTION, false, 0)
+    GameEvent::GameEvent(int playerID, const event::GameInput &gameInput)
+        : m_playerID(playerID), gameInput(gameInput), m_type(GameEventType::GameInput)
+    {
+
+    }
+    GameEvent::GameEvent(int playerID, const event::TextInput &textInput)
+        : m_playerID(playerID), textInput(textInput), m_type(GameEventType::TextInput)
     {
 
     }
@@ -21,48 +25,44 @@ namespace piga
     {
 
     }
-    bool GameEvent::isActive() const
+    void GameEvent::setPlayerID(int playerID)
     {
-        return m_state;
+        m_playerID = playerID;
     }
-    GameControl GameEvent::getControl() const
-    {
-        return m_control;
-    }
-    int GameEvent::getPlayerID() const
+    int GameEvent::playerID() const
     {
         return m_playerID;
     }
-    void GameEvent::setControl(GameControl control)
+    GameEvent::GameEventType GameEvent::type() const
     {
-        m_control = control;
+        return m_type;
     }
-    void GameEvent::setState(bool state)
+    GameEvent &GameEvent::operator=(const GameEvent &otherEvent)
     {
-        m_state = state;
-    }
-    bool GameEvent::operator==(const GameControl &rightControl) const
-    {
-        if(getControl() == rightControl)
-            return true;
-        return false;
-    }
-    bool GameEvent::operator==(int playerID) const
-    {
-        if(getPlayerID() == playerID)
+        m_playerID = otherEvent.playerID();
+        m_type = otherEvent.type();
+        switch(otherEvent.type())
         {
-            return true;
+            case GameInput:
+                gameInput = otherEvent.gameInput;
+                break;
+            case TextInput:
+                textInput = otherEvent.textInput;
+                break;
+            default:
+                //Do nothing
+                break;
         }
-        return false;
+        return *this;
     }
-    void GameEvent::operator=(const GameEvent &right)
+    void GameEvent::operator=(const event::GameInput &gameInput)
     {
-        m_state = right.isActive();
-        m_control = right.getControl();
-        m_playerID = right.getPlayerID();
+        this->gameInput = gameInput;
+        m_type = GameInput;
     }
-    piga::GameEvent::operator bool() const
+    void GameEvent::operator=(const event::TextInput &textInput)
     {
-        return this->isActive();
+        this->textInput = textInput;
+        m_type = TextInput;
     }
 }
