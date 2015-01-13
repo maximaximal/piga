@@ -13,18 +13,6 @@ namespace pigaco
     }
     Window::~Window()
     {
-		// Clean the SDL objects.
-		if(m_window != nullptr)
-        {
-			SDL_DestroyWindow(m_window);
-            SDL_GL_DeleteContext(m_glContext);
-            m_window = nullptr;
-        }
-        if(m_renderer != nullptr)
-        {
-            SDL_DestroyRenderer(m_renderer);
-            m_renderer = nullptr;
-        }
         if(m_SDLImageInitialized)
             IMG_Quit();
         if(TTF_WasInit())
@@ -36,6 +24,9 @@ namespace pigaco
     }
     int Window::init(const glm::ivec2 &windowSize, bool fullscreen)
     {
+        m_windowSize = windowSize;
+        m_fullscreen = fullscreen;
+
 		LOG(INFO) << "Initializing Window (" << windowSize.x << "x" << windowSize.y << ")";
 		if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		{
@@ -108,6 +99,29 @@ namespace pigaco
         {
             ((GLFunction_ClearColor) m_glClearColor)(0, 0, 0, 1);
             ((GLFunction_Clear) m_glClear)(m_window);
+        }
+    }
+    void Window::deepsleep()
+    {
+		this->destroy();
+    }
+    void Window::deepwake()
+    {
+        this->init(m_windowSize, m_fullscreen);
+    }
+    void Window::destroy()
+    {
+		// Clean the SDL objects.
+		if(m_window != nullptr)
+        {
+			SDL_DestroyWindow(m_window);
+            SDL_GL_DeleteContext(m_glContext);
+            m_window = nullptr;
+        }
+        if(m_renderer != nullptr)
+        {
+            SDL_DestroyRenderer(m_renderer);
+            m_renderer = nullptr;
         }
     }
     SDL_Renderer *Window::getSDLRenderer()

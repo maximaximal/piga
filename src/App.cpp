@@ -53,7 +53,7 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), false);
+        m_window->init(glm::ivec2(800, 600), true);
 
         PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
         config->setupDefaultConfig();
@@ -98,6 +98,7 @@ namespace pigaco
                 {
                     m_directoryScanner->getGame("BomberPi")->start();
                     m_host->setCurrentGameHost(m_directoryScanner->getGame("BomberPi"));
+                    this->sleepWindow();
                 }
             }
 
@@ -126,11 +127,26 @@ namespace pigaco
         SDL_GL_SwapWindow(m_window->getSDLWindow());
         SDL_RenderPresent(m_window->getSDLRenderer());
 
+        if(m_isSleeping && !m_host->gameIsRunning())
+        {
+            wakeupWindow();
+        }
+
         LOG_EVERY_N(60, INFO) << "Is game running: " << m_host->gameIsRunning();
     }
     bool App::end()
     {
         return m_end;
+    }
+    void App::sleepWindow()
+    {
+        m_isSleeping = true;
+        m_window->deepsleep();
+    }
+    void App::wakeupWindow()
+    {
+        m_isSleeping = false;
+        m_window->deepwake();
     }
     void App::setEnd(bool state)
     {

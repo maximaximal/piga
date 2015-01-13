@@ -28,6 +28,9 @@ namespace pigaco
             void onUpdate(float frametime);
 
             bool end();
+
+            void sleepWindow();
+            void wakeupWindow();
         protected:
             void setEnd(bool state = true);
             virtual void onGameEvent(const piga::GameEvent &gameEvent, float frametime);
@@ -43,5 +46,6 @@ namespace pigaco
             PiH::HudContainer *m_hudContainer = nullptr;
 
             bool m_end = false;
+            bool m_isSleeping = false;
     };
 }

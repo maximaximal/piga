@@ -29,6 +29,11 @@ namespace pigaco
         glm::ivec2 getSize();
 
         void glClear();
+
+        void deepsleep();
+        void deepwake();
+
+        void destroy();
     private:
         typedef void (*GLFunction_ClearColor)(float , float, float, float);
         typedef void (*GLFunction_Clear)(SDL_Window*);
@@ -42,6 +47,9 @@ namespace pigaco
 
         void* m_glClearColor = nullptr;
         void* m_glClear = nullptr;
+
+        glm::ivec2 m_windowSize;
+       	bool m_fullscreen;
     };
 }
 
