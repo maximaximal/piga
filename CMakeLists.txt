@@ -27,19 +27,19 @@ add_executable(pigaco ${SRCS} ${HDRS})
 
 find_package(SDL2)
 if(${SDL2_FOUND})
-    target_link_libraries(pigaco ${SDL2_LIBRARIES})
+    target_link_libraries(pigaco ${SDL2_LIBRARY})
     include_directories(${SDL2_INCLUDE_DIRS})
 endif()
 
 find_package(SDL2image)
 if(${SDL2IMAGE_FOUND})
-    target_link_libraries(pigaco ${SDL2IMAGE_LIBRARIES})
+    target_link_libraries(pigaco ${SDL2IMAGE_LIBRARY})
     include_directories(${SDL2IMAGE_INCLUDE_DIRS})
 endif()
 
 find_package(SDL2ttf)
 if(${SDL2TTF_FOUND})
-    target_link_libraries(pigaco ${SDL2TTF_LIBRARIES})
+    target_link_libraries(pigaco ${SDL2TTF_LIBRARY})
     include_directories(${SDL2TTF_INCLUDE_DIRS})
 endif()
 
