@@ -25,13 +25,23 @@ SET(SRCS
 
 add_executable(pigaco ${SRCS} ${HDRS})
 
-# Add SDL2 and SDL_image
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf)
+find_package(SDL2)
+if(${SDL2_FOUND})
+    target_link_libraries(pigaco ${SDL2_LIBRARIES})
+    include_directories(${SDL2_INCLUDE_DIRS})
+endif()
 
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(pigaco ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2TTF_LIBRARIES})
+find_package(SDL2image)
+if(${SDL2IMAGE_FOUND})
+    target_link_libraries(pigaco ${SDL2IMAGE_LIBRARIES})
+    include_directories(${SDL2IMAGE_INCLUDE_DIRS})
+endif()
+
+find_package(SDL2ttf)
+if(${SDL2TTF_FOUND})
+    target_link_libraries(pigaco ${SDL2TTF_LIBRARIES})
+    include_directories(${SDL2TTF_INCLUDE_DIRS})
+endif()
 
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 
