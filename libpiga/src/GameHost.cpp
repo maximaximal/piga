@@ -25,7 +25,7 @@ namespace piga
     void GameHost::loadFromDirectory(const std::string &directory)
     {
 		setConfig(Directory, directory);
-        LOG(INFO) << "Loading game from \"" << directory << "\"." << endl;
+        cout << PIGA_DEBUG_PRESTRING << "Loading game from \"" << directory << "\"." << endl;
 
         YAML::Node config;
 
@@ -98,7 +98,7 @@ namespace piga
         }
         else
         {
-            LOG(WARNING) << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
+            cout << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
                       << "\" is not valid and cannot be started!" << endl;
         }
     }
