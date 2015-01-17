@@ -1,8 +1,12 @@
 #include <piga/GameHost.hpp>
 #include <sstream>
-#include <easylogging++.h>
 #include <yaml-cpp/yaml.h>
 #include <boost/filesystem.hpp>
+#include <iostream>
+#include <piga/Definitions.hpp>
+
+using std::cout;
+using std::endl;
 
 namespace piga
 {
@@ -21,7 +25,7 @@ namespace piga
     void GameHost::loadFromDirectory(const std::string &directory)
     {
 		setConfig(Directory, directory);
-        LOG(INFO) << "Loading game from \"" << directory << "\".";
+        LOG(INFO) << "Loading game from \"" << directory << "\"." << endl;
 
         YAML::Node config;
 
@@ -29,7 +33,7 @@ namespace piga
 			config = YAML::LoadAllFromFile(directory + "/config.yml").front();
         }
         catch(std::exception &e) {
-            LOG(FATAL) << "The config.yml in \"" << directory << "\" could not be loaded!";
+            cout << PIGA_DEBUG_PRESTRING << "The config.yml in \"" << directory << "\" could not be loaded!" << endl;
             return;
         }
 
@@ -38,7 +42,7 @@ namespace piga
         else
         {
             setConfig(Name, "Unnamed");
-            LOG(WARNING) << "The config.yml in \"" << directory << "\" has no Name node!";
+            cout << PIGA_DEBUG_PRESTRING << "The config.yml in \"" << directory << "\" has no Name node!" << endl;
         }
 
         if(config["Parameters"])
@@ -46,7 +50,7 @@ namespace piga
         else
         {
             setConfig(Parameters, "");
-            LOG(WARNING) << "The config.yml in \"" << directory << "\" has no Parameters node!";
+            cout << PIGA_DEBUG_PRESTRING << "The config.yml in \"" << directory << "\" has no Parameters node!" << endl;
         }
 
         if(config["ProgramPath"])
@@ -54,11 +58,11 @@ namespace piga
         else
         {
             setConfig(ProgramPath, "Client");
-            LOG(WARNING) << "The config.yml in \"" << directory << "\" has no ProgramPath node!";
+            cout << PIGA_DEBUG_PRESTRING << "The config.yml in \"" << directory << "\" has no ProgramPath node!" << endl;
         }
 
-        LOG(INFO) << "Loaded game \"" << getConfig(Name) << "\" from directory \"" << directory
-                  << "\".";
+        cout << PIGA_DEBUG_PRESTRING << "Loaded game \"" << getConfig(Name) << "\" from directory \"" << directory
+                  << "\"." << endl;
     }
     void GameHost::start()
     {
@@ -66,11 +70,11 @@ namespace piga
         {
             if(isRunning())
             {
-				LOG(WARNING) << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
-						  << "\" is already running!";
+				cout << PIGA_DEBUG_PRESTRING << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
+						  << "\" is already running!" << endl;
                 return;
             }
-			LOG(INFO) << "Starting program \"" << getConfig(Name) << "\"";
+			cout << PIGA_DEBUG_PRESTRING << "Starting program \"" << getConfig(Name) << "\"" << endl;
 
             m_currentPath = boost::filesystem::current_path().string();
             boost::filesystem::current_path(getConfig(Directory));
@@ -83,19 +87,19 @@ namespace piga
 
 			std::string systemCmd = command.str();
 
-			LOG(INFO) << "Using Command: \"" << systemCmd << "\"";
+			cout << PIGA_DEBUG_PRESTRING << "Using Command: \"" << systemCmd << "\"" << endl;
 
 			system(systemCmd.c_str());
             m_running = true;
 
             boost::filesystem::current_path(m_currentPath);
 
-            LOG(INFO) << "======= Command Executed! =======";
+            cout << PIGA_DEBUG_PRESTRING << "======= Command Executed! =======" << endl;
         }
         else
         {
             LOG(WARNING) << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
-                      << "\" is not valid and cannot be started!";
+                      << "\" is not valid and cannot be started!" << endl;
         }
     }
     void GameHost::exit()
