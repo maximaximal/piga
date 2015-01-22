@@ -25,6 +25,7 @@ SET(HDRS
     ${HDR}/GameHost.hpp
     ${HDR}/Status.hpp
     ${HDR}/PlayerManager.hpp
+    ${HDR}/SharedLibWrapper.hpp
 
     ${HDR}/Events/GameInput.hpp
     ${HDR}/Events/TextInput.hpp
@@ -43,6 +44,8 @@ SET(SRCS
     ${SRC}/GameHost.cpp
     ${SRC}/Status.cpp
     ${SRC}/PlayerManager.cpp
+    ${SRC}/SharedLibWrapper.cpp
+    ${SRC}/GameControl.cpp
 
     ${SRC}/Events/GameInput.cpp
     ${SRC}/Events/TextInput.cpp
@@ -57,6 +60,15 @@ if(${Boost_FOUND})
     target_link_libraries(piga ${Boost_LIBRARIES})
 endif()
 
+# Add yaml-cpp
+find_package(YamlCpp)
+if(${YAMLCPP_FOUND})
+    target_link_libraries(piga ${YAMLCPP_LIBRARY})
+    include_directories(${YAMLCPP_INCLUDE_DIR})
+elseif()
+    message(STATUS "Did not find Yaml-Cpp! This binary can not be used as server.")
+endif()
+
 # Add sigc++2
 find_package(SigC++ REQUIRED)
 if(${SIGC++_FOUND})
@@ -69,6 +81,7 @@ endif()
 add_dependencies(piga pihud)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../pihud pihud)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../pihud/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hosts/)
 
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

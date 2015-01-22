@@ -2,7 +2,9 @@
 #define LIBPIGA_PIGA_HOST_HPP_INCLUDED
 
 #include <piga/GameInput.hpp>
+#include <piga/SharedLibWrapper.hpp>
 #include <boost/interprocess/mapped_region.hpp>
+#include <vector>
 
 namespace piga
 {
@@ -16,7 +18,7 @@ namespace piga
     class Host
     {
         public:
-            Host();
+            Host(const std::string &configFile);
             virtual ~Host();
 
             void init();
@@ -29,6 +31,8 @@ namespace piga
 
             bool gameIsRunning();
 
+            void update(float frametime);
+
             static const char* getInputSharedMemoryName();
             static const char* getStatusSharedMemoryName();
         protected:
@@ -39,6 +43,8 @@ namespace piga
             unsigned int m_playerCount = 2;
             unsigned int m_buttonCount = 11;
             std::shared_ptr<GameHost> m_currentGameHost;
+            std::vector<std::shared_ptr<SharedLibWrapper> > m_sharedLibs;
+            std::string m_configFile;
     };
 }
 

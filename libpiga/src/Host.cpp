@@ -4,19 +4,36 @@
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <yaml-cpp/yaml.h>
+
 namespace piga
 {
-    Host::Host()
+    Host::Host(const std::string &configFile)
+        : m_configFile(configFile)
     {
 
     }
     Host::~Host()
     {
+        m_sharedLibs.clear();
         deleteSharedMemory();
     }
     void Host::init()
     {
+        m_sharedLibs.clear();
+
         createSharedMemory();
+
+        YAML::Node doc = YAML::LoadAllFromFile(m_configFile).front();
+        if(doc["hosts"])
+        {
+            for(YAML::const_iterator it = doc["hosts"].begin(); it != doc["hosts"].end(); ++it)
+            {
+                std::shared_ptr<SharedLibWrapper> sharedLib = std::make_shared<SharedLibWrapper>((*it).as<std::string>());
+                sharedLib->init(m_playerCount);
+                m_sharedLibs.push_back(sharedLib);
+            }
+        }
     }
     void Host::applyFromGameInput(GameInput *gameInput)
     {
@@ -86,6 +103,19 @@ namespace piga
             }
         }
         return status->isRunning();
+    }
+    void Host::update(float frametime)
+    {
+        for(std::size_t i = 0; i < m_playerCount; ++i)
+        {
+            for(unsigned int control = GameControl::UP; control < GameControl::_COUNT; ++control)
+            {
+                for(auto sharedLibWrapper : m_sharedLibs)
+                {
+                    sharedLibWrapper->query(this, i, static_cast<GameControl>(control));
+                }
+            }
+        }
     }
     const char *Host::getInputSharedMemoryName()
     {

@@ -69,6 +69,7 @@ ExternalProject_Add(GLM_Project
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
+    CMAKE_ARGS -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
 )
 
 add_dependencies(pigaco GLM_Project)

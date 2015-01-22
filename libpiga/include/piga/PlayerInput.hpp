@@ -51,6 +51,18 @@ namespace piga
             bool button4();
             bool button5();
             bool button6();
+
+            void invertUp();
+            void invertDown();
+            void invertLeft();
+            void invertRight();
+            void invertAction();
+            void invertButton1();
+            void invertButton2();
+            void invertButton3();
+            void invertButton4();
+            void invertButton5();
+            void invertButton6();
         private:
             void setLikeBoolean(volatile boost::uint32_t *number, bool state);
             bool getLikeBoolean(volatile boost::uint32_t *number);

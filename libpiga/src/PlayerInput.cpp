@@ -270,6 +270,50 @@ namespace piga
     {
         return getLikeBoolean(&m_button6);
     }
+    void PlayerInputStruct::invertUp()
+    {
+        setUp(100000 - up());
+    }
+    void PlayerInputStruct::invertDown()
+    {
+        setDown(100000 - down());
+    }
+    void PlayerInputStruct::invertLeft()
+    {
+        setLeft(1000000 - left());
+    }
+    void PlayerInputStruct::invertRight()
+    {
+        setRight(100000 - right());
+    }
+    void PlayerInputStruct::invertAction()
+    {
+        setAction(!getLikeBoolean(&m_action));
+    }
+    void PlayerInputStruct::invertButton1()
+    {
+        setButton1(!getLikeBoolean(&m_button1));
+    }
+    void PlayerInputStruct::invertButton2()
+    {
+        setButton2(!getLikeBoolean(&m_button2));
+    }
+    void PlayerInputStruct::invertButton3()
+    {
+        setButton3(!getLikeBoolean(&m_button3));
+    }
+    void PlayerInputStruct::invertButton4()
+    {
+        setButton4(!getLikeBoolean(&m_button4));
+    }
+    void PlayerInputStruct::invertButton5()
+    {
+        setButton5(!getLikeBoolean(&m_button5));
+    }
+    void PlayerInputStruct::invertButton6()
+    {
+        setButton6(!getLikeBoolean(&m_button6));
+    }
     void PlayerInputStruct::setLikeBoolean(volatile uint32_t *number, bool state)
     {
         if(state)

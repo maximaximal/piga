@@ -16,7 +16,7 @@ namespace pigaco
     App::App()
     {
         LOG(INFO) << "Initializing PiGaCo app.";
-        m_host = std::make_shared<piga::Host>();
+        m_host = std::make_shared<piga::Host>("config.yml");
     }
     App::~App()
     {
@@ -70,6 +70,7 @@ namespace pigaco
         {
             frameTimePoint = std::chrono::high_resolution_clock::now();
 
+            SDL_PumpEvents();
             while(SDL_PollEvent(&e) != 0)
             {
                 if(e.type == SDL_QUIT)
@@ -117,8 +118,10 @@ namespace pigaco
     }
     void App::onUpdate(float frametime)
     {
+        m_host->update(frametime);
         m_gameInput->update();
         m_host->applyFromGameInput(m_gameInput.get());
+
 
         m_window->glClear();
         SDL_SetRenderDrawColor(m_window->getSDLRenderer(), 0, 0, 0, 0);

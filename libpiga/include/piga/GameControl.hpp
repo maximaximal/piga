@@ -21,6 +21,9 @@ namespace piga
         
         _COUNT
     };
+
+    int GameControlToHostDefine(GameControl control);
+    GameControl HostDefineToGameControl(int define);
 }
 
 #endif
