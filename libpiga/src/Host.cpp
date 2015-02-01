@@ -9,6 +9,7 @@
 
 #include <google/protobuf/message_lite.h>
 #include <libpiga_handshake.pb.h>
+#include <input.pb.h>
 
 using std::cout;
 using std::endl;
@@ -277,6 +278,46 @@ namespace piga
 
             ENetPacket *packet = enet_packet_create(&buffer[0u], buffer.length(), ENET_PACKET_FLAG_RELIABLE);
             enet_peer_send(peer, 0, packet);
+        }
+    }
+    void Host::receivePacket(ENetPacket *packet, ENetPeer *peer)
+    {
+        std::string buffer(packet->data, packet->data + packet->dataLength);
+        std::string packetType = buffer.substr(0, 5);
+        buffer.erase(0, 5);
+
+        if(packetType == "INPUT")
+        {
+            ::Input input;
+            input.ParseFromString(buffer);
+
+            piga::GameControl control;
+
+            switch(input.control())
+            {
+                case ::GameControl::ACTION:
+                    control = piga::GameControl::ACTION;
+                    break;
+                case ::GameControl::UP:
+                    control = piga::GameControl::UP;
+                    break;
+                case ::GameControl::DOWN:
+                    control = piga::GameControl::DOWN;
+                    break;
+                case ::GameControl::LEFT:
+                    control = piga::GameControl::LEFT;
+                    break;
+                case ::GameControl::RIGHT:
+                    control = piga::GameControl::RIGHT;
+                    break;
+            }
+
+            bool state = false;
+
+            if(input.input() > 0)
+                state = true;
+
+            setInput(input.playerid(), control, state);
         }
     }
 }

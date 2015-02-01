@@ -46,6 +46,7 @@ namespace piga
             unsigned int m_playerCount = 2;
             unsigned int m_buttonCount = 11;
             void sendHandshakePacket(ENetPeer *peer);
+            void receivePacket(ENetPacket *packet, ENetPeer *peer);
             std::shared_ptr<GameHost> m_currentGameHost;
             std::shared_ptr<PlayerManager> m_playerManager;
             std::vector<std::shared_ptr<SharedLibWrapper> > m_sharedLibs;
