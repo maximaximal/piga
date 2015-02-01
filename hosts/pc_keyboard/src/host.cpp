@@ -117,6 +117,22 @@ extern "C"
     }
 }
 
+extern "C"
+{
+    const char* getName()
+    {
+        return "PC-Keyboard Mapping";
+    }
+    const char* getDescription()
+    {
+        return "This host maps the normal keyboard to piga controls.";
+    }
+    const char* getAuthor()
+    {
+        return "maximaximal";
+    }
+}
+
 int destroy()
 {
     //Nothing to do.

@@ -80,6 +80,18 @@ extern "C"
     {
         return HOST_VERSION_MINI;
     }
+    /**
+     * Returns the name of the host. (Set by the host programmer.)
+     */
+    const char* getName();
+    /**
+     * Returns the description of the host. (Set by the host programmer.)
+     */
+    const char* getDescription();
+    /**
+     * @brief Returns the author of the host. (Set by the host programmer.)
+     */
+    const char* getAuthor();
 }
 
 #endif

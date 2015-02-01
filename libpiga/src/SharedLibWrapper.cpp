@@ -16,7 +16,23 @@ namespace piga
     SharedLibWrapper::SharedLibWrapper(const std::string &sharedObject)
         : m_sharedObject(sharedObject)
     {
+        //Try to open the handle.
+        m_dlHandle = dlopen(sharedObject.c_str(), RTLD_LAZY);
 
+        if(m_dlHandle != nullptr)
+        {
+            //Load informational functions.
+            m_getMajorVersion = dlsym(m_dlHandle, "getMajorVersion");
+            m_getMinorVersion = dlsym(m_dlHandle, "getMinorVersion");
+            m_getMiniVersion = dlsym(m_dlHandle, "getMiniVersion");
+            m_getName = dlsym(m_dlHandle, "getName");
+            m_getDescription = dlsym(m_dlHandle, "getDescription");
+            m_getAuthor = dlsym(m_dlHandle, "getAuthor");
+        }
+        else
+        {
+            cout << PIGA_DEBUG_PRESTRING << "The shared object \"" << sharedObject << "\" could not be loaded!" << endl;
+        }
     }
     SharedLibWrapper::~SharedLibWrapper()
     {
@@ -29,13 +45,16 @@ namespace piga
         m_dlHandle = dlopen(m_sharedObject.c_str(), RTLD_LAZY);
 
         //Load functions
-        m_getMajorVersion = dlsym(m_dlHandle, "getMajorVersion");
-        m_getMinorVersion = dlsym(m_dlHandle, "getMinorVersion");
-        m_getMiniVersion = dlsym(m_dlHandle, "getMiniVersion");
         m_getButtonState = dlsym(m_dlHandle, "getButtonState");
         m_setGameInput = dlsym(m_dlHandle, "setGameInput");
         m_init = dlsym(m_dlHandle, "init");
         m_destroy = dlsym(m_dlHandle, "destroy");
+        m_getMajorVersion = dlsym(m_dlHandle, "getMajorVersion");
+        m_getMinorVersion = dlsym(m_dlHandle, "getMinorVersion");
+        m_getMiniVersion = dlsym(m_dlHandle, "getMiniVersion");
+        m_getName = dlsym(m_dlHandle, "getName");
+        m_getDescription = dlsym(m_dlHandle, "getDescription");
+        m_getAuthor = dlsym(m_dlHandle, "getAuthor");
 
         if(test())
         {
@@ -63,7 +82,7 @@ namespace piga
                     m_type = Undefined;
                     break;
             }
-            cout << PIGA_DEBUG_PRESTRING << "Loaded shared object with the API-Version " << getMajorVersion() << "." << getMinorVersion() << "." << getMiniVersion()
+            cout << PIGA_DEBUG_PRESTRING << "Loaded shared object \"" << getName() << "\" with the API-Version " << getMajorVersion() << "." << getMinorVersion() << "." << getMiniVersion()
                  << " - piga is running on " << HOST_VERSION_MAJOR << "." << HOST_VERSION_MINOR << "." << HOST_VERSION_MINI << "." << endl;
         }
         else
@@ -93,6 +112,8 @@ namespace piga
     {
         if(m_dlHandle != nullptr)
         {
+            cout << PIGA_DEBUG_PRESTRING << "Destroyed shared library \"" << getName() << "\"." << endl;
+
             dlclose(m_dlHandle);
             m_dlHandle = nullptr;
 
@@ -103,8 +124,9 @@ namespace piga
             m_destroy = nullptr;
             m_getButtonState = nullptr;
             m_setGameInput = nullptr;
-
-            cout << PIGA_DEBUG_PRESTRING << "Destroyed shared library." << endl;
+            m_getName = nullptr;
+            m_getDescription = nullptr;
+            m_getAuthor = nullptr;
         }
     }
     int SharedLibWrapper::getMajorVersion()
@@ -119,13 +141,32 @@ namespace piga
     {
         return ((GetMiniVersion) m_getMiniVersion)();
     }
+    const char* SharedLibWrapper::getName()
+    {
+        if(m_getName != nullptr)
+            return ((GetString) m_getName)();
+        else
+            return "";
+    }
+    const char* SharedLibWrapper::getDescription()
+    {
+        if(m_getDescription != nullptr)
+            return ((GetString) m_getDescription)();
+        else
+            return "";
+    }
+    const char* SharedLibWrapper::getAuthor()
+    {
+        if(m_getAuthor != nullptr)
+            return ((GetString) m_getAuthor)();
+        else
+            return "";
+    }
     void SharedLibWrapper::query(Host *host, int playerID, GameControl input)
     {
         if(m_type == FixedFunction)
         {
             int result = getButtonState(playerID, input);
-
-            cout << "Query {" << playerID << "} : " << input << " [" << result << "]" << endl;
 
             if(m_controls[playerID][input] != result)
             {

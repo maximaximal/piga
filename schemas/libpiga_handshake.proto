@@ -1,0 +1,7 @@
+import "player.proto";
+
+message LibpigaHandshake {
+    optional string name = 1;
+    
+    repeated Player player = 2;
+}

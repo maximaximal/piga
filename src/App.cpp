@@ -16,7 +16,6 @@ namespace pigaco
     App::App()
     {
         LOG(INFO) << "Initializing PiGaCo app.";
-        m_host = std::make_shared<piga::Host>("config.yml");
     }
     App::~App()
     {
@@ -30,7 +29,6 @@ namespace pigaco
     void App::run()
     {
         LOG(INFO) << "Starting PiGaCo.";
-        m_host->init();
 
         m_playerManager = std::make_shared<piga::PlayerManager>();
 
@@ -41,6 +39,9 @@ namespace pigaco
         player = std::make_shared<piga::Player>(1);
         player->setName("Unnamed 2 (1)");
         m_playerManager->set(player, 1);
+
+        m_host = std::make_shared<piga::Host>("config.yml", m_playerManager);
+        m_host->init();
 
         m_gameInput = std::make_shared<piga::GameInput>();
 
@@ -53,7 +54,7 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), true);
+        m_window->init(glm::ivec2(800, 600), false);
 
         PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
         config->setupDefaultConfig();

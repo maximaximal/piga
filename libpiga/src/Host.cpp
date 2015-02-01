@@ -1,15 +1,22 @@
 #include <piga/Host.hpp>
 #include <piga/Status.hpp>
 #include <piga/GameHost.hpp>
+#include <piga/Definitions.hpp>
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/lexical_cast.hpp>
-
+#include <iostream>
 #include <yaml-cpp/yaml.h>
+
+#include <google/protobuf/message_lite.h>
+#include <libpiga_handshake.pb.h>
+
+using std::cout;
+using std::endl;
 
 namespace piga
 {
-    Host::Host(const std::string &configFile)
-        : m_configFile(configFile)
+    Host::Host(const std::string &configFile, std::shared_ptr<PlayerManager> playerManager)
+        : m_configFile(configFile), m_playerManager(playerManager)
     {
 
     }
@@ -17,6 +24,31 @@ namespace piga
     {
         m_sharedLibs.clear();
         deleteSharedMemory();
+        if(m_enetPeers.size() > 0)
+        {
+            for(auto &peer : m_enetPeers)
+            {
+                enet_peer_disconnect(peer.second, 1);
+            }
+            ENetEvent event;
+            while(enet_host_service(m_enetHost, &event, 100))
+            {
+                switch(event.type)
+                {
+                    case ENET_EVENT_TYPE_DISCONNECT:
+                        m_enetPeers.erase(event.peer->address.host);
+                        event.peer->data = nullptr;
+                        break;
+                    case ENET_EVENT_TYPE_RECEIVE:
+                        enet_packet_destroy(event.packet);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if(m_enetHost != nullptr)
+            enet_host_destroy(m_enetHost);
     }
     void Host::init()
     {
@@ -25,13 +57,60 @@ namespace piga
         createSharedMemory();
 
         YAML::Node doc = YAML::LoadAllFromFile(m_configFile).front();
-        if(doc["hosts"])
+        if(doc["Hosts"])
         {
-            for(YAML::const_iterator it = doc["hosts"].begin(); it != doc["hosts"].end(); ++it)
+            for(YAML::const_iterator it = doc["Hosts"].begin(); it != doc["Hosts"].end(); ++it)
             {
-                std::shared_ptr<SharedLibWrapper> sharedLib = std::make_shared<SharedLibWrapper>((*it).as<std::string>());
+                std::shared_ptr<SharedLibWrapper> sharedLib(std::make_shared<SharedLibWrapper>((*it).as<std::string>()));
                 sharedLib->init(m_playerCount);
                 m_sharedLibs.push_back(sharedLib);
+            }
+        }
+        if(doc["Name"])
+        {
+            m_name = doc["Name"].as<std::string>();
+        }
+        if(doc["Networked"])
+        {
+            GOOGLE_PROTOBUF_VERIFY_VERSION;
+            YAML::Node net = doc["Networked"];
+            int port = 17010;
+            int clientCount = 1;
+            int channelCount = 2;
+            int maxBandwithUp = 0;
+            int maxBandwithDown = 0;
+
+            if(net["ServerPort"])
+                port = net["ServerPort"].as<int>();
+            if(net["MaxClientCount"])
+                clientCount = net["MaxClientCount"].as<int>();
+            if(net["MaxChannelCount"])
+                channelCount = net["MaxChannelCount"].as<int>();
+            if(net["MaxBandwithUp"])
+                maxBandwithUp = net["MaxBandwithUp"].as<int>();
+            if(net["MaxBandwithDown"])
+                maxBandwithDown = net["MaxBandwithDown"].as<int>();
+
+            ENetAddress address;
+            address.host = ENET_HOST_ANY;
+            address.port = port;
+
+            m_enetHost = enet_host_create(&address,
+                             clientCount,
+                             channelCount,
+                             maxBandwithDown,
+                             maxBandwithUp);
+
+            cout << PIGA_DEBUG_PRESTRING << "Using networked features." << endl;
+            cout << PIGA_DEBUG_PRESTRING << "Server on port: " << port << endl;
+            cout << PIGA_DEBUG_PRESTRING << "Maximum client count: " << clientCount << endl;
+            cout << PIGA_DEBUG_PRESTRING << "Maximum bandwith (up): " << maxBandwithUp << endl;
+            cout << PIGA_DEBUG_PRESTRING << "Maximum bandwith (down): " << maxBandwithDown << endl;
+            cout << PIGA_DEBUG_PRESTRING << "Maximum channel count: " << channelCount << endl;
+
+            if(m_enetHost == nullptr)
+            {
+                cout << PIGA_DEBUG_PRESTRING << "ENet host could not be created!" << endl;
             }
         }
     }
@@ -75,6 +154,10 @@ namespace piga
             status->setRunning(true);
         }
     }
+    void Host::setPlayerManager(std::shared_ptr<PlayerManager> playerManager)
+    {
+        m_playerManager = playerManager;
+    }
     bool Host::gameIsRunning()
     {
         using namespace boost::interprocess;
@@ -116,6 +199,30 @@ namespace piga
                 }
             }
         }
+        if(m_enetHost != nullptr)
+        {
+            ENetEvent event;
+            while(enet_host_service(m_enetHost, &event, 10))
+            {
+                switch(event.type)
+                {
+                    case ENET_EVENT_TYPE_CONNECT:
+                        cout << PIGA_DEBUG_PRESTRING << "Client connected from " << event.peer->address.host << "." << endl;
+                        m_enetPeers[event.peer->address.host] = event.peer;
+                        sendHandshakePacket(event.peer);
+                        break;
+                    case ENET_EVENT_TYPE_DISCONNECT:
+                        m_enetPeers.erase(event.peer->address.host);
+                        event.peer->data = nullptr;
+                        break;
+                    case ENET_EVENT_TYPE_RECEIVE:
+                        enet_packet_destroy(event.packet);
+                        break;
+                    case ENET_EVENT_TYPE_NONE:
+                        break;
+                }
+            }
+        }
     }
     const char *Host::getInputSharedMemoryName()
     {
@@ -150,5 +257,26 @@ namespace piga
     {
         boost::interprocess::shared_memory_object::remove(getInputSharedMemoryName());
         boost::interprocess::shared_memory_object::remove(getStatusSharedMemoryName());
+    }
+    void Host::sendHandshakePacket(ENetPeer *peer)
+    {
+        if(m_playerManager)
+        {
+            LibpigaHandshake handshake;
+            handshake.set_name(m_name.c_str());
+            for(auto &player : m_playerManager->getPlayers())
+            {
+                ::Player *playerPacket = handshake.add_player();
+                playerPacket->set_username(player.second->getName());
+                playerPacket->set_id(player.first);
+                cout << PIGA_DEBUG_PRESTRING << "Added the player " << player.second->getName() << " - ID: " << player.first << endl;
+            }
+
+            //This is a handshake packet.
+            std::string buffer("HANDS" + handshake.SerializeAsString());
+
+            ENetPacket *packet = enet_packet_create(&buffer[0u], buffer.length(), ENET_PACKET_FLAG_RELIABLE);
+            enet_peer_send(peer, 0, packet);
+        }
     }
 }

@@ -3,8 +3,10 @@
 
 #include <piga/GameInput.hpp>
 #include <piga/SharedLibWrapper.hpp>
+#include <piga/PlayerManager.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 #include <vector>
+#include <enet/enet.h>
 
 namespace piga
 {
@@ -18,7 +20,7 @@ namespace piga
     class Host
     {
         public:
-            Host(const std::string &configFile);
+            Host(const std::string &configFile, std::shared_ptr<PlayerManager> playerManager);
             virtual ~Host();
 
             void init();
@@ -28,6 +30,7 @@ namespace piga
             void setInput(unsigned int playerID, GameControl control, bool state);
 
             void setCurrentGameHost(std::shared_ptr<GameHost> gameHost);
+            void setPlayerManager(std::shared_ptr<PlayerManager> playerManager);
 
             bool gameIsRunning();
 
@@ -42,9 +45,15 @@ namespace piga
             //Settings of the physical appearence of the console.
             unsigned int m_playerCount = 2;
             unsigned int m_buttonCount = 11;
+            void sendHandshakePacket(ENetPeer *peer);
             std::shared_ptr<GameHost> m_currentGameHost;
+            std::shared_ptr<PlayerManager> m_playerManager;
             std::vector<std::shared_ptr<SharedLibWrapper> > m_sharedLibs;
             std::string m_configFile;
+            std::string m_name = "Unnamed Host";
+            bool m_useSharedMemory = true;
+            ENetHost *m_enetHost = nullptr;
+            std::map<int, ENetPeer*> m_enetPeers;
     };
 }
 

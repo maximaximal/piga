@@ -1,0 +1,5 @@
+message Input {
+    required int32 control = 1;
+    required int32 playerID = 2;
+    required bool state = 3;
+}

@@ -94,7 +94,7 @@ endif()
 
 # Link to libpiga
 target_link_libraries(piga)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/../libpiga/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/include)
 
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

@@ -15,6 +15,10 @@ namespace piga
     {
 
     }
+    void PlayerManager::clear()
+    {
+        m_players.clear();
+    }
     std::shared_ptr<Player> PlayerManager::get(unsigned int playerID)
     {
         if(m_players.count(playerID) > 0)
@@ -32,5 +36,13 @@ namespace piga
             cout << PIGA_DEBUG_PRESTRING << "Overriding player \"" << m_players[id]->getName() << "\" with player \"" << player->getName() << "\"." << endl;
         }
         m_players[id] = player;
+    }
+    std::size_t PlayerManager::size()
+    {
+        return m_players.size();
+    }
+    std::map<unsigned int, std::shared_ptr<Player> >& PlayerManager::getPlayers()
+    {
+        return m_players;
     }
 }

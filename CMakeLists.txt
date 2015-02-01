@@ -88,6 +88,7 @@ elseif()
 endif()
  
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/ ${CMAKE_CURRENT_BINARY_DIR}/piga/)
+add_subdirectory(pihud/)
 add_dependencies(pigaco piga)
 include_directories(${LIBPIGA_INCLUDE_DIRECTORIES})
 target_link_libraries(pigaco piga)

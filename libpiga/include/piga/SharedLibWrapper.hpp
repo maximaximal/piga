@@ -35,6 +35,10 @@ namespace piga
             int getMinorVersion();
             int getMiniVersion();
 
+            const char* getName();
+            const char* getDescription();
+            const char* getAuthor();
+
             void query(Host* host, int playerID, GameControl input);
             int getButtonState(int playerID, GameControl button);
         private:
@@ -47,6 +51,7 @@ namespace piga
             typedef void (*Destroy)();
             typedef int (*GetButtonState)(int, int);
             typedef void (*SetGameInput)(piga::GameInput);
+            typedef const char*(*GetString)(void);
 
             void *m_getMajorVersion = nullptr;
             void *m_getMinorVersion = nullptr;
@@ -55,6 +60,10 @@ namespace piga
             void *m_destroy = nullptr;
             void *m_getButtonState = nullptr;
             void *m_setGameInput = nullptr;
+
+            void *m_getName = nullptr;
+            void *m_getDescription = nullptr;
+            void *m_getAuthor = nullptr;
 
             void *m_dlHandle = nullptr;
 

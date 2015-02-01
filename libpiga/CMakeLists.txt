@@ -21,7 +21,6 @@ SET(HDRS
     ${HDR}/GameEvent.hpp
     ${HDR}/Definitions.hpp
     ${HDR}/GameEventHandler.hpp
-    ${HDR}/Renderer.hpp
     ${HDR}/GameHost.hpp
     ${HDR}/Status.hpp
     ${HDR}/PlayerManager.hpp
@@ -40,7 +39,6 @@ SET(SRCS
     ${SRC}/Player.cpp
     ${SRC}/GameEvent.cpp
     ${SRC}/GameEventHandler.cpp
-    ${SRC}/Renderer.cpp
     ${SRC}/GameHost.cpp
     ${SRC}/Status.cpp
     ${SRC}/PlayerManager.cpp
@@ -51,7 +49,27 @@ SET(SRCS
     ${SRC}/Events/TextInput.cpp
 )
 
-add_library(piga SHARED ${SRCS} ${HDRS})
+SET(SCM ${CMAKE_CURRENT_SOURCE_DIR}/../schemas)
+
+SET(SCHEMAS
+    ${SCM}/player.proto
+    ${SCM}/libpiga_handshake.proto
+    ${SCM}/input.proto
+)
+
+SET(SCHEMAS ${SCHEMAS} PARENT_SCOPE)
+
+# Add google protocol buffers
+find_package(Protobuf REQUIRED)
+
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${SCHEMAS})
+
+add_library(piga SHARED ${SRCS} ${HDRS} ${PROTO_SRCS} ${PROTO_HDRS})
+
+if(${PROTOBUF_FOUND})
+    target_link_libraries(piga ${PROTOBUF_LIBRARIES})
+    include_directories(${PROTOBUF_INCLUDE_DIRS})
+endif()
 
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 
@@ -78,10 +96,15 @@ elseif()
     message(STATUS "Did not find Sigc++2! Please install it before you try to compile again.")
 endif()
 
-add_dependencies(piga pihud)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../pihud pihud)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../pihud/include)
+# Add enet
+find_package(ENet REQUIRED)
+if(${ENET_FOUND})
+    include_directories(${ENet_INCLUDE_DIRS})
+    target_link_libraries(piga ${ENet_LIBRARIES})
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hosts/)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

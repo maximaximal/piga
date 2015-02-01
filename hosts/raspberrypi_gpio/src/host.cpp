@@ -181,6 +181,21 @@ extern "C"
         //Nothing to do, using the fixed function pipeline.
     }
 }
+extern "C"
+{
+    const char* getName()
+    {
+        return "WiringPI Raspberry Pi GPIO Input Mapping";
+    }
+    const char* getDescription()
+    {
+        return "This host maps the GPIO connections of a Raspberry Pi to piga controls.";
+    }
+    const char* getAuthor()
+    {
+        return "maximaximal";
+    }
+}
 
 int destroy()
 {

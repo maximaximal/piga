@@ -4,7 +4,7 @@
 #define PIGA_DEBUG_PRESTRING "[PiGa] "
 
 #define PIGA_MAJOR_VERSION 0
-#define PIGA_MINOR_VERSION 1
+#define PIGA_MINOR_VERSION 2
 #define PIGA_MINI_VERSION 0
 
 #endif
