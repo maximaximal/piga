@@ -1,5 +1,7 @@
+import "gamecontrol.proto";
+
 message Input {
-    required int32 control = 1;
+    required GameControl control = 1;
     required int32 playerID = 2;
-    required bool state = 3;
+    required int32 input = 3;
 }

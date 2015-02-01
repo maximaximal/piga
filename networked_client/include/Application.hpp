@@ -22,8 +22,9 @@ class Application
 
         void handshakeCompleted();
     private:
+        bool m_handshakeCompleted = false;
         Client *m_client = nullptr;
         std::vector<std::unique_ptr<piga::SharedLibWrapper> > m_libs;
-        std::vector<std::map<piga::GameControl, bool> > m_inputs;
+        std::vector<std::map<piga::GameControl, int> > m_inputs;
         std::shared_ptr<piga::PlayerManager> m_playerManager;
 };

@@ -3,6 +3,7 @@
 #include <string>
 #include <enet/enet.h>
 #include <piga/PlayerManager.hpp>
+#include <piga/PlayerInput.hpp>
 #include <sigc++/sigc++.h>
 
 class Client
@@ -23,6 +24,8 @@ class Client
         bool disconnected();
 
         HandshakeCompletedSignal& handshakeCompleted();
+
+        void sendInputPacket(unsigned int playerID, piga::GameControl control, int input);
     private:
         HandshakeCompletedSignal m_handshakeCompleted;
         void receivePacket(ENetPacket *packet, ENetPeer *peer);

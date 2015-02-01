@@ -63,17 +63,40 @@ void Application::init()
 }
 void Application::run()
 {
+    int input = 0;
+
     while(!m_client->disconnected())
     {
+        if(m_handshakeCompleted)
+        {
+            for(auto &lib : m_libs)
+            {
+                for(auto &player : m_playerManager->getPlayers())
+                {
+                    for(unsigned int i = 0; i < piga::GameControl::_COUNT; ++i)
+                    {
+                        input = lib->getButtonState(player.second->getPlayerID(), static_cast<piga::GameControl>(i));
+
+                        if(m_inputs[player.first][static_cast<piga::GameControl>(i)] != input)
+                        {
+                            m_inputs[player.first][static_cast<piga::GameControl>(i)] = input;
+                            m_client->sendInputPacket(player.first, static_cast<piga::GameControl>(i), input);
+                        }
+                    }
+                }
+            }
+        }
         m_client->update();
     }
 }
 void Application::exit()
 {
     m_libs.clear();
+    m_handshakeCompleted = false;
 }
 void Application::handshakeCompleted()
 {
+    m_handshakeCompleted = true;
     for(auto &lib : m_libs)
     {
         lib->init(m_playerManager->size());

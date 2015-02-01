@@ -55,6 +55,7 @@ SET(SCHEMAS
     ${SCM}/player.proto
     ${SCM}/libpiga_handshake.proto
     ${SCM}/input.proto
+    ${SCM}/gamecontrol.proto
 )
 
 SET(SCHEMAS ${SCHEMAS} PARENT_SCOPE)

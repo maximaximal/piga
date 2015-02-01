@@ -2,6 +2,7 @@
 
 #include <../../include/easylogging++.h>
 #include <libpiga_handshake.pb.h>
+#include <input.pb.h>
 
 Client::Client(std::shared_ptr<piga::PlayerManager> playerManager)
     : m_playerManager(playerManager)
@@ -86,7 +87,7 @@ void Client::update()
 {
     ENetEvent event;
 
-    while(enet_host_service(m_client, &event, 1000))
+    while(enet_host_service(m_client, &event, 10))
     {
         switch(event.type)
         {
@@ -98,6 +99,7 @@ void Client::update()
             case ENET_EVENT_TYPE_DISCONNECT:
                 event.peer->data = nullptr;
                 LOG(INFO) << "Client disconnected.";
+                m_serverPeer = nullptr;
                 m_connected = false;
                 break;
             case ENET_EVENT_TYPE_NONE:
@@ -117,6 +119,61 @@ bool Client::disconnected()
 Client::HandshakeCompletedSignal& Client::handshakeCompleted()
 {
     return m_handshakeCompleted;
+}
+void Client::sendInputPacket(unsigned int playerID, piga::GameControl control, int input)
+{
+    if(m_serverPeer != nullptr)
+    {
+        Input inputPacket;
+
+        inputPacket.set_playerid(playerID);
+        inputPacket.set_input(input);
+
+        GameControl controlEnum;
+
+        switch(input)
+        {
+            case piga::ACTION:
+                controlEnum = GameControl::ACTION;
+                break;
+            case piga::UP:
+                controlEnum = GameControl::UP;
+                break;
+            case piga::DOWN:
+                controlEnum = GameControl::DOWN;
+                break;
+            case piga::LEFT:
+                controlEnum = GameControl::LEFT;
+                break;
+            case piga::RIGHT:
+                controlEnum = GameControl::RIGHT;
+                break;
+            case piga::BUTTON1:
+                controlEnum = GameControl::BUTTON1;
+                break;
+            case piga::BUTTON2:
+                controlEnum = GameControl::BUTTON2;
+                break;
+            case piga::BUTTON3:
+                controlEnum = GameControl::BUTTON3;
+                break;
+            case piga::BUTTON4:
+                controlEnum = GameControl::BUTTON4;
+                break;
+            case piga::BUTTON5:
+                controlEnum = GameControl::BUTTON5;
+                break;
+            case piga::BUTTON6:
+                controlEnum = GameControl::BUTTON6;
+                break;
+        }
+
+        inputPacket.set_control(controlEnum);
+
+        std::string buffer("INPUT" + inputPacket.SerializeAsString());
+        ENetPacket *packet = enet_packet_create(&buffer[0u], buffer.length(), ENET_PACKET_FLAG_RELIABLE);
+        enet_peer_send(m_serverPeer, 1, packet);
+    }
 }
 void Client::receivePacket(ENetPacket *packet, ENetPeer *peer)
 {

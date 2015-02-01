@@ -1,0 +1,13 @@
+enum GameControl {
+    UP = 0;
+    DOWN = 1;
+    LEFT = 2;
+    RIGHT = 3;
+    ACTION = 4;
+    BUTTON1 = 5;
+    BUTTON2 = 6;
+    BUTTON3 = 7;
+    BUTTON4 = 8;
+    BUTTON5 = 9;
+    BUTTON6 = 10;
+}
