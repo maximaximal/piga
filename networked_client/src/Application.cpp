@@ -1,9 +1,10 @@
 #include <Application.hpp>
 #include <Client.hpp>
-#include <../../include/easylogging++.h>
 #include <yaml-cpp/yaml.h>
 
-_INITIALIZE_EASYLOGGINGPP
+#define ELPP_NO_DEFAULT_LOG_FILE
+#include <../../include/easylogging++.h>
+INITIALIZE_EASYLOGGINGPP
 
 Application::Application()
 {
@@ -78,8 +79,12 @@ void Application::handshakeCompleted()
         lib->init(m_playerManager->size());
     }
 }
-int main()
+int main(int argv, char* argc[])
 {
+    START_EASYLOGGINGPP(argv, argc);
+
+
+
     LOG(INFO) << "Starting networked piga client.";
 
     Application *app = new Application();

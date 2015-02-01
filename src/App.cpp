@@ -3,13 +3,13 @@
 #include <chrono>
 #include <thread>
 
-#include <easylogging++.h>
-
 #include <pigaco/Window.hpp>
 #include <pigaco/DirectoryScanner.hpp>
 #include <pihud/pihud.hpp>
 
-_INITIALIZE_EASYLOGGINGPP
+#define ELPP_NO_DEFAULT_LOG_FILE
+#include <../../include/easylogging++.h>
+INITIALIZE_EASYLOGGINGPP
 
 namespace pigaco
 {
@@ -162,8 +162,10 @@ namespace pigaco
     }
 }
 
-int main()
+int main(int argv, char* argc[])
 {
+    START_EASYLOGGINGPP(argv, argc);
+
     pigaco::App *app = new pigaco::App();
 
     app->run();
