@@ -75,12 +75,13 @@ void Application::run()
                 {
                     for(unsigned int i = 0; i < piga::GameControl::_COUNT; ++i)
                     {
-                        input = lib->getButtonState(player.second->getPlayerID(), static_cast<piga::GameControl>(i));
+                        input = lib->getButtonState(player.first, static_cast<piga::GameControl>(i));
 
                         if(m_inputs[player.first][static_cast<piga::GameControl>(i)] != input)
                         {
+LOG(INFO) << "INPUT DETECTED!";
                             m_inputs[player.first][static_cast<piga::GameControl>(i)] = input;
-                            m_client->sendInputPacket(player.first, static_cast<piga::GameControl>(i), input);
+                        m_client->sendInputPacket(player.first, static_cast<piga::GameControl>(i), input);
                         }
                     }
                 }
