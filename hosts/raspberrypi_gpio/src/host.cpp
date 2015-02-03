@@ -108,17 +108,17 @@ extern "C"
         wiringPiSetup();
 
         //Set the interrupts
-        wiringPiISR(1, INT_EDGE_BOTH, &upHandler1);
-        wiringPiISR(2, INT_EDGE_BOTH, &downHandler1);
-        wiringPiISR(3, INT_EDGE_BOTH, &leftHandler1);
-        wiringPiISR(4, INT_EDGE_BOTH, &rightHandler1);
-        wiringPiISR(5, INT_EDGE_BOTH, &actionHandler1);
+        wiringPiISR(2, INT_EDGE_BOTH, &upHandler1);
+        wiringPiISR(7, INT_EDGE_BOTH, &downHandler1);
+        wiringPiISR(1, INT_EDGE_BOTH, &leftHandler1);
+        wiringPiISR(0, INT_EDGE_BOTH, &rightHandler1);
+        wiringPiISR(3, INT_EDGE_BOTH, &actionHandler1);
 
-        wiringPiISR(6, INT_EDGE_BOTH, &upHandler2);
-        wiringPiISR(7, INT_EDGE_BOTH, &downHandler2);
-        wiringPiISR(8, INT_EDGE_BOTH, &leftHandler2);
-        wiringPiISR(9, INT_EDGE_BOTH, &rightHandler2);
-        wiringPiISR(10, INT_EDGE_BOTH, &actionHandler2);
+        //wiringPiISR(6, INT_EDGE_BOTH, &upHandler2);
+        //wiringPiISR(7, INT_EDGE_BOTH, &downHandler2);
+        //wiringPiISR(8, INT_EDGE_BOTH, &leftHandler2);
+        //wiringPiISR(9, INT_EDGE_BOTH, &rightHandler2);
+        //wiringPiISR(10, INT_EDGE_BOTH, &actionHandler2);
 
 
         return HOST_RETURNCODE_USEFIXEDFUNCTION;
