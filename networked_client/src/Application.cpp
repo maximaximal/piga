@@ -106,7 +106,12 @@ int main(int argv, char* argc[])
 {
     START_EASYLOGGINGPP(argv, argc);
 
+    el::Configurations conf;
 
+    conf.setToDefault();
+    conf.setGlobally(el::ConfigurationType::ToFile, "false");
+
+    el::Loggers::reconfigureAllLoggers(conf);
 
     LOG(INFO) << "Starting networked piga client.";
 
