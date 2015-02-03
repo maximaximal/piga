@@ -96,9 +96,24 @@ void Application::exit()
 }
 void Application::handshakeCompleted()
 {
+    m_inputs.clear();
+
     m_handshakeCompleted = true;
     for(auto &lib : m_libs)
     {
+        m_inputs.resize(m_playerManager->size());
+        for(unsigned int i = 0; i < m_playerManager->size(); ++i)
+        {
+            std::map<piga::GameControl, int> inputsMap;
+
+            for(auto &input : inputsMap)
+            {
+                input.second = 0;
+            }
+
+            m_inputs[i] = inputsMap;
+        }
+
         lib->init(m_playerManager->size());
     }
 }
