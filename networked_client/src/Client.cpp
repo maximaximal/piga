@@ -129,42 +129,42 @@ void Client::sendInputPacket(unsigned int playerID, piga::GameControl control, i
         inputPacket.set_playerid(playerID);
         inputPacket.set_input(input);
 
-        GameControl controlEnum;
+        ::GameControl controlEnum;
 
         switch(input)
         {
             case piga::ACTION:
-                controlEnum = GameControl::ACTION;
+                controlEnum = ::GameControl::ACTION;
                 break;
             case piga::UP:
-                controlEnum = GameControl::UP;
+                controlEnum = ::GameControl::UP;
                 break;
             case piga::DOWN:
-                controlEnum = GameControl::DOWN;
+                controlEnum = ::GameControl::DOWN;
                 break;
             case piga::LEFT:
-                controlEnum = GameControl::LEFT;
+                controlEnum = ::GameControl::LEFT;
                 break;
             case piga::RIGHT:
-                controlEnum = GameControl::RIGHT;
+                controlEnum = ::GameControl::RIGHT;
                 break;
             case piga::BUTTON1:
-                controlEnum = GameControl::BUTTON1;
+                controlEnum = ::GameControl::BUTTON1;
                 break;
             case piga::BUTTON2:
-                controlEnum = GameControl::BUTTON2;
+                controlEnum = ::GameControl::BUTTON2;
                 break;
             case piga::BUTTON3:
-                controlEnum = GameControl::BUTTON3;
+                controlEnum = ::GameControl::BUTTON3;
                 break;
             case piga::BUTTON4:
-                controlEnum = GameControl::BUTTON4;
+                controlEnum = ::GameControl::BUTTON4;
                 break;
             case piga::BUTTON5:
-                controlEnum = GameControl::BUTTON5;
+                controlEnum = ::GameControl::BUTTON5;
                 break;
             case piga::BUTTON6:
-                controlEnum = GameControl::BUTTON6;
+                controlEnum = ::GameControl::BUTTON6;
                 break;
         }
 

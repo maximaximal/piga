@@ -1,7 +1,7 @@
 import "gamecontrol.proto";
 
 message Input {
-    required GameControl control = 1;
+    required GameControl control = 1 [default = ACTION];
     required int32 playerID = 2;
     required int32 input = 3;
 }
