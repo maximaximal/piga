@@ -128,56 +128,67 @@ namespace piga
         if(oldInputs.action() != action()) {
             e.gameInput.setControl(GameControl::ACTION);
             e.gameInput.setState(action());
+            oldInputs.setAction(action());
             return true;
         }
         if(oldInputs.up() != up()) {
             e.gameInput.setControl(GameControl::UP);
             e.gameInput.setValue(up());
+            oldInputs.setUp(up());
             return true;
         }
         if(oldInputs.down() != down()) {
             e.gameInput.setControl(GameControl::DOWN);
             e.gameInput.setValue(down());
+            oldInputs.setDown(down());
             return true;
         }
         if(oldInputs.left() != left()) {
             e.gameInput.setControl(GameControl::LEFT);
             e.gameInput.setValue(left());
+            oldInputs.setLeft(left());
             return true;
         }
         if(oldInputs.right() != right()) {
             e.gameInput.setControl(GameControl::RIGHT);
             e.gameInput.setValue(right());
+            oldInputs.setRight(right());
             return true;
         }
         if(oldInputs.button1() != button1()) {
             e.gameInput.setControl(GameControl::BUTTON1);
             e.gameInput.setState(button1());
+            oldInputs.setButton1(button1());
             return true;
         }
         if(oldInputs.button2() != button2()) {
             e.gameInput.setControl(GameControl::BUTTON2);
             e.gameInput.setState(button2());
+            oldInputs.setButton2(button2());
             return true;
         }
         if(oldInputs.button3() != button3()) {
             e.gameInput.setControl(GameControl::BUTTON3);
             e.gameInput.setState(button3());
+            oldInputs.setButton3(button3());
             return true;
         }
         if(oldInputs.button4() != button4()) {
             e.gameInput.setControl(GameControl::BUTTON4);
             e.gameInput.setState(button4());
+            oldInputs.setButton4(button4());
             return true;
         }
         if(oldInputs.button5() != button5()) {
             e.gameInput.setControl(GameControl::BUTTON5);
             e.gameInput.setState(button5());
+            oldInputs.setButton5(button5());
             return true;
         }
         if(oldInputs.button6() != button6()) {
             e.gameInput.setControl(GameControl::BUTTON6);
             e.gameInput.setState(button6());
+            oldInputs.setButton6(button6());
             return true;
         }
         return false;
@@ -188,15 +199,15 @@ namespace piga
     }
     void PlayerInputStruct::setDown(int val)
     {
-        boost::interprocess::ipcdetail::atomic_write32(&m_up, val);
+        boost::interprocess::ipcdetail::atomic_write32(&m_down, val);
     }
     void PlayerInputStruct::setLeft(int val)
     {
-        boost::interprocess::ipcdetail::atomic_write32(&m_up, val);
+        boost::interprocess::ipcdetail::atomic_write32(&m_left, val);
     }
     void PlayerInputStruct::setRight(int val)
     {
-        boost::interprocess::ipcdetail::atomic_write32(&m_up, val);
+        boost::interprocess::ipcdetail::atomic_write32(&m_right, val);
     }
     void PlayerInputStruct::setAction(bool state)
     {

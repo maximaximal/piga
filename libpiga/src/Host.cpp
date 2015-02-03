@@ -217,6 +217,7 @@ namespace piga
                         event.peer->data = nullptr;
                         break;
                     case ENET_EVENT_TYPE_RECEIVE:
+                        receivePacket(event.packet, event.peer);
                         enet_packet_destroy(event.packet);
                         break;
                     case ENET_EVENT_TYPE_NONE:
@@ -282,6 +283,7 @@ namespace piga
     }
     void Host::receivePacket(ENetPacket *packet, ENetPeer *peer)
     {
+        cout << PIGA_DEBUG_PRESTRING << "Message Received!" << endl;
         std::string buffer(packet->data, packet->data + packet->dataLength);
         std::string packetType = buffer.substr(0, 5);
         buffer.erase(0, 5);
@@ -317,6 +319,7 @@ namespace piga
             if(input.input() > 0)
                 state = true;
 
+            cout << PIGA_DEBUG_PRESTRING << "INPUT!!" << endl;
             setInput(input.playerid(), control, state);
         }
     }
