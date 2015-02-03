@@ -129,9 +129,9 @@ void Client::sendInputPacket(unsigned int playerID, piga::GameControl control, i
         inputPacket.set_playerid(playerID);
         inputPacket.set_input(input);
 
-        ::GameControl controlEnum;
+        ::GameControl controlEnum = inputPacket.control();
 
-        switch(input)
+        switch(control)
         {
             case piga::ACTION:
                 controlEnum = ::GameControl::ACTION;
