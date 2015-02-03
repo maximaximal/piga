@@ -28,10 +28,7 @@ ExternalProject_Add(wiringpi_project
 
 add_dependencies(host_raspberrypi_gpio wiringpi_project)
 
-find_library(wiringpi_library
-    NAMES wiringpi libwiringpi libwiringpi.a libwiringpi.so
-    HINTS ${CMAKE_CURRENT_BINARY_DIR}/wiringpi/
-)
+target_link_libraries(host_raspberrypi_gpio wiringPi)
 
 include_directories(${HDR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libpiga/include/)
