@@ -9,6 +9,9 @@ def setupDist(path):
         os.makedirs(path)
         if not os.path.exists(path + "/Games"):
             os.makedirs(path + "/Games")
+        if not os.path.exists(path + "/Data"):
+            os.makedirs(path + "/Data")
+            os.makedirs(path + "/Data/Fonts")
 
     shutil.copy(currentPath + "/README_pigaco.md", path + "/README.md")
 

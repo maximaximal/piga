@@ -32,6 +32,8 @@ set(SRCS
     ${SRC}/Particle.cpp
     ${SRC}/ParticleSource.cpp
     ${SRC}/WeHaveAWinnerWidget.cpp
+    ${SRC}/PigaEvent.cpp
+    ${SRC}/TextureManager.cpp
 )
 
 set(HDR ${CMAKE_CURRENT_SOURCE_DIR}/include/pihud/)
@@ -59,6 +61,8 @@ set(HDRS
     ${HDR}/FocusManager.hpp
     ${HDR}/FocusEvent.hpp
     ${HDR}/WeHaveAWinnerWidget.hpp
+    ${HDR}/PigaEvent.hpp
+    ${HDR}/TextureManager.hpp
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

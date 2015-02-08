@@ -36,18 +36,18 @@ namespace PiH
     }
     void Layout::onEvent(const Event &e)
     {
-		m_layouter.onEvent(e);
+	m_layouter.onEvent(e);
     }
     void Layout::onUpdate(float frametime)
     {
-		m_layouter.onUpdate(frametime);
+	m_layouter.onUpdate(frametime);
     }
     void Layout::onRender(SDL_Renderer *renderer, const FloatRect &offset)
     {
-		m_layouter.onRender(renderer, offset);
+	m_layouter.onRender(renderer, offset);
     }
     void Layout::updateBoundingBox()
     {
-		updateLayout();
+	updateLayout();
     }
 }

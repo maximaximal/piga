@@ -21,11 +21,18 @@ namespace PiH
         type = EventType::Focus;
         focus = focusEvent;
     }
+    Event::Event(const PigaEvent &pigaEvent)
+    {
+        type = EventType::Piga;
+        piga = pigaEvent;
+    }
     Event::Event(const piga::GameEvent &gameEvent)
     {
         if(gameEvent.type() == piga::GameEvent::GameInput)
         {
-
+            PigaEvent pigaEvent(gameEvent.gameInput.control(), gameEvent.gameInput.state());
+            type = EventType::Piga;
+            piga = pigaEvent;
         }
         if(gameEvent.gameInput.control() == piga::DOWN
                 || gameEvent.gameInput.control() == piga::LEFT

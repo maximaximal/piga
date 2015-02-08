@@ -15,12 +15,16 @@ SET(HDRS
     ${HDR}/App.hpp
     ${HDR}/Window.hpp
     ${HDR}/DirectoryScanner.hpp
+    ${HDR}/GameChooser.hpp
+    ${HDR}/GameBox.hpp
 )
 
 SET(SRCS
     ${SRC}/App.cpp
     ${SRC}/Window.cpp
     ${SRC}/DirectoryScanner.cpp
+    ${SRC}/GameChooser.cpp
+    ${SRC}/GameBox.cpp
 )
 
 add_executable(pigaco ${SRCS} ${HDRS})
@@ -74,7 +78,6 @@ ExternalProject_Add(GLM_Project
 
 add_dependencies(pigaco GLM_Project)
 
-include_directories(${INCLUDE})
 # GLM Headers in the glm/ path.
 include_directories(SYSTEM ${CMAKE_CURRENT_BINARY_DIR}/glm/src/GLM_Project/)
 
@@ -87,13 +90,13 @@ elseif()
     message(STATUS "Did not find Yaml-Cpp! Please install it before you try to compile again.")
 endif()
  
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/ ${CMAKE_CURRENT_BINARY_DIR}/piga/)
-add_subdirectory(pihud/)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pihud/)
 add_dependencies(pigaco piga)
-include_directories(${LIBPIGA_INCLUDE_DIRECTORIES})
 target_link_libraries(pigaco piga)
 target_link_libraries(pigaco pihud)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pihud/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/include)
 
 add_custom_command(TARGET pigaco
                    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/distributor.py

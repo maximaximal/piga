@@ -15,7 +15,7 @@ namespace PiH
 
             int getSpacing();
         private:
-			int m_spacing = 5;
+            int m_spacing = 5;
             std::size_t m_currentlyFocused = 0;
     };
 }

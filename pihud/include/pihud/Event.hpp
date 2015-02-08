@@ -5,6 +5,7 @@
 #include <pihud/DirectionEvent.hpp>
 #include <pihud/InputEvent.hpp>
 #include <pihud/FocusEvent.hpp>
+#include <pihud/PigaEvent.hpp>
 
 namespace PiH
 {
@@ -13,6 +14,7 @@ namespace PiH
         NotSet,
         Direction,
         Input,
+        Piga,
         Mouse,
         Focus,
 
@@ -26,16 +28,18 @@ namespace PiH
             Event(const DirectionEvent &dirEvent);
             Event(const InputEvent &inputEvent);
             Event(const FocusEvent &focusEvent);
+            Event(const PigaEvent &pigaEvent);
             Event(const piga::GameEvent &gameEvent);
             virtual ~Event();
 
-			EventType type;
+            EventType type;
 
             union
             {
-				DirectionEvent dir;
+                DirectionEvent dir;
                 InputEvent input;
                 FocusEvent focus;
+                PigaEvent piga;
             };
     };
 }

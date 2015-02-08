@@ -15,10 +15,14 @@ namespace piga
             enum ConfigValue
             {
                 Name,
+                Description,
+                Version,
+                Author,
                 ProgramPath,
-				Parameters,
+                Parameters,
                 Directory,
-
+                BackgroundImage,
+                Logo,
 
                 _COUNT
             };
