@@ -60,6 +60,9 @@ namespace pigaco
         config->setupDefaultConfig();
         PiH::initialize(config);
 
+        m_textureManager = std::make_shared<PiH::TextureManager>(m_window->getSDLRenderer());
+        m_fontManager = std::make_shared<PiH::FontManager>();
+        
         m_hudContainer = new PiH::HudContainer(0);
 
         m_directoryScanner.reset(new DirectoryScanner);

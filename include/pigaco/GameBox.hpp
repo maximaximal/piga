@@ -10,6 +10,10 @@
 
 namespace pigaco
 {
+    /**
+     * @brief Describes the image with text for a game host in a game chooser list.
+     * 
+     */
     class GameBox : public PiH::Widget
     {
         public:

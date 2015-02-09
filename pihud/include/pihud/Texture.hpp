@@ -11,10 +11,14 @@ namespace PiH
             Texture();
             virtual ~Texture();
 
+            int load(SDL_Renderer *renderer, const std::string &path);
+            void destroy();
+
             virtual const std::string& getPath();
-			virtual SDL_Texture* getSDLTexture();
+            virtual SDL_Texture* getSDLTexture();
         private:
-           	SDL_Texture *m_texture;
-            std::string m_path;
+            SDL_Texture *m_texture = nullptr;
+            SDL_Renderer *m_renderer = nullptr;
+            std::string m_path = "";
     };
 }

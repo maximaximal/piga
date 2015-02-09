@@ -9,6 +9,8 @@
 #include <piga/GameInput.hpp>
 #include <piga/PlayerManager.hpp>
 
+#include <pihud/TextureManager.hpp>
+#include <pihud/FontManager.hpp>
 #include <pihud/HudContainer.hpp>
 
 namespace pigaco
@@ -39,6 +41,9 @@ namespace pigaco
             std::shared_ptr<piga::Host> m_host;
             std::shared_ptr<piga::GameInput> m_gameInput;
             std::shared_ptr<piga::PlayerManager> m_playerManager;
+            
+            std::shared_ptr<PiH::TextureManager> m_textureManager;
+            std::shared_ptr<PiH::FontManager> m_fontManager;
 
             std::unique_ptr<Window> m_window;
             std::unique_ptr<DirectoryScanner> m_directoryScanner;
