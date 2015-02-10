@@ -5,10 +5,13 @@
 
 #include <pigaco/Window.hpp>
 #include <pigaco/DirectoryScanner.hpp>
+#include <pigaco/GameChooser.hpp>
 #include <pihud/pihud.hpp>
+#include <pihud/VerticalListLayout.hpp>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
+
 INITIALIZE_EASYLOGGINGPP
 
 namespace pigaco
@@ -65,8 +68,21 @@ namespace pigaco
         
         m_hudContainer = new PiH::HudContainer(0);
 
-        m_directoryScanner.reset(new DirectoryScanner);
+        m_directoryScanner = std::make_shared<DirectoryScanner>();
         m_directoryScanner->scanDirectory("Games");
+        
+        GameChooser *chooser = new GameChooser(m_hudContainer);
+        chooser->setFont(m_fontManager->get("Data/Fonts/Roboto-Regular.ttf:22"));
+        chooser->setTextureManager(m_textureManager);
+        chooser->setDirectoryScanner(m_directoryScanner);
+        
+        PiH::VerticalListLayout verticalLayout;
+        verticalLayout.setSpacing(10);
+        chooser->setLayouter(verticalLayout);
+        
+        chooser->setBoundingBox(PiH::FloatRect(0, m_window->getSize().y / 4, m_window->getSize().x, m_window->getSize().y / 2));
+        
+        m_hudContainer->addWidget(chooser, "GameChooser");
 
         LOG(INFO) << "Starting the App-Loop.";
 
@@ -125,21 +141,21 @@ namespace pigaco
         m_host->update(frametime);
         m_gameInput->update();
         m_host->applyFromGameInput(m_gameInput.get());
-
+        
+        m_hudContainer->onUpdate(frametime);
 
         m_window->glClear();
         SDL_SetRenderDrawColor(m_window->getSDLRenderer(), 0, 0, 0, 0);
         SDL_RenderClear(m_window->getSDLRenderer());
 
-        SDL_GL_SwapWindow(m_window->getSDLWindow());
+        m_hudContainer->onRender(m_window->getSDLRenderer(), PiH::FloatRect(0, 0, m_window->getSize().x, m_window->getSize().y));
+        
         SDL_RenderPresent(m_window->getSDLRenderer());
 
         if(m_isSleeping && !m_host->gameIsRunning())
         {
             wakeupWindow();
         }
-
-        LOG_EVERY_N(60, INFO) << "Is game running: " << m_host->gameIsRunning();
     }
     bool App::end()
     {

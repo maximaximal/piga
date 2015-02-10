@@ -46,8 +46,8 @@ namespace pigaco
             std::shared_ptr<PiH::FontManager> m_fontManager;
 
             std::unique_ptr<Window> m_window;
-            std::unique_ptr<DirectoryScanner> m_directoryScanner;
-
+            std::shared_ptr<DirectoryScanner> m_directoryScanner;
+            
             PiH::HudContainer *m_hudContainer = nullptr;
 
             bool m_end = false;

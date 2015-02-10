@@ -1,4 +1,5 @@
 #include <pigaco/GameBox.hpp>
+#include <easylogging++.h>
 
 namespace pigaco
 {
@@ -8,9 +9,19 @@ namespace pigaco
         m_image_background.reset(new PiH::Image());
         m_image_logo.reset(new PiH::Image());
         
+        SDL_Color color;
+        color.a = 255;
+        color.r = 190;
+        color.g = 190;
+        color.b = 190;
+        
         m_label_description.reset(new PiH::Label(this));
         m_label_name.reset(new PiH::Label(this));
         m_label_version.reset(new PiH::Label(this));
+        
+        m_label_description->setColor(color);
+        m_label_name->setColor(color);
+        m_label_version->setColor(color);
     }
     GameBox::~GameBox()
     {
@@ -58,7 +69,7 @@ namespace pigaco
     {
         m_gameHost = gameHost;
         m_label_name->setText(gameHost->getConfig(piga::GameHost::Name));
-        m_label_description->setText("Made by " + gameHost->getConfig(piga::GameHost::Description));
+        m_label_description->setText(gameHost->getConfig(piga::GameHost::Description));
         m_label_version->setText("V" + gameHost->getConfig(piga::GameHost::Version));
     }
     void GameBox::setFont(std::shared_ptr<PiH::Font> font)
@@ -76,11 +87,10 @@ namespace pigaco
         PiH::Widget::updateBoundingBox();
         
         m_image_background->setPosition(getBoundingBox().x, getBoundingBox().y);
-        m_image_logo->setPosition(getBoundingBox().x + getBoundingBox().w - 
-            m_image_logo->getBoundingBox().w - 10, getBoundingBox().y - 10);
+        m_image_logo->setPosition(getBoundingBox().x + getBoundingBox().w - m_image_logo->getBoundingBox().w - 10, getBoundingBox().y - 10);
         
-        m_label_name->setPosition(getBoundingBox().x + 10, getBoundingBox().y + 10);
-        m_label_description->setPosition(getBoundingBox().x + 10, getBoundingBox().y + m_label_name->getBoundingBox().h + 25);
-        m_label_version->setPosition(getBoundingBox().x + 10, getBoundingBox().y + 10 + m_label_version->getBoundingBox().h);
+        m_label_name->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + 10, getBoundingBox().w, getBoundingBox().h));
+        m_label_description->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + m_label_name->getBoundingBox().h + 25, getBoundingBox().w, getBoundingBox().h));
+        m_label_version->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + getBoundingBox().h - 10 - m_label_version->getBoundingBox().h, getBoundingBox().w, getBoundingBox().h));
     }
 }

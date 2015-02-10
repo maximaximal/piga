@@ -9,21 +9,18 @@
 #include <pihud/TextureManager.hpp>
 #include <pihud/Font.hpp>
 #include <pihud/Widget.hpp>
+#include <pihud/Layout.hpp>
 
 namespace pigaco
 {
-    class GameChooser : public PiH::Widget
+    class GameChooser : public PiH::Layout
     {
         public:
-            GameChooser(PiH::Widget *parent, std::shared_ptr<DirectoryScanner> directoryScanner);
+            GameChooser(PiH::Widget *parent);
             virtual ~GameChooser();
             
             void setDirectoryScanner(std::shared_ptr<DirectoryScanner> directoryScanner);
             std::shared_ptr<DirectoryScanner> getDirectoryScanner();
-            
-            virtual void onEvent(const PiH::Event &e);
-            virtual void onUpdate(float frametime);
-            virtual void onRender(SDL_Renderer *renderer, const PiH::FloatRect &offset);
             
             void setTextureManager(std::shared_ptr<PiH::TextureManager> textureManager);
             void setFont(std::shared_ptr<PiH::Font> font);
@@ -31,7 +28,5 @@ namespace pigaco
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
             std::shared_ptr<PiH::TextureManager> m_textureManager;
             std::shared_ptr<PiH::Font> m_font;
-            
-            std::vector<std::shared_ptr<GameBox>> m_boxes;
     };
 }

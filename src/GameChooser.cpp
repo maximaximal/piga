@@ -1,11 +1,12 @@
 #include <pigaco/GameChooser.hpp>
+#include <easylogging++.h>
 
 namespace pigaco 
 {
-    GameChooser::GameChooser(PiH::Widget *parent, std::shared_ptr<DirectoryScanner> directoryScanner)
-        : m_directoryScanner(directoryScanner), PiH::Widget(parent)
+    GameChooser::GameChooser(PiH::Widget *parent)
+        : PiH::Layout(parent)
     {
-    
+        
     }
     GameChooser::~GameChooser()
     {
@@ -14,50 +15,34 @@ namespace pigaco
     void GameChooser::setDirectoryScanner(std::shared_ptr<DirectoryScanner> directoryScanner)
     {
         m_directoryScanner = directoryScanner;
+        for(auto &game : directoryScanner->getGames())
+        {
+            std::shared_ptr<GameBox> box = std::make_shared<GameBox>(this);
+            box->setFont(m_font);
+            box->setTextureManager(m_textureManager);
+            box->loadFromHost(game.second);
+            box->setBoundingBox(PiH::FloatRect(0, 0, 50, 0));
+            m_widgets.push_back(std::static_pointer_cast<PiH::Widget>(box));
+        }
     }
     std::shared_ptr<DirectoryScanner> GameChooser::getDirectoryScanner()
     {
         return m_directoryScanner;
     }
-    void GameChooser::onEvent(const PiH::Event &e)
-    {
-        PiH::Widget::onEvent(e);
-        for(auto &box : m_boxes)
-        {
-            box->onEvent(e);
-        }
-    }
-    void GameChooser::onUpdate(float frametime)
-    {
-        PiH::Widget::onUpdate(frametime);
-        for(auto &box : m_boxes)
-        {
-            box->onUpdate(frametime);
-        }
-    }
-    void GameChooser::onRender(SDL_Renderer *renderer, const PiH::FloatRect &offset)
-    {
-        for(auto &box : m_boxes)
-        {
-            if(box->getBoundingBox().x + box->getBoundingBox().w > 0
-                && box->getBoundingBox().x < getBoundingBox().w)
-                box->onRender(renderer, offset);
-        }
-    }
     void GameChooser::setTextureManager(std::shared_ptr<PiH::TextureManager> textureManager)
     {
         m_textureManager = textureManager;
-        for(auto &box : m_boxes)
+        for(auto &box : m_widgets)
         {
-            box->setTextureManager(textureManager);
+            std::static_pointer_cast<GameBox>(box)->setTextureManager(textureManager);
         }
     }
     void GameChooser::setFont(std::shared_ptr<PiH::Font> font)
     {
         m_font = font;
-        for(auto &box : m_boxes)
+        for(auto &box : m_widgets)
         {
-            box->setFont(font);
+            std::static_pointer_cast<GameBox>(box)->setFont(font);
         }
     }
 }
