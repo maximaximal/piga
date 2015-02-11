@@ -84,8 +84,6 @@ namespace pigaco
     }
     void GameBox::updateBoundingBox()
     {
-        PiH::Widget::updateBoundingBox();
-        
         m_image_background->setPosition(getBoundingBox().x, getBoundingBox().y);
         m_image_logo->setPosition(getBoundingBox().x + getBoundingBox().w - m_image_logo->getBoundingBox().w - 10, getBoundingBox().y - 10);
         

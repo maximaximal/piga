@@ -7,7 +7,7 @@ namespace PiH
         float x = 0;
         for(std::shared_ptr<PiH::Widget> &widget : widgets)
         {
-            widget->setPosition(x, widget->getBoundingBox().y);
+            widget->setBoundingBox(x, getBoundingBox().y, widget->getBoundingBox().w, getBoundingBox().h);
             x += widget->getBoundingBox().w + getSpacing();
         }
     }
@@ -37,5 +37,10 @@ namespace PiH
     {
         return m_spacing;
     }
+    void VerticalListLayout::updateBoundingBox()
+    {
+
+    }
+
 }
 

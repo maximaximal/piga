@@ -57,7 +57,7 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), false);
+        m_window->init(glm::ivec2(800, 600), true);
 
         PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
         config->setupDefaultConfig();
@@ -76,8 +76,8 @@ namespace pigaco
         chooser->setTextureManager(m_textureManager);
         chooser->setDirectoryScanner(m_directoryScanner);
         
-        PiH::VerticalListLayout verticalLayout;
-        verticalLayout.setSpacing(10);
+        PiH::VerticalListLayout *verticalLayout = new PiH::VerticalListLayout;
+        verticalLayout->setSpacing(10);
         chooser->setLayouter(verticalLayout);
         
         chooser->setBoundingBox(PiH::FloatRect(0, m_window->getSize().y / 4, m_window->getSize().x, m_window->getSize().y / 2));

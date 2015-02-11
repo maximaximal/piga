@@ -17,6 +17,7 @@ namespace PiH
             virtual ~Widget();
 
             FloatRect& getBoundingBox();
+            void setBoundingBox(float x, float y, float w, float h);
             void setBoundingBox(const FloatRect &box);
             void setPosition(float x, float y);
             void setWidth(float w);
@@ -30,7 +31,7 @@ namespace PiH
 
             void updateParent();
         protected:
-            virtual void updateBoundingBox();
+            virtual void updateBoundingBox() = 0;
 
             FloatRect m_boundingBox;
             Widget *m_parent;

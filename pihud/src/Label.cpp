@@ -53,7 +53,6 @@ namespace PiH
     }
     void Label::updateBoundingBox()
     {
-        PiH::Widget::updateBoundingBox();
         redraw();
     }
     void Label::redraw()

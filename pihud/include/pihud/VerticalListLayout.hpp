@@ -14,6 +14,8 @@ namespace PiH
             virtual void onEvent(const Event &e);
 
             int getSpacing();
+        protected:
+            virtual void updateBoundingBox();
         private:
             int m_spacing = 5;
             std::size_t m_currentlyFocused = 0;

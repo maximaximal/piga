@@ -25,6 +25,7 @@ namespace PiH
 
             virtual void setBoxes(LayoutedWidgets &widgets);
         protected:
+            virtual void updateBoundingBox() = 0;
             LayoutedWidgets *m_widgets = nullptr;
     };
 }

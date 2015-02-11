@@ -69,4 +69,9 @@ namespace PiH
             m_widgets.erase(name);
         }
     }
+    void HudContainer::updateBoundingBox()
+    {
+
+    }
+
 }

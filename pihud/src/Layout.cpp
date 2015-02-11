@@ -12,18 +12,29 @@ namespace PiH
     Layout::~Layout()
     {
         //Unset the widgets.
-        m_layouter.m_widgets = nullptr;
+        if(m_layouter != nullptr)
+        {
+            m_layouter->m_widgets = nullptr;
+            delete m_layouter;
+            m_layouter = nullptr;
+        }
     }
-    void Layout::setLayouter(const Layouter &layouter)
+    void Layout::setLayouter(Layouter *layouter)
     {
+        if(m_layouter != nullptr)
+            delete m_layouter;
         m_layouter = layouter;
         //Set the widgets to the layouter.
-        m_layouter.m_widgets = &m_widgets;
+        if(m_layouter != nullptr)
+            m_layouter->m_widgets = &m_widgets;
     }
     void Layout::updateLayout()
     {
-        m_layouter.setBoundingBox(getBoundingBox());
-        m_layouter.setBoxes(m_widgets);
+        if(m_layouter != nullptr)
+        {
+            m_layouter->setBoundingBox(getBoundingBox());
+            m_layouter->setBoxes(m_widgets);
+        }
     }
     void Layout::addWidget(std::shared_ptr<Widget> widget)
     {
@@ -36,15 +47,18 @@ namespace PiH
     }
     void Layout::onEvent(const Event &e)
     {
-        m_layouter.onEvent(e);
+        if(m_layouter != nullptr)
+            m_layouter->onEvent(e);
     }
     void Layout::onUpdate(float frametime)
     {
-        m_layouter.onUpdate(frametime);
+        if(m_layouter != nullptr)
+            m_layouter->onUpdate(frametime);
     }
     void Layout::onRender(SDL_Renderer *renderer, const FloatRect &offset)
     {
-        m_layouter.onRender(renderer, offset);
+        if(m_layouter != nullptr)
+            m_layouter->onRender(renderer, offset);
     }
     void Layout::updateBoundingBox()
     {

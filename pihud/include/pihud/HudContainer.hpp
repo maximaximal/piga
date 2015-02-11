@@ -22,6 +22,8 @@ namespace PiH
             Widget* getWidget(const std::string &name);
             void addWidget(Widget *widget, std::string name = "");
             void deleteWidget(const std::string &name);
+        protected:
+            virtual void updateBoundingBox();
         private:
             std::map<std::string, Widget*> m_widgets;
     };

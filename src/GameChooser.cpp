@@ -21,7 +21,7 @@ namespace pigaco
             box->setFont(m_font);
             box->setTextureManager(m_textureManager);
             box->loadFromHost(game.second);
-            box->setBoundingBox(PiH::FloatRect(0, 0, 50, 0));
+            box->setBoundingBox(PiH::FloatRect(0, 0, 300, getBoundingBox().h));
             m_widgets.push_back(std::static_pointer_cast<PiH::Widget>(box));
         }
     }
@@ -44,5 +44,9 @@ namespace pigaco
         {
             std::static_pointer_cast<GameBox>(box)->setFont(font);
         }
+    }
+    void GameChooser::updateBoundingBox()
+    {
+        PiH::Layout::updateBoundingBox();
     }
 }

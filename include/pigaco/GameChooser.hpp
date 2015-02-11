@@ -24,6 +24,8 @@ namespace pigaco
             
             void setTextureManager(std::shared_ptr<PiH::TextureManager> textureManager);
             void setFont(std::shared_ptr<PiH::Font> font);
+        protected:
+            virtual void updateBoundingBox();
         private:
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
             std::shared_ptr<PiH::TextureManager> m_textureManager;

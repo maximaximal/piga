@@ -120,4 +120,9 @@ namespace PiH
             return true;
         return false;
     }
+    void ParticleSource::updateBoundingBox()
+    {
+
+    }
+
 }

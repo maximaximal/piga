@@ -36,6 +36,7 @@ namespace PiH
         protected:
             void addParticle();
             inline bool spawnMoreParticles();
+            virtual void updateBoundingBox();
         private:
             std::vector<std::unique_ptr<Particle> > m_particles;
             std::shared_ptr<Texture> m_texture;
