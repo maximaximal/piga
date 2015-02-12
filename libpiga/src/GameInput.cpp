@@ -24,6 +24,10 @@ namespace piga
         m_playerInputIdCounter++;
         return m_playerInputIdCounter - 1;
     }
+    void GameInput::pushGameEvent(const GameEvent &e)
+    {
+        m_gameEvents.push_back(e);
+    }
     int GameInput::getPlayerCount()
     {
         return m_playerInputs.size();
@@ -37,6 +41,12 @@ namespace piga
     }
     bool GameInput::pollEvent(GameEvent &gameEvent)
     {
+        while(m_gameEvents.size() > 0)
+        {
+            gameEvent = m_gameEvents.front();
+            m_gameEvents.pop_front();
+            return true;
+        }
         for(auto &playerInput : m_playerInputs)
         {
             if(playerInput.second->pollEvent(gameEvent))

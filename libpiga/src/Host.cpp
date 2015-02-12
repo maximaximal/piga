@@ -138,6 +138,17 @@ namespace piga
                 shm.find<PlayerInputStruct>("PlayerInput");
 
         p.first[playerID].fromGameEvent(control, state);
+        
+        if(m_backcallingGameInput)
+        {
+            GameEvent e(event::GameInput(control, state));
+            e.setPlayerID(playerID);
+            m_backcallingGameInput->pushGameEvent(e);
+        }
+    }
+    void Host::setBackcallingGameInput(std::shared_ptr<GameInput> gameInput)
+    {
+        m_backcallingGameInput = gameInput;
     }
     void Host::setCurrentGameHost(std::shared_ptr<GameHost> gameHost)
     {

@@ -174,6 +174,8 @@ namespace piga
                     host->setInput(playerID, input, false);
                 else
                     host->setInput(playerID, input, true);
+                
+                m_controls[playerID][input] = result;
             }
 
             m_controls[playerID][input] = result;

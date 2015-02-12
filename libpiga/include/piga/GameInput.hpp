@@ -3,7 +3,7 @@
 
 #include <map>
 #include <memory>
-#include <queue>
+#include <deque>
 
 #include <piga/PlayerInput.hpp>
 #include <piga/GameEvent.hpp>
@@ -22,6 +22,7 @@ namespace piga
             void update();
             
             int addPlayerInput(std::shared_ptr<PlayerInput> playerInput);
+            void pushGameEvent(const GameEvent &e);
 
             int getPlayerCount();
             const PlayerInput& getPlayerInput(int id);
@@ -29,6 +30,8 @@ namespace piga
             bool pollEvent(GameEvent &gameEvent);
         private:
             std::map<int, std::shared_ptr<PlayerInput> > m_playerInputs;
+            std::deque<GameEvent> m_gameEvents;
+            
             int m_playerInputIdCounter = 0;
     };
 }

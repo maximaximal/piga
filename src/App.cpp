@@ -48,6 +48,8 @@ namespace pigaco
         m_host->init();
 
         m_gameInput = std::make_shared<piga::GameInput>();
+        
+        m_host->setBackcallingGameInput(m_gameInput);
 
         LOG(INFO) << "Clock-Precision: " << std::chrono::high_resolution_clock::period::den;
 
@@ -58,7 +60,7 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), true);
+        m_window->init(glm::ivec2(800, 600), false);
 
         PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
         config->setupDefaultConfig();
@@ -108,7 +110,8 @@ namespace pigaco
         
         m_hudContainer->addWidget(chooser, "GameChooser");
         
-
+        piga::GameEvent gameEvent;
+        
         LOG(INFO) << "Starting the App-Loop.";
 
         while(!end())
@@ -123,6 +126,12 @@ namespace pigaco
                     setEnd(true);
                 }
                 onEvent(e, frametime);
+            }
+            m_gameInput->update();
+            m_host->update(frametime);
+            while(m_gameInput->pollEvent(gameEvent))
+            {
+                onGameEvent(gameEvent, frametime);
             }
             onUpdate(frametime);
 
@@ -163,9 +172,6 @@ namespace pigaco
     }
     void App::onUpdate(float frametime)
     {
-        m_host->update(frametime);
-        m_gameInput->update();
-        m_host->applyFromGameInput(m_gameInput.get());
         
         if(!m_isSleeping)
         {
@@ -204,6 +210,7 @@ namespace pigaco
     }
     void App::onGameEvent(const piga::GameEvent &gameEvent, float frametime)
     {
+        LOG(INFO) << "GameEvent!";
         m_hudContainer->onEvent(gameEvent);
     }
 }

@@ -35,6 +35,7 @@ namespace piga
             bool gameIsRunning();
 
             void update(float frametime);
+            void setBackcallingGameInput(std::shared_ptr<GameInput> gameInput);
 
             static const char* getInputSharedMemoryName();
             static const char* getStatusSharedMemoryName();
@@ -49,6 +50,7 @@ namespace piga
             void receivePacket(ENetPacket *packet, ENetPeer *peer);
             std::shared_ptr<GameHost> m_currentGameHost;
             std::shared_ptr<PlayerManager> m_playerManager;
+            std::shared_ptr<GameInput> m_backcallingGameInput;
             std::vector<std::shared_ptr<SharedLibWrapper> > m_sharedLibs;
             std::string m_configFile;
             std::string m_name = "Unnamed Host";
