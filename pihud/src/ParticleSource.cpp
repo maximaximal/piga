@@ -14,6 +14,7 @@ namespace PiH
     void ParticleSource::setTargetCount(long count)
     {
         m_targetCount = count;
+        m_particles.reserve(count);
     }
     void ParticleSource::setTexture(std::shared_ptr<Texture> texture)
     {
@@ -78,13 +79,19 @@ namespace PiH
                     || (*it)->getY() > getBoundingBox().y + getBoundingBox().h + (*it)->getTextureRect().h)
                     && (*it)->velY > 1)
             {
-                m_particles.erase(it);
+                if(spawnMoreParticles())
+                {
+                    m_currentFrameSpawns -= 1;
+                    addParticle((*it).get());
+                }
             }
         }
         while(spawnMoreParticles())
         {
             m_currentFrameSpawns -= 1;
-            addParticle();
+            std::unique_ptr<Particle> particle(new Particle());
+            addParticle(particle.get());
+            m_particles.push_back(std::move(particle));
         }
     }
     void ParticleSource::onEvent(const Event &e)
@@ -98,10 +105,9 @@ namespace PiH
             particle->onRender(renderer);
         }
     }
-    void ParticleSource::addParticle()
+    void ParticleSource::addParticle(Particle *particle)
     {
         int textureRect = m_distribution(m_generator);
-        std::unique_ptr<Particle> particle(new Particle());
         particle->setTextureRect(m_textureRects[textureRect]);
         particle->texture = m_texture;
         particle->setX(m_xStartRange(m_generator));
@@ -111,8 +117,6 @@ namespace PiH
         particle->velY = m_ySpeedRange(m_generator);
 
         particle->rotationSpeed = m_rotationSpeedRange(m_generator);
-
-        m_particles.push_back(std::move(particle));
     }
     bool ParticleSource::spawnMoreParticles()
     {

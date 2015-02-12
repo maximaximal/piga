@@ -109,6 +109,14 @@ namespace pigaco
     {
         this->init(m_windowSize, m_fullscreen);
     }
+    void Window::hide()
+    {
+        SDL_SetWindowFullscreen(m_window, 0);
+    }
+    void Window::show()
+    {
+        SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    }
     void Window::destroy()
     {
 		// Clean the SDL objects.

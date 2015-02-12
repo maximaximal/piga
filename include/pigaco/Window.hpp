@@ -32,6 +32,9 @@ namespace pigaco
 
         void deepsleep();
         void deepwake();
+        
+        void hide();
+        void show();
 
         void destroy();
     private:

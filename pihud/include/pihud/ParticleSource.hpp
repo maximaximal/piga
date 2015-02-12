@@ -34,7 +34,7 @@ namespace PiH
             virtual void onEvent(const Event &e);
             virtual void onRender(SDL_Renderer *renderer, const FloatRect &offset);
         protected:
-            void addParticle();
+            void addParticle(Particle *particle);
             inline bool spawnMoreParticles();
             virtual void updateBoundingBox();
         private:

@@ -8,6 +8,7 @@
 #include <pigaco/GameChooser.hpp>
 #include <pihud/pihud.hpp>
 #include <pihud/VerticalListLayout.hpp>
+#include <pihud/ParticleSource.hpp>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
@@ -57,7 +58,7 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), false);
+        m_window->init(glm::ivec2(800, 600), true);
 
         PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
         config->setupDefaultConfig();
@@ -67,9 +68,32 @@ namespace pigaco
         m_fontManager = std::make_shared<PiH::FontManager>();
         
         m_hudContainer = new PiH::HudContainer(0);
+        m_hudContainer->setBoundingBox(0, 0, m_window->getSize().x, m_window->getSize().y);
 
         m_directoryScanner = std::make_shared<DirectoryScanner>();
         m_directoryScanner->scanDirectory("Games");
+
+        PiH::ParticleSource *particles = new PiH::ParticleSource(m_hudContainer);
+        particles->setDuration(0);
+        particles->setGravity(-0.0001);
+        particles->setSpawnsPerFrame(0.3);
+        particles->setTargetCount(m_window->getSize().x * m_window->getSize().y / 300);
+        particles->setTexture(m_textureManager->getTexture("Data/Textures/GuiBackgroundEffects.png"));
+        particles->setXSpeedRange(-0.25, 0.25);
+        particles->setYSpeedRange(0.00005, 0.00007);
+        particles->setRotationSpeedRange(0, 0);
+        
+        std::vector<PiH::IntRect> rects = {
+            PiH::IntRect(0, 0, 128, 128),
+            PiH::IntRect(133, 37, 80, 80),
+            PiH::IntRect(0, 125, 400, 320)
+        };
+        
+        particles->setTextureRectVector(rects);
+        particles->setBoundingBox(m_hudContainer->getBoundingBox());
+        particles->setXStartRange(0, m_window->getSize().x);
+        particles->setYStartRange(-400, -401);
+        m_hudContainer->addWidget(particles, "GuiBackgroundEffects");
         
         GameChooser *chooser = new GameChooser(m_hudContainer);
         chooser->setFont(m_fontManager->get("Data/Fonts/Roboto-Regular.ttf:22"));
@@ -83,6 +107,7 @@ namespace pigaco
         chooser->setBoundingBox(PiH::FloatRect(0, m_window->getSize().y / 4, m_window->getSize().x, m_window->getSize().y / 2));
         
         m_hudContainer->addWidget(chooser, "GameChooser");
+        
 
         LOG(INFO) << "Starting the App-Loop.";
 
@@ -142,16 +167,18 @@ namespace pigaco
         m_gameInput->update();
         m_host->applyFromGameInput(m_gameInput.get());
         
-        m_hudContainer->onUpdate(frametime);
+        if(!m_isSleeping)
+        {
+            m_hudContainer->onUpdate(frametime);
+        }
 
         m_window->glClear();
         SDL_SetRenderDrawColor(m_window->getSDLRenderer(), 0, 0, 0, 0);
         SDL_RenderClear(m_window->getSDLRenderer());
 
         m_hudContainer->onRender(m_window->getSDLRenderer(), PiH::FloatRect(0, 0, m_window->getSize().x, m_window->getSize().y));
-        
         SDL_RenderPresent(m_window->getSDLRenderer());
-
+        
         if(m_isSleeping && !m_host->gameIsRunning())
         {
             wakeupWindow();
@@ -164,12 +191,12 @@ namespace pigaco
     void App::sleepWindow()
     {
         m_isSleeping = true;
-        m_window->deepsleep();
+        m_window->hide();
     }
     void App::wakeupWindow()
     {
         m_isSleeping = false;
-        m_window->deepwake();
+        m_window->show();
     }
     void App::setEnd(bool state)
     {
