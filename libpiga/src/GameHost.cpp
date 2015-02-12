@@ -73,7 +73,7 @@ namespace piga
         }
         
         if(config["BackgroundImage"])
-            setConfig(BackgroundImage, getConfig(Directory) + config["BackgroundImage"].as<std::string>());
+            setConfig(BackgroundImage, getConfig(Directory) + "/" + config["BackgroundImage"].as<std::string>());
         else
         {
             setConfig(BackgroundImage, "");
@@ -81,7 +81,7 @@ namespace piga
         }
         
         if(config["Logo"])
-            setConfig(Logo, getConfig(Directory) + config["Logo"].as<std::string>());
+            setConfig(Logo, getConfig(Directory) +  "/" +config["Logo"].as<std::string>());
         else
         {
             setConfig(Logo, "");

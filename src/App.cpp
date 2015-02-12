@@ -57,7 +57,7 @@ namespace pigaco
         SDL_Event e;
 
         m_window.reset(new Window());
-        m_window->init(glm::ivec2(800, 600), true);
+        m_window->init(glm::ivec2(800, 600), false);
 
         PiH::Config *config = new PiH::Config(m_window->getSDLRenderer());
         config->setupDefaultConfig();

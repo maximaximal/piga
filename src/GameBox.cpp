@@ -71,6 +71,14 @@ namespace pigaco
         m_label_name->setText(gameHost->getConfig(piga::GameHost::Name));
         m_label_description->setText(gameHost->getConfig(piga::GameHost::Description));
         m_label_version->setText("V" + gameHost->getConfig(piga::GameHost::Version));
+        
+        if(m_textureManager)
+        {
+            m_image_background->setTexture(m_textureManager->getTexture(gameHost->getConfig(piga::GameHost::BackgroundImage)));
+            m_image_background->setTextureRect(PiH::IntRect(0, 0, getBoundingBox().w, getBoundingBox().h));
+            m_image_logo->setTexture(m_textureManager->getTexture(gameHost->getConfig(piga::GameHost::Logo)));
+            m_image_logo->setTextureRect(PiH::IntRect(0, 0, 32, 32));
+        }
     }
     void GameBox::setFont(std::shared_ptr<PiH::Font> font)
     {
@@ -85,6 +93,7 @@ namespace pigaco
     void GameBox::updateBoundingBox()
     {
         m_image_background->setPosition(getBoundingBox().x, getBoundingBox().y);
+        m_image_background->setTextureRect(PiH::IntRect(0, 0, getBoundingBox().w, getBoundingBox().h));
         m_image_logo->setPosition(getBoundingBox().x + getBoundingBox().w - m_image_logo->getBoundingBox().w - 10, getBoundingBox().y - 10);
         
         m_label_name->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + 10, getBoundingBox().w, getBoundingBox().h));
