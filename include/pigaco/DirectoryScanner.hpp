@@ -10,7 +10,7 @@ namespace pigaco
     {
         public:
             typedef std::map<std::string, std::shared_ptr<piga::GameHost> > GameMap;
-            DirectoryScanner();
+            DirectoryScanner(std::shared_ptr<piga::Host> host);
             virtual ~DirectoryScanner();
 
             void scanDirectory(const std::string &dir);
@@ -20,6 +20,7 @@ namespace pigaco
             std::shared_ptr<piga::GameHost> getGame(const std::string &dir);
 		private:
             std::string m_directory = "";
+            std::shared_ptr<piga::Host> m_host;
             GameMap m_games;
     };
 }

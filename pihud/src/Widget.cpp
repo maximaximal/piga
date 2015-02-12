@@ -47,10 +47,6 @@ namespace PiH
     {
         return m_focused;
     }
-    void Widget::onEvent(const Event &e)
-    {
-
-    }
     void Widget::onUpdate(float frametime)
     {
 

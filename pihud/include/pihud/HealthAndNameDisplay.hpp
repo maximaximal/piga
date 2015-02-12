@@ -24,6 +24,7 @@ namespace PiH
             IconHealthIndicator* getHealthIndicator();
             Label* getLabel();
 
+            virtual void onEvent(const Event &e);
             virtual void onRender(SDL_Renderer *renderer, const FloatRect &offset);
         protected:
             virtual void updateRectFromBeneath();

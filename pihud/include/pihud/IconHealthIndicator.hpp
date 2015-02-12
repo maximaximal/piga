@@ -30,6 +30,7 @@ namespace PiH
 
             void setTexture(std::shared_ptr<Texture> texture);
 
+            virtual void onEvent(const Event &e);
             virtual void onRender(SDL_Renderer *renderer, const FloatRect &offset);
         protected:
             void updateMaximum();

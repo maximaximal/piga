@@ -66,6 +66,10 @@ namespace PiH
         m_texture = texture;
         updateTexture();
     }
+    void IconHealthIndicator::onEvent(const Event &e)
+    {
+
+    }
     void IconHealthIndicator::onRender(SDL_Renderer *renderer, const FloatRect &offset)
     {
         for(auto &icon : m_icons)

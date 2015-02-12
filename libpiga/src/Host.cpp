@@ -141,8 +141,7 @@ namespace piga
         
         if(m_backcallingGameInput)
         {
-            GameEvent e(event::GameInput(control, state));
-            e.setPlayerID(playerID);
+            GameEvent e(playerID, event::GameInput(control, state));
             m_backcallingGameInput->pushGameEvent(e);
         }
     }
@@ -150,20 +149,23 @@ namespace piga
     {
         m_backcallingGameInput = gameInput;
     }
-    void Host::setCurrentGameHost(std::shared_ptr<GameHost> gameHost)
+    void Host::setCurrentGameHost(GameHost *gameHost)
     {
         m_currentGameHost = gameHost;
-        if(m_currentGameHost->isRunning())
+        if(gameHost != nullptr)
         {
-            using namespace boost::interprocess;
-            managed_shared_memory shm(open_only, getStatusSharedMemoryName());
+            if(m_currentGameHost->isRunning())
+            {
+                using namespace boost::interprocess;
+                managed_shared_memory shm(open_only, getStatusSharedMemoryName());
 
-            std::pair<Status*, std::size_t> p =
-                    shm.find<Status>("Status");
+                std::pair<Status*, std::size_t> p =
+                        shm.find<Status>("Status");
 
-            Status *status = p.first;
+                Status *status = p.first;
 
-            status->setRunning(true);
+                status->setRunning(true);
+            }
         }
     }
     void Host::setPlayerManager(std::shared_ptr<PlayerManager> playerManager)
@@ -180,7 +182,7 @@ namespace piga
 
         Status *status = p.first;
 
-        if(m_currentGameHost)
+        if(m_currentGameHost != nullptr)
         {
             if(m_currentGameHost->isRunning())
             {

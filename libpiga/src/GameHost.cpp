@@ -4,6 +4,7 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <piga/Definitions.hpp>
+#include <piga/Host.hpp>
 
 using std::cout;
 using std::endl;
@@ -111,6 +112,13 @@ namespace piga
     {
         if(isValid())
         {
+            if(m_host)
+            {
+                if(m_host->gameIsRunning())
+                {
+                    return;
+                }
+            }
             if(isRunning())
             {
                 cout << PIGA_DEBUG_PRESTRING << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
@@ -138,6 +146,11 @@ namespace piga
             boost::filesystem::current_path(m_currentPath);
 
             cout << PIGA_DEBUG_PRESTRING << "======= Command Executed! =======" << endl;
+            
+            if(m_host)
+            {
+                m_host->setCurrentGameHost(this);
+            }
         }
         else
         {
@@ -148,6 +161,11 @@ namespace piga
     void GameHost::exit()
     {
         m_running = false;
+        if(m_host)
+        {
+            //Unset this gamehost from the host.
+            m_host->setCurrentGameHost(nullptr);
+        }
     }
     bool GameHost::isValid()
     {

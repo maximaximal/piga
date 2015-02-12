@@ -6,7 +6,8 @@ namespace fs = boost::filesystem;
 
 namespace pigaco
 {
-    DirectoryScanner::DirectoryScanner()
+    DirectoryScanner::DirectoryScanner(std::shared_ptr<piga::Host> host)
+        : m_host(host)
     {
 
     }
@@ -42,6 +43,7 @@ namespace pigaco
     {
         std::shared_ptr<piga::GameHost> gameHost = std::make_shared<piga::GameHost>();
         gameHost->loadFromDirectory(dir);
+        gameHost->setHost(m_host);
         m_games[dir] = gameHost;
     }
     DirectoryScanner::GameMap &DirectoryScanner::getGames()

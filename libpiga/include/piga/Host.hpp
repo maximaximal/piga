@@ -29,7 +29,7 @@ namespace piga
 
             void setInput(unsigned int playerID, GameControl control, bool state);
 
-            void setCurrentGameHost(std::shared_ptr<GameHost> gameHost);
+            void setCurrentGameHost(GameHost *gameHost);
             void setPlayerManager(std::shared_ptr<PlayerManager> playerManager);
 
             bool gameIsRunning();
@@ -48,7 +48,7 @@ namespace piga
             unsigned int m_buttonCount = 11;
             void sendHandshakePacket(ENetPeer *peer);
             void receivePacket(ENetPacket *packet, ENetPeer *peer);
-            std::shared_ptr<GameHost> m_currentGameHost;
+            GameHost *m_currentGameHost = nullptr;
             std::shared_ptr<PlayerManager> m_playerManager;
             std::shared_ptr<GameInput> m_backcallingGameInput;
             std::vector<std::shared_ptr<SharedLibWrapper> > m_sharedLibs;

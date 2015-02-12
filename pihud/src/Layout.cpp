@@ -25,8 +25,7 @@ namespace PiH
             delete m_layouter;
         m_layouter = layouter;
         //Set the widgets to the layouter.
-        if(m_layouter != nullptr)
-            m_layouter->m_widgets = &m_widgets;
+        m_layouter->m_widgets = &m_widgets;
     }
     void Layout::updateLayout()
     {

@@ -6,11 +6,6 @@ namespace PiH
     {
 		type = EventType::NotSet;
     }
-    Event::Event(const DirectionEvent &dirEvent)
-    {
-        type = EventType::Direction;
-        dir = dirEvent;
-    }
     Event::Event(const InputEvent &inputEvent)
     {
         type = EventType::Input;
@@ -26,21 +21,25 @@ namespace PiH
         type = EventType::Piga;
         piga = pigaEvent;
     }
-    Event::Event(const piga::GameEvent &gameEvent)
+    Event::Event(const piga::GameEvent &gameEvent, bool focusEvent)
     {
-        if(gameEvent.type() == piga::GameEvent::GameInput)
+        if(gameEvent.type() == piga::GameEvent::GameInput && !focusEvent)
         {
             PigaEvent pigaEvent(gameEvent.gameInput.control(), gameEvent.gameInput.state());
             type = EventType::Piga;
             piga = pigaEvent;
         }
-        if(gameEvent.gameInput.control() == piga::DOWN
-                || gameEvent.gameInput.control() == piga::LEFT
-                || gameEvent.gameInput.control() == piga::RIGHT
-                || gameEvent.gameInput.control() == piga::UP)
+        else if(gameEvent.type() == piga::GameEvent::GameInput)
         {
-            type = EventType::Direction;
-            dir = DirectionEvent(gameEvent.gameInput.control(), gameEvent.gameInput.state());
+            if(gameEvent.gameInput.control() == piga::DOWN
+                    || gameEvent.gameInput.control() == piga::LEFT
+                    || gameEvent.gameInput.control() == piga::RIGHT
+                    || gameEvent.gameInput.control() == piga::UP
+                    && focusEvent)
+            {
+                type = EventType::Focus;
+                focus = FocusEvent(gameEvent);
+            }
         }
     }
     Event::~Event()

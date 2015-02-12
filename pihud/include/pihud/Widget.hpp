@@ -24,7 +24,7 @@ namespace PiH
             void setHeight(float h);
             bool isFocused();
 
-            virtual void onEvent(const Event &e);
+            virtual void onEvent(const Event &e) = 0;
             virtual void onUpdate(float frametime);
             virtual void onRender(SDL_Renderer* renderer, const FloatRect &offset);
             virtual void updateRectFromBeneath();

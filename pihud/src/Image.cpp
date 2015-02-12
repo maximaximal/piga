@@ -25,6 +25,10 @@ namespace PiH
         m_boundingBox.w = rect.w;
         m_boundingBox.h = rect.h;
     }
+    void Image::onEvent(const Event &e)
+    {
+
+    }
     void Image::onRender(SDL_Renderer *renderer, const FloatRect &offset)
     {
         SDL_Rect srcRect = m_textureRect.toSDLRect();

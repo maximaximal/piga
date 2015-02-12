@@ -9,7 +9,6 @@ include(FindPackageHandleStandardArgs)
 set(SRC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SRCS
     ${SRC}/HudContainer.cpp
-    ${SRC}/DirectionEvent.cpp
     ${SRC}/InputEvent.cpp
     ${SRC}/Event.cpp
     ${SRC}/Widget.cpp
@@ -43,7 +42,7 @@ set(HDRS
     ${HDR}/Rect.hpp
     ${HDR}/Event.hpp
     ${HDR}/InputEvent.hpp
-    ${HDR}/DirectionEvent.hpp
+    ${HDR}/Direction.hpp
     ${HDR}/Config.hpp
     ${HDR}/pihud.hpp
     ${HDR}/Font.hpp

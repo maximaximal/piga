@@ -53,6 +53,10 @@ namespace PiH
     {
         return m_label;
     }
+    void HealthAndNameDisplay::onEvent(const Event &e)
+    {
+        
+    }
     void HealthAndNameDisplay::onRender(SDL_Renderer *renderer, const FloatRect &offset)
     {
         m_label->onRender(renderer, offset);

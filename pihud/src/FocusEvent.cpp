@@ -7,9 +7,39 @@ namespace PiH
     {
 
     }
-    FocusEvent::FocusEvent(DirectionEvent &dirEvent)
+    FocusEvent::FocusEvent(const piga::GameEvent &gameEvent)
     {
-
+        if(gameEvent.type() == piga::GameEvent::GameInput)
+        {
+            if(gameEvent.gameInput.state())
+            {
+                switch(gameEvent.gameInput.control())
+                {
+                    case piga::GameControl::UP:
+                        direction = Direction::UP;
+                        break;
+                    case piga::GameControl::DOWN:
+                        direction = Direction::DOWN;
+                        break;
+                    case piga::GameControl::LEFT:
+                        direction = Direction::LEFT;
+                        break;
+                    case piga::GameControl::RIGHT:
+                        direction = Direction::RIGHT;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else 
+            {
+                direction = Direction::DIRECTION_NOT_SET;
+            }
+        }
+        else 
+        {
+            direction = Direction::DIRECTION_NOT_SET;
+        }
     }
     FocusEvent::~FocusEvent()
     {
@@ -42,6 +72,14 @@ namespace PiH
 			m_focusManager->setFocused(focusedWidget);
         }
         m_handled = true;
+    }
+    FocusEvent& FocusEvent::operator=(const FocusEvent &other)
+    {
+        if(other.getFocusManager())
+            m_focusManager = other.getFocusManager();
+        m_forced = other.wasForced();
+        m_handled = other.wasHandled();
+        return *this;
     }
     std::shared_ptr<FocusManager> FocusEvent::getFocusManager() const
     {

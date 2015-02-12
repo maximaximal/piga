@@ -1,7 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <pihud/DirectionEvent.hpp>
+#include <piga/GameEvent.hpp>
+#include <pihud/Direction.hpp>
 
 namespace PiH
 {
@@ -15,11 +16,11 @@ namespace PiH
      * further. Please include a check if the focus event was already handled before you try to handle
      * it in your own code!
      */
-    class FocusEvent : public DirectionEvent
+    class FocusEvent
     {
         public:
             FocusEvent();
-            FocusEvent(DirectionEvent &dirEvent);
+            FocusEvent(const piga::GameEvent &gameEvent);
             virtual ~FocusEvent();
 
             void setHandled(bool handled = true) const;
@@ -27,8 +28,12 @@ namespace PiH
 
 			bool leftOrRight() const;
             bool upOrDown() const;
+            
+            Direction direction;
 
             void focus(std::shared_ptr<Widget> focusedWidget) const;
+            
+            FocusEvent& operator=(const FocusEvent &other);
 
             std::shared_ptr<FocusManager> getFocusManager() const;
             void setFocusManager(std::shared_ptr<FocusManager> focusManager);

@@ -7,6 +7,7 @@
 #include <pigaco/DirectoryScanner.hpp>
 #include <pigaco/GameChooser.hpp>
 #include <pihud/pihud.hpp>
+#include <pihud/Event.hpp>
 #include <pihud/VerticalListLayout.hpp>
 #include <pihud/ParticleSource.hpp>
 
@@ -72,7 +73,7 @@ namespace pigaco
         m_hudContainer = new PiH::HudContainer(0);
         m_hudContainer->setBoundingBox(0, 0, m_window->getSize().x, m_window->getSize().y);
 
-        m_directoryScanner = std::make_shared<DirectoryScanner>();
+        m_directoryScanner = std::make_shared<DirectoryScanner>(m_host);
         m_directoryScanner->scanDirectory("Games");
 
         PiH::ParticleSource *particles = new PiH::ParticleSource(m_hudContainer);
@@ -145,34 +146,10 @@ namespace pigaco
     }
     void App::onEvent(const SDL_Event &e, float frametime)
     {
-		if(e.type == SDL_KEYDOWN)
-        {
-            if(e.key.keysym.scancode == SDL_SCANCODE_B)
-            {
-                if(!m_directoryScanner->getGame("BomberPi")->isRunning())
-                {
-                    m_directoryScanner->getGame("BomberPi")->start();
-                    m_host->setCurrentGameHost(m_directoryScanner->getGame("BomberPi"));
-                    this->sleepWindow();
-                }
-            }
-
-            if(e.key.keysym.scancode == SDL_SCANCODE_W)
-            {
-                m_host->setInput(0, piga::GameControl::UP, true);
-            }
-        }
-        if(e.type == SDL_KEYUP)
-        {
-            if(e.key.keysym.scancode == SDL_SCANCODE_W)
-            {
-                m_host->setInput(0, piga::GameControl::UP, false);
-            }
-        }
+        
     }
     void App::onUpdate(float frametime)
     {
-        
         if(!m_isSleeping)
         {
             m_hudContainer->onUpdate(frametime);
@@ -188,6 +165,10 @@ namespace pigaco
         if(m_isSleeping && !m_host->gameIsRunning())
         {
             wakeupWindow();
+        }
+        else if(!m_isSleeping && m_host->gameIsRunning())
+        {
+            sleepWindow();
         }
     }
     bool App::end()
@@ -210,8 +191,8 @@ namespace pigaco
     }
     void App::onGameEvent(const piga::GameEvent &gameEvent, float frametime)
     {
-        LOG(INFO) << "GameEvent!";
-        m_hudContainer->onEvent(gameEvent);
+        m_hudContainer->onEvent(PiH::Event(gameEvent, true));
+        m_hudContainer->onEvent(PiH::Event(gameEvent, false));
     }
 }
 
