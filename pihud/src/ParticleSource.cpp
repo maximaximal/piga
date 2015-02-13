@@ -77,7 +77,7 @@ namespace PiH
             if(((*it)->getX() + (*it)->getTextureRect().w < 0
                     || (*it)->getX() > getBoundingBox().x + getBoundingBox().w
                     || (*it)->getY() > getBoundingBox().y + getBoundingBox().h + (*it)->getTextureRect().h)
-                    && (*it)->velY > 1)
+                    && (*it)->velY > 0)
             {
                 if(spawnMoreParticles())
                 {

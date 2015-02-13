@@ -79,16 +79,17 @@ namespace pigaco
         PiH::ParticleSource *particles = new PiH::ParticleSource(m_hudContainer);
         particles->setDuration(0);
         particles->setGravity(-0.0001);
-        particles->setSpawnsPerFrame(0.3);
-        particles->setTargetCount(m_window->getSize().x * m_window->getSize().y / 300);
+        particles->setSpawnsPerFrame(0.057);
+        particles->setTargetCount((m_window->getSize().x * m_window->getSize().y) / 300);
         particles->setTexture(m_textureManager->getTexture("Data/Textures/GuiBackgroundEffects.png"));
-        particles->setXSpeedRange(-0.25, 0.25);
+        particles->setXSpeedRange(-0.025, 0.025);
         particles->setYSpeedRange(0.00005, 0.00007);
         particles->setRotationSpeedRange(0, 0);
         
         std::vector<PiH::IntRect> rects = {
             PiH::IntRect(0, 0, 128, 128),
             PiH::IntRect(133, 37, 80, 80),
+            PiH::IntRect(0, 125, 400, 320),
             PiH::IntRect(0, 125, 400, 320)
         };
         
@@ -184,6 +185,12 @@ namespace pigaco
     {
         m_isSleeping = false;
         m_window->show();
+        m_hudContainer->setBoundingBox(0, 0, m_window->getSize().x, m_window->getSize().y);
+        m_hudContainer->getWidget("GuiBackgroundEffects")->setBoundingBox(m_hudContainer->getBoundingBox());
+        PiH::ParticleSource *particles = static_cast<PiH::ParticleSource*>(m_hudContainer->getWidget("GuiBackgroundEffects"));
+        particles->setXStartRange(0, m_window->getSize().x);
+        particles->setTargetCount(m_window->getSize().x * m_window->getSize().y / 300);
+        m_hudContainer->getWidget("GameChooser")->setBoundingBox(PiH::FloatRect(0, m_window->getSize().y / 4, m_window->getSize().x, m_window->getSize().y / 2));
     }
     void App::setEnd(bool state)
     {
