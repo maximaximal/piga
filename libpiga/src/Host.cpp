@@ -139,11 +139,14 @@ namespace piga
 
         p.first[playerID].fromGameEvent(control, state);
         
+        GameEvent e(playerID, event::GameInput(control, state));
         if(m_backcallingGameInput)
         {
-            GameEvent e(playerID, event::GameInput(control, state));
             m_backcallingGameInput->pushGameEvent(e);
         }
+        
+        if(m_currentGameHost != nullptr)
+            m_currentGameHost->sendGameEvent(e);
     }
     void Host::setBackcallingGameInput(std::shared_ptr<GameInput> gameInput)
     {

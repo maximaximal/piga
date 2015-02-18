@@ -104,6 +104,49 @@ namespace piga
             setConfig(ProgramPath, "Client");
             cout << PIGA_DEBUG_PRESTRING << "The config.yml in \"" << directory << "\" has no ProgramPath node!" << endl;
         }
+        
+        if(config["KeyboardMappings"])
+        {
+            //Try to interpret the specific keyboard mappings for this game/application host.
+            for(YAML::const_iterator mappingNode = config["KeyboardMappings"].begin(); mappingNode!= config["KeyboardMappings"].end(); ++mappingNode)
+            {
+                std::string mapping = (*mappingNode).as<std::string>();
+                int playerID = atoi(mapping.substr(0, mapping.find(':')).c_str());
+                std::string control = mapping.substr(mapping.find(':') + 1, mapping.find("->") - mapping.find(":") - 1);
+                std::string mappedKey = mapping.substr(mapping.find("->") + 2);
+                piga::GameControl gameControl;
+
+                if(control == "UP")
+                    gameControl = GameControl::UP;
+                else if(control == "DOWN")
+                    gameControl = GameControl::DOWN;
+                else if(control == "LEFT")
+                    gameControl = GameControl::LEFT;
+                else if(control == "RIGHT")
+                    gameControl = GameControl::RIGHT;
+                else if(control == "ACTION")
+                    gameControl = GameControl::ACTION;
+                else if(control == "BUTTON1")
+                    gameControl = GameControl::BUTTON1;
+                else if(control == "BUTTON2")
+                    gameControl = GameControl::BUTTON2;
+                else if(control == "BUTTON3")
+                    gameControl = GameControl::BUTTON3;
+                else if(control == "BUTTON4")
+                    gameControl = GameControl::BUTTON4;
+                else if(control == "BUTTON5")
+                    gameControl = GameControl::BUTTON5;
+                else if(control == "BUTTON6")
+                    gameControl = GameControl::BUTTON6;
+                else
+                {
+                    cout << PIGA_DEBUG_PRESTRING << "[Keyboard Mapping Error in " << getConfig(Directory) << "]: The mapping \"" << control << "\" could not be interpreted!" << endl;
+                }
+
+                m_keyboardMappings[playerID][gameControl] = mappedKey;
+                cout << PIGA_DEBUG_PRESTRING << "Added Mapping \"" << control << "\" (GameControl " << gameControl << ") -> \"" << mappedKey << "\" for player " << playerID << " in \"" << getConfig(Name) << "\"!" << endl;
+            }
+        }
 
         cout << PIGA_DEBUG_PRESTRING << "Loaded game \"" << getConfig(Name) << "\" from directory \"" << directory
              << "\"." << endl;
@@ -190,5 +233,25 @@ namespace piga
     void GameHost::setConfig(GameHost::ConfigValue id, const std::string &value)
     {
         m_config[id] = value;
+    }
+    void GameHost::sendGameEvent(const GameEvent &event)
+    {
+        if(event.type() == GameEvent::GameEventType::GameInput)
+        {
+            if(m_keyboardMappings.size() > 0)
+            {
+                if(m_keyboardMappings.count(event.playerID()) == 1)
+                {
+                    if(m_keyboardMappings[event.playerID()].count(event.gameInput.control()) == 1)
+                    {
+                        //Issue a xdotool keyboard command.
+                        if(event.gameInput.state())
+                            system(std::string("xdotool keydown " + m_keyboardMappings[event.playerID()][event.gameInput.control()] + ";").c_str());
+                        else
+                            system(std::string("xdotool keyup " + m_keyboardMappings[event.playerID()][event.gameInput.control()] + ";").c_str());
+                    }
+                }
+            }
+        }
     }
 }

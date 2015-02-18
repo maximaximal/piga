@@ -4,14 +4,22 @@ import sys
 
 currentPath = os.path.dirname(os.path.realpath(__file__))
 
-def copytree(src, dst, symlinks=False, ignore=None):
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isdir(s):
-            shutil.copytree(s, d, symlinks, ignore)
+def copytree(src, dest, ignore=None):
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        if ignore is not None:
+            ignored = ignore(src, files)
         else:
-            shutil.copy2(s, d)
+            ignored = set()
+        for f in files:
+            if f not in ignored:
+                copytree(os.path.join(src, f), 
+                                    os.path.join(dest, f), 
+                                    ignore)
+    else:
+        shutil.copyfile(src, dest)
 
 def setupDist(path): 
     if not os.path.exists(path):
