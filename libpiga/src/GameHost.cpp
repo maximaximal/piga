@@ -5,6 +5,7 @@
 #include <iostream>
 #include <piga/Definitions.hpp>
 #include <piga/Host.hpp>
+#include <fstream>
 
 using std::cout;
 using std::endl;
@@ -170,16 +171,21 @@ namespace piga
             }
             cout << PIGA_DEBUG_PRESTRING << "Starting program \"" << getConfig(Name) << "\"" << endl;
 
+
             m_currentPath = boost::filesystem::current_path().string();
             boost::filesystem::current_path(getConfig(Directory));
+
+            std::ofstream tmp(".app_running.tmp");
 
             std::stringstream command;
             command << "./" << getConfig(ProgramPath);
             command << " ";
             command << getConfig(Parameters);
-            command << " &";
+            command << " && rm .app_running.tmp &";
 
             std::string systemCmd = command.str();
+            tmp << "" << endl;
+            tmp.close();
 
             cout << PIGA_DEBUG_PRESTRING << "Using Command: \"" << systemCmd << "\"" << endl;
 
@@ -214,8 +220,10 @@ namespace piga
     {
         return m_valid;
     }
-    bool GameHost::isRunning()
+    bool GameHost::isRunning(bool fsCheck)
     {
+        if(fsCheck)
+            setRunning(boost::filesystem::exists(getConfig(Directory) + "/.app_running.tmp"));
         return m_running;
     }
     void GameHost::invalidate(bool state)

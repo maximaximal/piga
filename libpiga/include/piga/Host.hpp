@@ -32,7 +32,7 @@ namespace piga
             void setCurrentGameHost(GameHost *gameHost);
             void setPlayerManager(std::shared_ptr<PlayerManager> playerManager);
 
-            bool gameIsRunning();
+            bool gameIsRunning(bool fsCheck = false);
 
             void update(float frametime);
             void setBackcallingGameInput(std::shared_ptr<GameInput> gameInput);
@@ -57,6 +57,7 @@ namespace piga
             bool m_useSharedMemory = true;
             ENetHost *m_enetHost = nullptr;
             std::map<int, ENetPeer*> m_enetPeers;
+            float m_isRunningTimer = 0;
     };
 }
 

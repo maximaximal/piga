@@ -175,37 +175,22 @@ namespace piga
     {
         m_playerManager = playerManager;
     }
-    bool Host::gameIsRunning()
+    bool Host::gameIsRunning(bool fsCheck)
     {
-        using namespace boost::interprocess;
-        managed_shared_memory shm(open_only, getStatusSharedMemoryName());
-
-        std::pair<Status*, std::size_t> p =
-                shm.find<Status>("Status");
-
-        Status *status = p.first;
-
         if(m_currentGameHost != nullptr)
         {
-            if(m_currentGameHost->isRunning())
-            {
-                if(!status->isRunning())
-                {
-                    m_currentGameHost->setRunning(false);
-                }
-            }
-            else
-            {
-                if(status->isRunning())
-                {
-                    m_currentGameHost->setRunning(true);
-                }
-            }
+            return m_currentGameHost->isRunning(fsCheck);
         }
-        return status->isRunning();
+        return false;
     }
     void Host::update(float frametime)
     {
+        m_isRunningTimer += frametime;
+        if(m_isRunningTimer > 0.5)
+        {
+            gameIsRunning(true);
+            m_isRunningTimer = 0;
+        }
         for(std::size_t i = 0; i < m_playerCount; ++i)
         {
             for(unsigned int control = GameControl::UP; control < GameControl::_COUNT; ++control)

@@ -38,7 +38,7 @@ namespace piga
             void exit();
 
             bool isValid();
-            bool isRunning();
+            bool isRunning(bool fsCheck = false);
             void invalidate(bool state = false);
             void setRunning(bool state);
 
