@@ -73,6 +73,14 @@ namespace piga
                  */
                 int value() const;
                 /**
+                 * @brief Returns the value as a float variable between 0 and 1. 
+                 * 
+                 * This function maps the integer value to a float value. 
+                 * 
+                 * @return The float value generated from the integer value.
+                 */
+                float fValue() const;
+                /**
                  * @brief Returns the control of the GameInput event. 
                  * 
                  * @return The control of this GameInput event. 
@@ -109,6 +117,12 @@ namespace piga
                  * @param value The value of the GameInput event to be set. 
                  */
                 void setValue(int value);
+                /**
+                 * @brief Sets the value from a float variable ranging between 0 and 1. 
+                 * 
+                 * @param value The float representation of the int value between 0 and 1. 
+                 */
+                void setFValue(float value);
                 /**
                  * @brief Sets the control of the GameEvent. 
                  * 

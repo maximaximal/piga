@@ -37,6 +37,10 @@ namespace piga
         {
             return m_value;
         }
+        float GameInput::fValue() const
+        {
+            return (100000.0 / (float) value());
+        }
         GameControl GameInput::control() const
         {
             return m_control;
@@ -51,6 +55,10 @@ namespace piga
         void GameInput::setValue(int value)
         {
             m_value = value;
+        }
+        void GameInput::setFValue(float value)
+        {
+            m_value = value * 100000;
         }
         void GameInput::setControl(GameControl control)
         {
