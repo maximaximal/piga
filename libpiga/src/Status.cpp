@@ -10,6 +10,10 @@ namespace piga
     {
 
     }
+    Status::~Status()
+    {
+
+    }
     bool Status::isRunning()
     {
         ip::scoped_lock<ip::interprocess_mutex> lock(m_runningMutex);
