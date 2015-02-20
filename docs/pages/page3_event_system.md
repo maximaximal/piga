@@ -14,7 +14,7 @@ The event system is divided into several different modules:
 The piga::event::GameInput class has 2 variants of describing inputs: 
 
   1. A boolean state value. 
-  2. A integer value. 
+  2. An integer value. 
 
 #### State (bool)
 
