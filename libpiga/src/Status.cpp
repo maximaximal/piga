@@ -20,4 +20,20 @@ namespace piga
         ip::scoped_lock<ip::interprocess_mutex> lock(m_runningMutex);
         m_running = state;
     }
+    int Status::getCreditCount()
+    {
+        ip::scoped_lock<ip::interprocess_mutex> lock(m_creditsMutex);
+        return m_creditCount;
+    }
+    void Status::setCreditCount(int credits)
+    {
+        ip::scoped_lock<ip::interprocess_mutex> lock(m_creditsMutex);
+        m_creditCount = credits;
+    }
+    int Status::addCredit()
+    {
+        ip::scoped_lock<ip::interprocess_mutex> lock(m_creditsMutex);
+        ++m_creditCount;
+        return m_creditCount;
+    }
 }

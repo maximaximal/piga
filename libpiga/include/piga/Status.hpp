@@ -16,9 +16,15 @@ namespace piga
             Status(bool running);
             bool isRunning();
             void setRunning(bool state);
+            
+            int getCreditCount();
+            void setCreditCount(int credits);
+            int addCredit();
         private:
             bool m_running;
+            int m_creditCount;
             boost::interprocess::interprocess_mutex m_runningMutex;
+            boost::interprocess::interprocess_mutex m_creditsMutex;
     };
 }
 
