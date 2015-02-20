@@ -72,6 +72,33 @@ namespace piga
              */
             void update();
             void logToStatus(const std::string &message);
+            
+            /**
+             * @brief Returns the remaining credits. Forwards the request to piga::Status::getCreditCount().
+             * 
+             * @return The remaining credits.
+             */
+            int getRemainingCredits();
+            /**
+             * @brief Set the remaining tickets to the specified count. Forwards to piga::Status::setRemainingCredits().
+             * 
+             * @param credits The remaining credits to be set.
+             */
+            void setRemainingCredits(int credits);
+            /**
+             * @brief Adds the specified amount of credits to the remaining credits. Forwards to piga::Status::addCredits().
+             * 
+             * @param amount The amount to be added to the remaining credits. Defaults to 1. 
+             * @return The remaining tickets after this operation.
+             */
+            int addCredits(int amount = 1);
+            /**
+             * @brief Removes the specified amount of credits from the remaining tickets. Forwards to piga::Status::removeCredits().
+             * 
+             * @param amount The amount of credits to be removed. Defaults to 1. 
+             * @return The remaining tickets after this operation.
+             */
+            int removeCredits(int amount = 1);
         private:
 			std::deque<GameEvent> events;
             GameInput *externalGameInput = nullptr;

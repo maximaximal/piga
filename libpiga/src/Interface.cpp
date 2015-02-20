@@ -152,4 +152,44 @@ namespace piga
             piga::Status *status = p.first;
         }
     }
+    int Interface::getRemainingCredits()
+    {
+        using namespace boost::interprocess;
+        managed_shared_memory shm(open_only, piga::Host::getStatusSharedMemoryName());
+
+        std::pair<piga::Status*, std::size_t> p =
+                shm.find<piga::Status>("Status");
+
+        piga::Status *status = p.first;
+        
+        return status->getCreditCount();
+    }
+    void Interface::setRemainingCredits(int credits)
+    {
+        using namespace boost::interprocess;
+        managed_shared_memory shm(open_only, piga::Host::getStatusSharedMemoryName());
+
+        std::pair<piga::Status*, std::size_t> p =
+                shm.find<piga::Status>("Status");
+
+        piga::Status *status = p.first;
+        
+        status->setCreditCount(credits);
+    }
+    int Interface::addCredits(int amount)
+    {
+        using namespace boost::interprocess;
+        managed_shared_memory shm(open_only, piga::Host::getStatusSharedMemoryName());
+
+        std::pair<piga::Status*, std::size_t> p =
+                shm.find<piga::Status>("Status");
+
+        piga::Status *status = p.first;
+        
+        return status->addCredits(amount);
+    }
+    int Interface::removeCredits(int amount)
+    {
+        return addCredits(-amount);
+    }
 }
