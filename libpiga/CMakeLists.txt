@@ -104,8 +104,12 @@ if(${ENET_FOUND})
     target_link_libraries(piga ${ENet_LIBRARIES})
 endif()
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples/)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../hosts/)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+target_link_libraries(piga dl)
 
 # Activate C++11
 list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

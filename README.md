@@ -1,4 +1,4 @@
-Piga Console
+Piga Console {#mainpage}
 ============
 
 This is the official repository for the piga source code. The piga project 

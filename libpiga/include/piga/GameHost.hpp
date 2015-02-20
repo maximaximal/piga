@@ -11,6 +11,11 @@ namespace piga
 {
     class Host;
 
+    /**
+     * @brief Holds an instance of a game. 
+     * 
+     * Games/Apps are loaded, run, and managed through this class.
+     */
     class GameHost
     {
         public:
