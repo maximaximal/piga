@@ -1,4 +1,4 @@
-Overall Architecture
+Overall Architecture {#overall_architecture}
 --------------------
 
 This diagram illustrates the architecture of the piga application and

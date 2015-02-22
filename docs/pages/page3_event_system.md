@@ -9,7 +9,11 @@ The event system is divided into several different modules:
   4. The piga::Interface and piga::Host classes for event dispatching 
      between apps/games and the host application.
      
-### State vs Value
+### Different Input Types (piga::GameControl)
+
+The piga::GameControl enum defines the individual input types of the system. 
+     
+### State vs Value vs Float
 
 The piga::event::GameInput class has 2 variants of describing inputs: 
 
@@ -32,13 +36,22 @@ The integer value is the internal representation of the input value in the piga:
 This is an integer to provide the possibility of floating point inputs (analog joysticks or similar devices) without 
 the introduction of another event type. 
 
+#### Float (float)
+
+The float value is a conversion of the internal int representation to the float format. The float 
+version uses the space between 0 and 1 to represent the input, where 0 means off and 1 means on. 
+
 #### Translation
 
 States can be translated into values (and values into states) using this conversion
-table:
+matrix:
 
-State | Value
------ |  -----
-true  | 100000
-false | 0
-
+int    | float | boolean
+---   | ----- | -------
+x      | x / 100000 | {x = 0: false; x > 0: true}
+x * 100000 | x     | {x = 0: false; x > 0: true}
+x * 100000 | x * 100000 | x
+0      | 0     | false
+100000 | 1     | true
+50000  | 0.5   | true
+25000  | 0.25  | true
