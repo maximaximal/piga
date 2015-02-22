@@ -11,7 +11,8 @@ The event system is divided into several different modules:
      
 ### Different Input Types (piga::GameControl)
 
-The piga::GameControl enum defines the individual input types of the system. 
+The piga::GameControl enum defines the individual input types of the system. The default layout 
+of inputs can be seen at the [inputs page](@ref inputs).
      
 ### State vs Value vs Float
 

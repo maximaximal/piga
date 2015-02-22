@@ -10,7 +10,7 @@ Standard Inputs
 Each console can have different inputs, depending on the used hardware. To make development 
 easier, a standard set of inputs is defined as:
 
-Input Name | Description | piga::GameControl
+Input Name | Description | GameControl
 --------- | ---------- | -------------
 Joystick Up | Analog arcade joystick; values: true & false | UP
 Joystick Down | Analog arcade joystick; values: true & false | DOWN
