@@ -244,19 +244,22 @@ namespace piga
     }
     void GameHost::sendGameEvent(const GameEvent &event)
     {
-        if(event.type() == GameEvent::GameEventType::GameInput)
+        if(isRunning())
         {
-            if(m_keyboardMappings.size() > 0)
+            if(event.type() == GameEvent::GameEventType::GameInput)
             {
-                if(m_keyboardMappings.count(event.playerID()) == 1)
+                if(m_keyboardMappings.size() > 0)
                 {
-                    if(m_keyboardMappings[event.playerID()].count(event.gameInput.control()) == 1)
+                    if(m_keyboardMappings.count(event.playerID()) == 1)
                     {
-                        //Issue a xdotool keyboard command.
-                        if(event.gameInput.state())
-                            system(std::string("xdotool keydown " + m_keyboardMappings[event.playerID()][event.gameInput.control()] + ";").c_str());
-                        else
-                            system(std::string("xdotool keyup " + m_keyboardMappings[event.playerID()][event.gameInput.control()] + ";").c_str());
+                        if(m_keyboardMappings[event.playerID()].count(event.gameInput.control()) == 1)
+                        {
+                            //Issue a xdotool keyboard command.
+                            if(event.gameInput.state())
+                                system(std::string("xdotool keydown " + m_keyboardMappings[event.playerID()][event.gameInput.control()] + " &").c_str());
+                            else
+                                system(std::string("xdotool keyup " + m_keyboardMappings[event.playerID()][event.gameInput.control()] + " &").c_str());
+                        }
                     }
                 }
             }

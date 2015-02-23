@@ -15,6 +15,8 @@ namespace PiH
             void updateLayout();
             void addWidget(std::shared_ptr<Widget> widget);
             void removeWidget(std::shared_ptr<Widget> widget);
+            
+            bool memberInFocus();
 
             virtual void onEvent(const Event &e);
             virtual void onUpdate(float frametime);

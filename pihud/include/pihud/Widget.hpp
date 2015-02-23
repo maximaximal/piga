@@ -22,7 +22,7 @@ namespace PiH
             void setPosition(float x, float y);
             void setWidth(float w);
             void setHeight(float h);
-            bool isFocused(int playerID = -1);
+            virtual bool isFocused(int playerID = -1);
 
             virtual void onEvent(const Event &e) = 0;
             virtual void onUpdate(float frametime);

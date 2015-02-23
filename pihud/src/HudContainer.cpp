@@ -13,10 +13,6 @@ namespace PiH
     }
     void HudContainer::clear()
     {
-        for(auto &widget : m_widgets)
-        {
-            delete widget.second;
-        }
         m_widgets.clear();
     }
     void HudContainer::onEvent(const Event &e)
@@ -44,28 +40,20 @@ namespace PiH
     {
 
     }
-    Widget *HudContainer::getWidget(const std::string &name)
+    std::shared_ptr<Widget> HudContainer::getWidget(const std::string &name)
     {
         if(m_widgets.count(name))
             return m_widgets[name];
         return nullptr;
     }
-    void HudContainer::addWidget(Widget *widget, std::string name)
+    void HudContainer::addWidget(std::shared_ptr<Widget> widget, std::string name)
     {
-        if(m_widgets.count(name))
-        {
-            if(m_widgets[name] != nullptr)
-            {
-                delete m_widgets[name];
-            }
-        }
         m_widgets[name] = widget;
     }
     void HudContainer::deleteWidget(const std::string &name)
     {
         if(m_widgets.count(name))
         {
-            delete m_widgets[name];
             m_widgets.erase(name);
         }
     }
@@ -73,5 +61,4 @@ namespace PiH
     {
 
     }
-
 }

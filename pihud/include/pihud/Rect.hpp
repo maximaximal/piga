@@ -45,6 +45,13 @@ namespace PiH
                 rect.h = h;
                 return rect;
             }
+            void toSDLRect(SDL_Rect &rect) {
+                rect.x = x;
+                rect.y = y;
+                rect.w = w;
+                rect.h = h;
+            }
+
             void fromSDLRect(const SDL_Rect &sdlRect) {
                 this->x = sdlRect.x;
                 this->y = sdlRect.y;

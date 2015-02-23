@@ -17,6 +17,9 @@ namespace PiH
 
             Layouter(Widget *parent = 0);
             Layouter(const Layouter &layouter, Widget *parent = 0);
+            
+            bool memberInFocus();
+            
             virtual ~Layouter();
 
             virtual void onUpdate(float frametime);

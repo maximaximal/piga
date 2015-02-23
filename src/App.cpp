@@ -10,6 +10,7 @@
 #include <pihud/Event.hpp>
 #include <pihud/VerticalListLayout.hpp>
 #include <pihud/ParticleSource.hpp>
+#include <pihud/pihud.hpp>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
@@ -76,7 +77,7 @@ namespace pigaco
         m_directoryScanner = std::make_shared<DirectoryScanner>(m_host);
         m_directoryScanner->scanDirectory("Games");
 
-        PiH::ParticleSource *particles = new PiH::ParticleSource(m_hudContainer);
+        std::shared_ptr<PiH::ParticleSource> particles(new PiH::ParticleSource(m_hudContainer));
         particles->setDuration(0);
         particles->setGravity(-0.0001);
         particles->setSpawnsPerFrame(0.057);
@@ -99,7 +100,8 @@ namespace pigaco
         particles->setYStartRange(-400, -401);
         m_hudContainer->addWidget(particles, "GuiBackgroundEffects");
         
-        GameChooser *chooser = new GameChooser(m_hudContainer);
+        std::shared_ptr<GameChooser> chooser(new GameChooser(m_hudContainer));
+        PiH::getGlobalConfig()->getFocusManager()->setFocused(chooser);
         chooser->setFont(m_fontManager->get("Data/Fonts/Roboto-Regular.ttf:22"));
         chooser->setTextureManager(m_textureManager);
         chooser->setDirectoryScanner(m_directoryScanner);
@@ -187,7 +189,7 @@ namespace pigaco
         m_window->show();
         m_hudContainer->setBoundingBox(0, 0, m_window->getSize().x, m_window->getSize().y);
         m_hudContainer->getWidget("GuiBackgroundEffects")->setBoundingBox(m_hudContainer->getBoundingBox());
-        PiH::ParticleSource *particles = static_cast<PiH::ParticleSource*>(m_hudContainer->getWidget("GuiBackgroundEffects"));
+        std::shared_ptr<PiH::ParticleSource> particles = std::static_pointer_cast<PiH::ParticleSource>(m_hudContainer->getWidget("GuiBackgroundEffects"));
         particles->setXStartRange(0, m_window->getSize().x);
         particles->setTargetCount(m_window->getSize().x * m_window->getSize().y / 300);
         m_hudContainer->getWidget("GameChooser")->setBoundingBox(PiH::FloatRect(0, m_window->getSize().y / 4, m_window->getSize().x, m_window->getSize().y / 2));

@@ -1,4 +1,5 @@
 #include <pihud/Layouter.hpp>
+#include <pihud/Layout.hpp>
 
 namespace PiH
 {
@@ -15,6 +16,28 @@ namespace PiH
     Layouter::~Layouter()
     {
         //Nothing to do
+    }
+    bool Layouter::memberInFocus()
+    {
+        if(m_widgets != nullptr)
+        {
+            for(auto &widget : (*m_widgets))
+            {
+                //Check if the member can be casted into a layout
+                std::shared_ptr<Layout> layout;
+                if(layout = std::dynamic_pointer_cast<Layout>(widget))
+                {
+                    if(layout->memberInFocus())
+                        return true;
+                }
+                else
+                {
+                    if(widget->isFocused())
+                        return true;
+                }
+            }
+        }
+        return false;
     }
     void Layouter::onUpdate(float frametime)
     {

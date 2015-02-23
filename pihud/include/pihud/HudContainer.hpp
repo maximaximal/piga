@@ -19,14 +19,14 @@ namespace PiH
 
             virtual void updateRectFromBeneath();
 
-            Widget* getWidget(const std::string &name);
-            void addWidget(Widget *widget, std::string name = "");
+            std::shared_ptr<Widget> getWidget(const std::string &name);
+            void addWidget(std::shared_ptr<Widget> widget, std::string name = "");
             void deleteWidget(const std::string &name);
         protected:
             virtual void updateBoundingBox();
             virtual void focusGained(int playerID) {}
             virtual void focusLost(int playerID) {}
         private:
-            std::map<std::string, Widget*> m_widgets;
+            std::map<std::string, std::shared_ptr<Widget>> m_widgets;
     };
 }

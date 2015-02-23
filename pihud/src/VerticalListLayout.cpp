@@ -22,14 +22,14 @@ namespace PiH
         Layouter::onEvent(e);
         if(e.type == EventType::Focus)
         {
-            if(!e.focus.wasHandled() && isFocused())
+            if(!e.focus.wasHandled() && (memberInFocus() || isFocused()))
             {
                 if(e.focus.direction == LEFT)
                 {
-                    if(m_currentlyFocused - 1 >= 0)
+                    if(m_currentlyFocused - 1 >= 0 && m_currentlyFocused != 0)
                     {
                         m_currentlyFocused -= 1;
-                        e.focus.focus((*m_widgets)[m_currentlyFocused]);
+                        e.focus.setHandled();
                         getGlobalConfig()->getFocusManager()->setFocused(getCurrentlyFocusedWidget(), e.playerID);
                     }
                 }
@@ -38,7 +38,7 @@ namespace PiH
                     if(m_currentlyFocused + 1 < m_widgets->size())
                     {
                         m_currentlyFocused += 1;
-                        e.focus.focus((*m_widgets)[m_currentlyFocused]);
+                        e.focus.setHandled();
                         getGlobalConfig()->getFocusManager()->setFocused(getCurrentlyFocusedWidget(), e.playerID);
                     }
                 }

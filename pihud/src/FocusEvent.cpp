@@ -65,29 +65,12 @@ namespace PiH
             return true;
         return false;
     }
-    void FocusEvent::focus(std::shared_ptr<Widget> focusedWidget) const
-    {
-        if(m_focusManager)
-        {
-			m_focusManager->setFocused(focusedWidget);
-        }
-        m_handled = true;
-    }
     FocusEvent& FocusEvent::operator=(const FocusEvent &other)
     {
-        if(other.getFocusManager())
-            m_focusManager = other.getFocusManager();
         m_forced = other.wasForced();
         m_handled = other.wasHandled();
+        direction = other.direction;
         return *this;
-    }
-    std::shared_ptr<FocusManager> FocusEvent::getFocusManager() const
-    {
-        return m_focusManager;
-    }
-    void FocusEvent::setFocusManager(std::shared_ptr<FocusManager> focusManager)
-    {
-        m_focusManager = focusManager;
     }
     bool FocusEvent::wasForced() const
     {

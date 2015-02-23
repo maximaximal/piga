@@ -31,12 +31,7 @@ namespace PiH
             
             Direction direction;
 
-            void focus(std::shared_ptr<Widget> focusedWidget) const;
-            
             FocusEvent& operator=(const FocusEvent &other);
-
-            std::shared_ptr<FocusManager> getFocusManager() const;
-            void setFocusManager(std::shared_ptr<FocusManager> focusManager);
 
             /**
              * @brief Checks if the focus event was forced by a specific action of the user.
@@ -51,7 +46,6 @@ namespace PiH
             bool wasForced() const;
         private:
             mutable bool m_handled = false;
-            mutable std::shared_ptr<FocusManager> m_focusManager;
             bool m_forced = false;
     };
 }

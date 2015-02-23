@@ -42,7 +42,8 @@ namespace PiH
                     && focusEvent)
             {
                 type = EventType::Focus;
-                focus = FocusEvent(gameEvent);
+                FocusEvent focusEvent(gameEvent);
+                focus = focusEvent;
             }
         }
     }

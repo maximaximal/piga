@@ -44,6 +44,25 @@ namespace PiH
         auto it = std::find(m_widgets.begin(), m_widgets.end(), widget);
         m_widgets.erase(it);
     }
+    bool Layout::memberInFocus()
+    {
+        for(auto &widget : m_widgets)
+        {
+            //Check if the member can be casted into a layout
+            std::shared_ptr<Layout> layout;
+            if(layout = std::dynamic_pointer_cast<Layout>(widget))
+            {
+                if(layout->memberInFocus())
+                    return true;
+            }
+            else
+            {
+                if(widget->isFocused())
+                    return true;
+            }
+        }
+        return false;
+    }
     void Layout::onEvent(const Event &e)
     {
         if(m_layouter != nullptr)

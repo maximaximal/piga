@@ -42,5 +42,7 @@ namespace pigaco
             std::unique_ptr<PiH::Label> m_label_name;
             std::unique_ptr<PiH::Label> m_label_description;
             std::unique_ptr<PiH::Label> m_label_version;
+            
+            SDL_Color m_backgroundRectColor;
     };
 }

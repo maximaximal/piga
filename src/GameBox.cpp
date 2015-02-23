@@ -22,6 +22,11 @@ namespace pigaco
         m_label_description->setColor(color);
         m_label_name->setColor(color);
         m_label_version->setColor(color);
+     
+        m_backgroundRectColor.r = 214;
+        m_backgroundRectColor.g = 214;
+        m_backgroundRectColor.b = 214;
+        m_backgroundRectColor.a = 20;
     }
     GameBox::~GameBox()
     {
@@ -38,11 +43,14 @@ namespace pigaco
         
         if(e.type == PiH::EventType::Piga)
         {
-            if(e.piga.control == piga::ACTION && m_gameHost)
+            if(isFocused())
             {
-                if(!m_gameHost->isRunning())
+                if(e.piga.control == piga::ACTION && m_gameHost)
                 {
-                    m_gameHost->start();
+                    if(!m_gameHost->isRunning())
+                    {
+                        m_gameHost->start();
+                    }
                 }
             }
         }
@@ -58,6 +66,19 @@ namespace pigaco
     }
     void GameBox::onRender(SDL_Renderer *renderer, const PiH::FloatRect &floatRect)
     {
+        Uint8 a, r, g, b;
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+        SDL_SetRenderDrawColor(renderer, m_backgroundRectColor.r,
+            m_backgroundRectColor.g,
+            m_backgroundRectColor.b,
+            m_backgroundRectColor.a
+        );
+        SDL_Rect rect = getBoundingBox().toSDLRect();
+        SDL_RenderFillRect(renderer, &rect);
+        SDL_SetRenderDrawColor(renderer, r, g, b, a);
+        
+        
         m_image_background->onRender(renderer, floatRect);
         m_image_logo->onRender(renderer, floatRect);
         
@@ -92,11 +113,23 @@ namespace pigaco
     }
     void GameBox::focusGained(int playerID)
     {
-
+        if(playerID != -1)
+        {
+            m_backgroundRectColor.r = 255;
+            m_backgroundRectColor.g = 189;
+            m_backgroundRectColor.b = 97;
+            m_backgroundRectColor.a = 80;
+        }
     }
     void GameBox::focusLost(int playerID)
     {
-
+        if(playerID != -1)
+        {
+            m_backgroundRectColor.r = 214;
+            m_backgroundRectColor.g = 214;
+            m_backgroundRectColor.b = 214;
+            m_backgroundRectColor.a = 20;
+        }
     }
     void GameBox::updateBoundingBox()
     {

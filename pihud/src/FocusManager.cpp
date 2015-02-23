@@ -12,12 +12,15 @@ namespace PiH
     }
     void FocusManager::setFocused(std::shared_ptr<Widget> widget, int playerID)
     {
-        m_focused[playerID]->m_focused = false;
-        m_focused[playerID]->focusLost(playerID);
+        if(m_focused[playerID])
+        {
+            m_focused[playerID]->m_focused = false;
+            m_focused[playerID]->focusLost(playerID);
+        }
         
         m_focused[playerID] = widget;
-        m_focused[playerID]->m_focused = true;
-        m_focused[playerID]->focusGained(playerID);
+        widget->m_focused = true;
+        widget->focusGained(playerID);
     }
     std::shared_ptr<Widget> FocusManager::getFocused(int playerID)
     {

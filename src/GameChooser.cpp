@@ -1,6 +1,8 @@
 #include <pigaco/GameChooser.hpp>
 #include <easylogging++.h>
 
+#include <pihud/pihud.hpp>
+
 namespace pigaco 
 {
     GameChooser::GameChooser(PiH::Widget *parent)
@@ -22,6 +24,10 @@ namespace pigaco
             box->setTextureManager(m_textureManager);
             box->loadFromHost(game.second);
             box->setBoundingBox(PiH::FloatRect(0, 0, 300, getBoundingBox().h));
+            if(isFocused() && m_widgets.size() == 0)
+            {
+                PiH::getGlobalConfig()->getFocusManager()->setFocused(box, 0);
+            }
             m_widgets.push_back(std::static_pointer_cast<PiH::Widget>(box));
         }
     }

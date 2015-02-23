@@ -177,11 +177,12 @@ namespace piga
     }
     bool Host::gameIsRunning(bool fsCheck)
     {
+        bool state = false;
         if(m_currentGameHost != nullptr)
         {
-            return m_currentGameHost->isRunning(fsCheck);
+            state = m_currentGameHost->isRunning(fsCheck);
         }
-        return false;
+        return state;
     }
     void Host::update(float frametime)
     {
