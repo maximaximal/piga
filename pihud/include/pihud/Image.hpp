@@ -25,6 +25,9 @@ namespace PiH
             void renderTo(float x, float y, SDL_Renderer *renderer, const FloatRect &offset);
         protected:
             virtual void updateBoundingBox();
+            
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::shared_ptr<Texture> m_texture;
             IntRect m_textureRect;

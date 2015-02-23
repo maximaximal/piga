@@ -1,4 +1,5 @@
 #include <pihud/Widget.hpp>
+#include <pihud/pihud.hpp>
 
 namespace PiH
 {
@@ -43,9 +44,16 @@ namespace PiH
         updateBoundingBox();
         updateParent();
     }
-    bool Widget::isFocused()
+    bool Widget::isFocused(int playerID)
     {
-        return m_focused;
+        ///If the player ID equals the global focus, return the focus directly. 
+        ///This means, that no matter which player is focusing this widget, the 
+        ///function returns true.
+        if(playerID == -1)
+            return m_focused;
+        
+        ///Else, determine if the specified player is focusing this widget through the global PiH::FocusManager in PiH::Config. 
+        return getGlobalConfig()->getFocusManager()->isFocusedByPlayer(this, playerID);
     }
     void Widget::onUpdate(float frametime)
     {

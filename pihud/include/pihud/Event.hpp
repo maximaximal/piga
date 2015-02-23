@@ -25,13 +25,14 @@ namespace PiH
     {
         public:
             Event();
-            Event(const InputEvent &inputEvent);
-            Event(const FocusEvent &focusEvent);
-            Event(const PigaEvent &pigaEvent);
+            Event(const InputEvent &inputEvent, int playerID = -1);
+            Event(const FocusEvent &focusEvent, int playerID = -1);
+            Event(const PigaEvent &pigaEvent, int playerID = -1);
             Event(const piga::GameEvent &gameEvent, bool focusEvent = false);
             virtual ~Event();
 
             EventType type;
+            int playerID = -1;
 
             union
             {

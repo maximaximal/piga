@@ -28,6 +28,8 @@ namespace PiH
             void setParticleTexture(std::shared_ptr<Texture> texture, const std::vector<IntRect> rects);
         protected:
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::unique_ptr<ParticleSource> m_particleSource;
             std::unique_ptr<Image> m_victoryImage;

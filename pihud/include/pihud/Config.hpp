@@ -4,6 +4,8 @@
 #include <map>
 #include <SDL2/SDL.h>
 
+#include <pihud/FocusManager.hpp>
+
 namespace PiH
 {
     class Config
@@ -30,8 +32,10 @@ namespace PiH
             void setValueAsString(Config::Variable variable, const std::string &value);
 
             SDL_Renderer *getSDLRenderer();
+            std::shared_ptr<FocusManager> getFocusManager();
         private:
             std::map<Config::Variable, std::string> m_values;
+            std::shared_ptr<FocusManager> m_focusManager;
             SDL_Renderer *m_sdlRenderer;
 	};
 }

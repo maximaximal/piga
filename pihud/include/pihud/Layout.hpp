@@ -24,5 +24,7 @@ namespace PiH
             Layouter::LayoutedWidgets m_widgets;
 
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
     };
 }

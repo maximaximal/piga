@@ -47,4 +47,10 @@ namespace PiH
     {
         return m_sdlRenderer;
     }
+    std::shared_ptr<PiH::FocusManager> Config::getFocusManager()
+    {
+        if(!m_focusManager)
+            m_focusManager = std::make_shared<FocusManager>();
+        return m_focusManager;
+    }
 }

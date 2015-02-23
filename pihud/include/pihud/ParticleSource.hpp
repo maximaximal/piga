@@ -37,6 +37,8 @@ namespace PiH
             void addParticle(Particle *particle);
             inline bool spawnMoreParticles();
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::vector<std::unique_ptr<Particle> > m_particles;
             std::shared_ptr<Texture> m_texture;

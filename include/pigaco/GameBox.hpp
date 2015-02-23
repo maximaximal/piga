@@ -28,6 +28,9 @@ namespace pigaco
             
             void setFont(std::shared_ptr<PiH::Font> font);
             void setTextureManager(std::shared_ptr<PiH::TextureManager> textureManager);
+        protected:
+            virtual void focusGained(int playerID);
+            virtual void focusLost(int playerID);
         private:
             virtual void updateBoundingBox();
             std::shared_ptr<piga::GameHost> m_gameHost;

@@ -1,4 +1,6 @@
 #include <pihud/VerticalListLayout.hpp>
+#include <pihud/Config.hpp>
+#include <pihud/pihud.hpp>
 
 namespace PiH
 {
@@ -28,6 +30,16 @@ namespace PiH
                     {
                         m_currentlyFocused -= 1;
                         e.focus.focus((*m_widgets)[m_currentlyFocused]);
+                        getGlobalConfig()->getFocusManager()->setFocused(getCurrentlyFocusedWidget(), e.playerID);
+                    }
+                }
+                else if(e.focus.direction == RIGHT)
+                {
+                    if(m_currentlyFocused + 1 < m_widgets->size())
+                    {
+                        m_currentlyFocused += 1;
+                        e.focus.focus((*m_widgets)[m_currentlyFocused]);
+                        getGlobalConfig()->getFocusManager()->setFocused(getCurrentlyFocusedWidget(), e.playerID);
                     }
                 }
             }
@@ -37,10 +49,13 @@ namespace PiH
     {
         return m_spacing;
     }
+    std::shared_ptr<Widget> VerticalListLayout::getCurrentlyFocusedWidget()
+    {
+        return (*m_widgets)[m_currentlyFocused];
+    }
     void VerticalListLayout::updateBoundingBox()
     {
 
     }
-
 }
 

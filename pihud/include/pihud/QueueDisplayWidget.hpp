@@ -25,6 +25,8 @@ namespace PiH
             std::size_t getQueueSize();
         protected:
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::vector<std::unique_ptr<Image> > m_images;
             std::unique_ptr<Image> m_backgroundImage;

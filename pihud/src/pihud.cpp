@@ -19,6 +19,11 @@ namespace PiH
     }
     Config *getGlobalConfig()
     {
+        if(GlobalConfig == nullptr)
+        {
+            GlobalConfig = new Config(nullptr);
+            GlobalConfig->setupDefaultConfig();
+        }
         return GlobalConfig;
     }
 }

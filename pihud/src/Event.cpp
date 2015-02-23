@@ -6,23 +6,27 @@ namespace PiH
     {
 		type = EventType::NotSet;
     }
-    Event::Event(const InputEvent &inputEvent)
+    Event::Event(const InputEvent &inputEvent, int playerID)
     {
         type = EventType::Input;
         input = inputEvent;
+        this->playerID = playerID;
     }
-    Event::Event(const FocusEvent &focusEvent)
+    Event::Event(const FocusEvent &focusEvent, int playerID)
     {
         type = EventType::Focus;
         focus = focusEvent;
+        this->playerID = playerID;
     }
-    Event::Event(const PigaEvent &pigaEvent)
+    Event::Event(const PigaEvent &pigaEvent, int playerID)
     {
         type = EventType::Piga;
         piga = pigaEvent;
+        this->playerID = playerID;
     }
     Event::Event(const piga::GameEvent &gameEvent, bool focusEvent)
     {
+        playerID = gameEvent.playerID();
         if(gameEvent.type() == piga::GameEvent::GameInput && !focusEvent)
         {
             PigaEvent pigaEvent(gameEvent.gameInput.control(), gameEvent.gameInput.state());

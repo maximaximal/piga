@@ -26,6 +26,8 @@ namespace PiH
             virtual void setBoxes(LayoutedWidgets &widgets);
         protected:
             virtual void updateBoundingBox() = 0;
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
             LayoutedWidgets *m_widgets = nullptr;
     };
 }

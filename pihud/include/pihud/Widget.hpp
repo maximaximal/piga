@@ -22,7 +22,7 @@ namespace PiH
             void setPosition(float x, float y);
             void setWidth(float w);
             void setHeight(float h);
-            bool isFocused();
+            bool isFocused(int playerID = -1);
 
             virtual void onEvent(const Event &e) = 0;
             virtual void onUpdate(float frametime);
@@ -32,6 +32,9 @@ namespace PiH
             void updateParent();
         protected:
             virtual void updateBoundingBox() = 0;
+            
+            virtual void focusGained(int playerID) = 0;
+            virtual void focusLost(int playerID) = 0;
 
             FloatRect m_boundingBox;
             Widget *m_parent;

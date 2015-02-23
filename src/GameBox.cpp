@@ -90,6 +90,14 @@ namespace pigaco
     {
         m_textureManager = textureManager;
     }
+    void GameBox::focusGained(int playerID)
+    {
+
+    }
+    void GameBox::focusLost(int playerID)
+    {
+
+    }
     void GameBox::updateBoundingBox()
     {
         m_image_background->setPosition(getBoundingBox().x, getBoundingBox().y);

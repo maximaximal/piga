@@ -3,7 +3,7 @@
 namespace PiH
 {
     IconHealthIndicator::IconHealthIndicator(Widget *parent)
-    	: Widget(parent)
+        : Widget(parent)
     {
 
     }
@@ -23,26 +23,26 @@ namespace PiH
     {
         if(health != m_currentHealth)
         {
-			if(health > m_maximumHealth)
-				health = m_maximumHealth;
-			if(health < 0)
-				health = 0;
-			m_currentHealth = health;
-			updateCurrent();
+            if(health > m_maximumHealth)
+                health = m_maximumHealth;
+            if(health < 0)
+                health = 0;
+            m_currentHealth = health;
+            updateCurrent();
         }
     }
     void IconHealthIndicator::setMaximumHealth(int maximumHealth)
     {
         if(maximumHealth != m_maximumHealth)
         {
-			m_maximumHealth = maximumHealth;
-			updateMaximum();
+            m_maximumHealth = maximumHealth;
+            updateMaximum();
         }
     }
     void IconHealthIndicator::setFullIcon(const IntRect &rect)
     {
-		m_fullIcon = rect;
-        for(auto &icon : m_icons)
+        m_fullIcon = rect;
+        for(auto & icon : m_icons)
         {
             icon->setTextureRect(rect);
         }
@@ -51,7 +51,7 @@ namespace PiH
     void IconHealthIndicator::setDepletedIcon(const IntRect &rect)
     {
         m_depletedIcon = rect;
-        for(auto &icon : m_icons)
+        for(auto & icon : m_icons)
         {
             icon->setTextureRect(rect);
         }
@@ -72,44 +72,45 @@ namespace PiH
     }
     void IconHealthIndicator::onRender(SDL_Renderer *renderer, const FloatRect &offset)
     {
-        for(auto &icon : m_icons)
+        for(auto & icon : m_icons)
         {
             icon->onRender(renderer, offset);
         }
     }
     void IconHealthIndicator::updateMaximum()
     {
-		if(m_icons.size() > m_maximumHealth)
+        if(m_icons.size() > m_maximumHealth)
         {
             m_icons.erase(m_icons.begin() + m_maximumHealth - 1,
                           m_icons.begin() + m_icons.size() - 1);
         }
-        else if(m_icons.size() < m_maximumHealth)
-        {
-            while(m_icons.size() < m_maximumHealth)
+        else
+            if(m_icons.size() < m_maximumHealth)
             {
-				std::unique_ptr<Image> icon(new Image(this));
-				icon->setTexture(m_texture);
-				icon->setTextureRect(m_fullIcon);
-				m_icons.push_back(std::move(icon));
+                while(m_icons.size() < m_maximumHealth)
+                {
+                    std::unique_ptr<Image> icon(new Image(this));
+                    icon->setTexture(m_texture);
+                    icon->setTextureRect(m_fullIcon);
+                    m_icons.push_back(std::move(icon));
+                }
             }
-        }
         updateBoundingBox();
     }
     void IconHealthIndicator::updateCurrent()
     {
-		for(std::size_t i = 0; i < m_currentHealth; ++i)
+        for(std::size_t i = 0; i < m_currentHealth; ++i)
         {
-           	m_icons[i]->setTextureRect(m_fullIcon);
+            m_icons[i]->setTextureRect(m_fullIcon);
         }
-		for(std::size_t i = m_currentHealth; i < m_icons.size(); ++i)
+        for(std::size_t i = m_currentHealth; i < m_icons.size(); ++i)
         {
-           	m_icons[i]->setTextureRect(m_depletedIcon);
+            m_icons[i]->setTextureRect(m_depletedIcon);
         }
     }
     void IconHealthIndicator::updateTexture()
     {
-        for(auto &icon : m_icons)
+        for(auto & icon : m_icons)
         {
             icon->setTexture(m_texture);
         }
@@ -119,22 +120,22 @@ namespace PiH
         updateDimensions();
 
         float x = m_boundingBox.x, y = m_boundingBox.y;
-		FloatRect box;
-		box.y = y;
-		box.w = 32;
-		box.h = 32;
+        FloatRect box;
+        box.y = y;
+        box.w = 32;
+        box.h = 32;
 
         for(std::size_t i = 0; i < m_icons.size(); ++i)
         {
             if(m_sideOfIcons == LEFT)
             {
-				box.x = x + m_fullIcon.w * i;
+                box.x = x + m_fullIcon.w * i;
             }
             else
             {
-				box.x = x + m_boundingBox.w - (m_fullIcon.w * i);
+                box.x = x + m_boundingBox.w - (m_fullIcon.w * i);
             }
-			m_icons[i]->setBoundingBox(box);
+            m_icons[i]->setBoundingBox(box);
         }
     }
 

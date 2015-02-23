@@ -24,6 +24,8 @@ namespace PiH
             void redraw();
         protected: 
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::string m_text;
             std::shared_ptr<Font> m_font;

@@ -38,6 +38,9 @@ namespace PiH
             void updateTexture();
 
             virtual void updateBoundingBox();
+            
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             void updateDimensions();
 

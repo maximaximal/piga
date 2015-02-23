@@ -24,6 +24,8 @@ namespace PiH
             void deleteWidget(const std::string &name);
         protected:
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::map<std::string, Widget*> m_widgets;
     };

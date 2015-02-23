@@ -29,6 +29,9 @@ namespace PiH
         protected:
             virtual void updateRectFromBeneath();
             virtual void updateBoundingBox();
+            
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             IconHealthIndicator *m_iconHealthIndicator;
             Label *m_label;

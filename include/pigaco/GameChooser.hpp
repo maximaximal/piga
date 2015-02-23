@@ -26,6 +26,8 @@ namespace pigaco
             void setFont(std::shared_ptr<PiH::Font> font);
         protected:
             virtual void updateBoundingBox();
+            virtual void focusGained(int playerID) {}
+            virtual void focusLost(int playerID) {}
         private:
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
             std::shared_ptr<PiH::TextureManager> m_textureManager;
