@@ -33,6 +33,7 @@ set(SRCS
     ${SRC}/WeHaveAWinnerWidget.cpp
     ${SRC}/PigaEvent.cpp
     ${SRC}/TextureManager.cpp
+    ${SRC}/MenuContainer.cpp
 )
 
 set(HDR ${CMAKE_CURRENT_SOURCE_DIR}/include/pihud/)
@@ -62,6 +63,7 @@ set(HDRS
     ${HDR}/WeHaveAWinnerWidget.hpp
     ${HDR}/PigaEvent.hpp
     ${HDR}/TextureManager.hpp
+    ${HDR}/MenuContainer.hpp
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
