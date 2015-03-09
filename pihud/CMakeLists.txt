@@ -24,7 +24,7 @@ set(SRCS
     ${SRC}/Rect.cpp
     ${SRC}/Layout.cpp
     ${SRC}/Layouter.cpp
-    ${SRC}/VerticalListLayout.cpp
+    ${SRC}/HorizontalListLayout.cpp
     ${SRC}/FocusManager.cpp
     ${SRC}/FocusEvent.cpp
     ${SRC}/QueueDisplayWidget.cpp
@@ -57,7 +57,7 @@ set(HDRS
     ${HDR}/Particle.hpp
     ${HDR}/Layout.hpp
     ${HDR}/Layouter.hpp
-    ${HDR}/VerticalListLayout.hpp
+    ${HDR}/HorizontalListLayout.hpp
     ${HDR}/FocusManager.hpp
     ${HDR}/FocusEvent.hpp
     ${HDR}/WeHaveAWinnerWidget.hpp

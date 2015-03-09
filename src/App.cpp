@@ -8,7 +8,7 @@
 #include <pigaco/GameChooser.hpp>
 #include <pihud/pihud.hpp>
 #include <pihud/Event.hpp>
-#include <pihud/VerticalListLayout.hpp>
+#include <pihud/HorizontalListLayout.hpp>
 #include <pihud/ParticleSource.hpp>
 #include <pihud/pihud.hpp>
 
@@ -106,7 +106,7 @@ namespace pigaco
         chooser->setTextureManager(m_textureManager);
         chooser->setDirectoryScanner(m_directoryScanner);
         
-        PiH::VerticalListLayout *verticalLayout = new PiH::VerticalListLayout;
+        PiH::HorizontalListLayout *verticalLayout = new PiH::HorizontalListLayout;
         verticalLayout->setSpacing(10);
         chooser->setLayouter(verticalLayout);
         

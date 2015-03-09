@@ -4,7 +4,7 @@
 
 namespace PiH
 {
-    class VerticalListLayout : public Layouter
+    class HorizontalListLayout : public Layouter
     {
         public:
             virtual void setBoxes(LayoutedWidgets &widgets);

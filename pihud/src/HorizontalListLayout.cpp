@@ -1,10 +1,10 @@
-#include <pihud/VerticalListLayout.hpp>
+#include <pihud/HorizontalListLayout.hpp>
 #include <pihud/Config.hpp>
 #include <pihud/pihud.hpp>
 
 namespace PiH
 {
-    void VerticalListLayout::setBoxes(Layouter::LayoutedWidgets &widgets)
+    void HorizontalListLayout::setBoxes(Layouter::LayoutedWidgets &widgets)
     {
         float x = 0;
         for(std::shared_ptr<PiH::Widget> &widget : widgets)
@@ -13,11 +13,11 @@ namespace PiH
             x += widget->getBoundingBox().w + getSpacing();
         }
     }
-    void VerticalListLayout::setSpacing(int spacing)
+    void HorizontalListLayout::setSpacing(int spacing)
     {
         m_spacing = spacing;
     }
-    void VerticalListLayout::onEvent(const Event &e)
+    void HorizontalListLayout::onEvent(const Event &e)
     {
         Layouter::onEvent(e);
         if(e.type == EventType::Focus)
@@ -45,15 +45,15 @@ namespace PiH
             }
         }
     }
-    int VerticalListLayout::getSpacing()
+    int HorizontalListLayout::getSpacing()
     {
         return m_spacing;
     }
-    std::shared_ptr<Widget> VerticalListLayout::getCurrentlyFocusedWidget()
+    std::shared_ptr<Widget> HorizontalListLayout::getCurrentlyFocusedWidget()
     {
         return (*m_widgets)[m_currentlyFocused];
     }
-    void VerticalListLayout::updateBoundingBox()
+    void HorizontalListLayout::updateBoundingBox()
     {
 
     }
