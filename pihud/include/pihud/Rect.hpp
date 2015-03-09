@@ -37,13 +37,12 @@ namespace PiH
                 w = 0;
                 h = 0;
             }
-            SDL_Rect toSDLRect() {
-                SDL_Rect rect;
-                rect.x = x;
-                rect.y = y;
-                rect.w = w;
-                rect.h = h;
-                return rect;
+            const SDL_Rect& toSDLRect() {
+                m_sdlRect.x = x;
+                m_sdlRect.y = y;
+                m_sdlRect.w = w;
+                m_sdlRect.h = h;
+                return m_sdlRect;
             }
             void toSDLRect(SDL_Rect &rect) {
                 rect.x = x;
@@ -75,6 +74,11 @@ namespace PiH
             void print() {
                 std::cout << "Rect-Print: " << x << "x" << y << "x" << w << "x" << h << "x" << std::endl;
             }
+        private:
+            /**
+             * @brief Caches SDL-Rects to minify memory assignments.
+             */
+            SDL_Rect m_sdlRect;
     };
 
     typedef Rect<float> FloatRect;

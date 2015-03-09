@@ -31,6 +31,15 @@ namespace PiH
     {
         SDL_Rect dstRect = m_boundingBox.toIntRect().toSDLRect();
 
+        if(m_centered)
+        {
+            dstRect.x += dstRect.w / 2 - m_textW / 2;
+            dstRect.y += dstRect.h / 2 - m_textH / 2;
+        }
+
+        dstRect.w = m_textW;
+        dstRect.h = m_textH;
+
         if(m_renderedText != nullptr)
         {
             SDL_RenderCopy(renderer, m_renderedText, nullptr, &dstRect);
@@ -93,13 +102,25 @@ namespace PiH
             }
             SDL_FreeSurface(rendered);
 
-            int w = 0, h = 0;
-            SDL_QueryTexture(m_renderedText, nullptr, nullptr, &w, &h);
-
-            m_boundingBox.w = w;
-            m_boundingBox.h = h;
+            SDL_QueryTexture(m_renderedText, nullptr, nullptr, &m_textW, &m_textH);
 
             updateParent();
         }
+    }
+    void Label::setCentered(bool centered)
+    {
+        m_centered = centered;
+    }
+    int Label::getTextWidth()
+    {
+        return m_textW;
+    }
+    int Label::getTextHeight()
+    {
+        return m_textH;
+    }
+    const std::string& Label::getText()
+    {
+        return m_text;
     }
 }

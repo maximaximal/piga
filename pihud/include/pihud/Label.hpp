@@ -23,6 +23,12 @@ namespace PiH
             void setColor(SDL_Color color);
             void setColor(int r, int g, int b, int a = 255);
             void redraw();
+            void setCentered(bool centered = true);
+
+            int getTextWidth();
+            int getTextHeight();
+
+            const std::string& getText();
         protected: 
             virtual void updateBoundingBox();
             virtual void focusGained(int playerID) {}
@@ -32,5 +38,7 @@ namespace PiH
             std::shared_ptr<Font> m_font;
             SDL_Texture *m_renderedText = nullptr;
             SDL_Color m_color;
+            bool m_centered = false;
+            int m_textW, m_textH;
     };
 }

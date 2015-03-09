@@ -35,6 +35,7 @@ set(SRCS
     ${SRC}/PigaEvent.cpp
     ${SRC}/TextureManager.cpp
     ${SRC}/MenuContainer.cpp
+    ${SRC}/PushButton.cpp
 )
 
 set(HDR ${CMAKE_CURRENT_SOURCE_DIR}/include/pihud/)
@@ -66,6 +67,7 @@ set(HDRS
     ${HDR}/PigaEvent.hpp
     ${HDR}/TextureManager.hpp
     ${HDR}/MenuContainer.hpp
+    ${HDR}/PushButton.hpp
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

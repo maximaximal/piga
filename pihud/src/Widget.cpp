@@ -55,6 +55,10 @@ namespace PiH
         ///Else, determine if the specified player is focusing this widget through the global PiH::FocusManager in PiH::Config. 
         return getGlobalConfig()->getFocusManager()->isFocusedByPlayer(this, playerID);
     }
+    void Widget::onEvent(const Event &e)
+    {
+
+    }
     void Widget::onUpdate(float frametime)
     {
 
