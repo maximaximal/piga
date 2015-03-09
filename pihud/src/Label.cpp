@@ -51,6 +51,14 @@ namespace PiH
         m_color = color;
         redraw();
     }
+    void Label::setColor(int r, int g, int b, int a)
+    {
+        m_color.r = r;
+        m_color.g = g;
+        m_color.b = b;
+        m_color.a = a;
+        redraw();
+    }
     void Label::updateBoundingBox()
     {
         redraw();

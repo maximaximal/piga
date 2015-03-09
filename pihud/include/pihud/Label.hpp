@@ -21,6 +21,7 @@ namespace PiH
             void setText(const std::string &text);
             void setFont(std::shared_ptr<Font> font);
             void setColor(SDL_Color color);
+            void setColor(int r, int g, int b, int a = 255);
             void redraw();
         protected: 
             virtual void updateBoundingBox();
