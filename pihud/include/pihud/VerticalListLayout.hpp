@@ -7,6 +7,9 @@ namespace PiH
     class VerticalListLayout : public Layouter
     {
         public:
+            VerticalListLayout();
+            virtual ~VerticalListLayout();
+
             virtual void setBoxes(LayoutedWidgets &widgets);
 
             void setSpacing(int spacing);

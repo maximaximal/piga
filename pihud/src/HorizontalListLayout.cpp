@@ -4,6 +4,14 @@
 
 namespace PiH
 {
+    HorizontalListLayout::HorizontalListLayout()
+    {
+
+    }
+    HorizontalListLayout::~HorizontalListLayout()
+    {
+
+    }
     void HorizontalListLayout::setBoxes(Layouter::LayoutedWidgets &widgets)
     {
         float x = 0;

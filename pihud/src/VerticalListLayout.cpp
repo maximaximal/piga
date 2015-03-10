@@ -4,6 +4,14 @@
 
 namespace PiH
 {
+    VerticalListLayout::VerticalListLayout()
+    {
+
+    }
+    VerticalListLayout::~VerticalListLayout()
+    {
+
+    }
     void VerticalListLayout::setBoxes(Layouter::LayoutedWidgets &widgets)
     {
         float x = getBoundingBox().x, y = getBoundingBox().y;

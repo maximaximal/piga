@@ -7,6 +7,8 @@ namespace PiH
     class HorizontalListLayout : public Layouter
     {
         public:
+            HorizontalListLayout();
+            virtual ~HorizontalListLayout();
             virtual void setBoxes(LayoutedWidgets &widgets);
 
             void setSpacing(int spacing);

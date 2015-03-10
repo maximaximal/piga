@@ -106,9 +106,9 @@ namespace pigaco
         chooser->setTextureManager(m_textureManager);
         chooser->setDirectoryScanner(m_directoryScanner);
         
-        PiH::HorizontalListLayout *verticalLayout = new PiH::HorizontalListLayout;
-        verticalLayout->setSpacing(10);
-        chooser->setLayouter(verticalLayout);
+        PiH::HorizontalListLayout *horizontalLayout = new PiH::HorizontalListLayout();
+        horizontalLayout->setSpacing(10);
+        chooser->setLayouter(horizontalLayout);
         
         chooser->setBoundingBox(PiH::FloatRect(0, m_window->getSize().y / 4, m_window->getSize().x, m_window->getSize().y / 2));
         

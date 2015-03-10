@@ -28,6 +28,7 @@ SET(HDRS
 
     ${HDR}/Events/GameInput.hpp
     ${HDR}/Events/TextInput.hpp
+    ${HDR}/Events/PlayerAdded.hpp
 )
 
 SET(SRCS
@@ -47,6 +48,7 @@ SET(SRCS
 
     ${SRC}/Events/GameInput.cpp
     ${SRC}/Events/TextInput.cpp
+    ${SRC}/Events/PlayerAdded.cpp
 )
 
 SET(SCM ${CMAKE_CURRENT_SOURCE_DIR}/../schemas)
