@@ -138,7 +138,7 @@ namespace pigaco
         m_image_logo->setPosition(getBoundingBox().x + getBoundingBox().w - m_image_logo->getBoundingBox().w - 10, getBoundingBox().y - 10);
         
         m_label_name->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + 10, getBoundingBox().w, getBoundingBox().h));
-        m_label_description->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + m_label_name->getBoundingBox().h + 25, getBoundingBox().w, getBoundingBox().h));
-        m_label_version->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + getBoundingBox().h - 10 - m_label_version->getBoundingBox().h, getBoundingBox().w, getBoundingBox().h));
+        m_label_description->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + m_label_name->getTextHeight() + 25, getBoundingBox().w, getBoundingBox().h));
+        m_label_version->setBoundingBox(PiH::FloatRect(getBoundingBox().x + 10, getBoundingBox().y + getBoundingBox().h - 10 - m_label_version->getTextHeight(), getBoundingBox().w, getBoundingBox().h));
     }
 }
