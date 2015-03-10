@@ -6,10 +6,14 @@ namespace PiH
 {
     void VerticalListLayout::setBoxes(Layouter::LayoutedWidgets &widgets)
     {
-        float y = 0;
+        float x = getBoundingBox().x, y = getBoundingBox().y;
         for(std::shared_ptr<PiH::Widget> &widget : widgets)
         {
-            widget->setBoundingBox(getBoundingBox().x, y, widget->getBoundingBox().w, getBoundingBox().h);
+            if(m_centered)
+            {
+                x = getBoundingBox().x + getBoundingBox().w / 2 - widget->getBoundingBox().w / 2;
+            }
+            widget->setBoundingBox(x, y, widget->getBoundingBox().w, widget->getBoundingBox().h);
             y += widget->getBoundingBox().h + getSpacing();
         }
     }
@@ -48,6 +52,14 @@ namespace PiH
     int VerticalListLayout::getSpacing()
     {
         return m_spacing;
+    }
+    bool VerticalListLayout::getCentered()
+    {
+        return m_centered;
+    }
+    void VerticalListLayout::setCentered(bool centered)
+    {
+        m_centered = centered;
     }
     std::shared_ptr<Widget> VerticalListLayout::getCurrentlyFocusedWidget()
     {

@@ -10,7 +10,10 @@ namespace PiH
     Label::Label(Widget *parent)
         : Widget(parent)
     {
-
+        m_color.a = 255;
+        m_color.r = 190;
+        m_color.g = 190;
+        m_color.b = 190;
     }
     Label::~Label()
     {

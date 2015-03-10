@@ -33,6 +33,10 @@ namespace PiH
         if(m_pages.count(pageName) > 0)
             m_currentPage = m_pages[pageName];
     }
+    std::shared_ptr<HudContainer> MenuContainer::getCurrentPage()
+    {
+        return m_currentPage;
+    }
     void MenuContainer::addPage(std::shared_ptr<HudContainer> page, const std::string &pageName)
     {
         m_pages[pageName] = page;

@@ -10,10 +10,12 @@ namespace PiH
             virtual void setBoxes(LayoutedWidgets &widgets);
 
             void setSpacing(int spacing);
+            void setCentered(bool centered);
 
             virtual void onEvent(const Event &e);
 
             int getSpacing();
+            bool getCentered();
 
             std::shared_ptr<Widget> getCurrentlyFocusedWidget();
         protected:
@@ -22,6 +24,7 @@ namespace PiH
             virtual void focusLost(int playerID) {}
         private:
             int m_spacing = 5;
+            bool m_centered = false;
             std::size_t m_currentlyFocused = 0;
     };
 }

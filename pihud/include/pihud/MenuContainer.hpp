@@ -20,6 +20,7 @@ namespace PiH
             virtual void updateRectFromBeneath();
 
             void setCurrentPage(const std::string &pageName);
+            std::shared_ptr<HudContainer> getCurrentPage();
 
             void addPage(std::shared_ptr<HudContainer> page, const std::string &pageName);
             void removePage(const std::string &pageName);
