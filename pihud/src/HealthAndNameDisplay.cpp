@@ -78,8 +78,8 @@ namespace PiH
     }
     void HealthAndNameDisplay::updateBoundingBox()
     {
-        m_boundingBox.w = m_label->getBoundingBox().w;
-        m_boundingBox.h = m_label->getBoundingBox().h + m_distance
+        m_boundingBox.w = m_label->getTextWidth();
+        m_boundingBox.h = m_label->getTextHeight() + m_distance
                 + m_iconHealthIndicator->getBoundingBox().h;
 
         m_label->setBoundingBox(FloatRect(m_boundingBox.x,
