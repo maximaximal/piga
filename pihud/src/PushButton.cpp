@@ -47,6 +47,15 @@ namespace PiH
 				}
 			}
         }
+        else
+        {
+            if(m_pressed)
+            {
+                m_pressed = false;
+                onButtonReleased(e.playerID);
+                m_buttonReleasedSignal(e.playerID);
+            }
+        }
     }
     void PushButton::onUpdate(float frametime)
     {
