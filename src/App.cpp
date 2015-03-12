@@ -37,17 +37,16 @@ namespace pigaco
         LOG(INFO) << "Starting PiGaCo.";
 
         m_playerManager = std::make_shared<piga::PlayerManager>();
-
-        auto player = std::make_shared<piga::Player>(0);
-        player->setName("Unnamed 1 (0)");
-        m_playerManager->set(player, 0);
-
-        player = std::make_shared<piga::Player>(1);
-        player->setName("Unnamed 2 (1)");
-        m_playerManager->set(player, 1);
-
         m_host = std::make_shared<piga::Host>("config.yml", m_playerManager);
+
         m_host->init();
+
+        m_playerManager->init();
+
+        m_playerManager->getPlayer(0)->setName("Player 1");
+        m_playerManager->getPlayer(0)->setActive(true);
+        m_playerManager->getPlayer(1)->setName("Player 2");
+        m_playerManager->getPlayer(1)->setActive(true);
 
         m_gameInput = std::make_shared<piga::GameInput>();
         

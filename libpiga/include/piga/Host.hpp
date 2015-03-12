@@ -23,7 +23,7 @@ namespace piga
             Host(const std::string &configFile, std::shared_ptr<PlayerManager> playerManager);
             virtual ~Host();
 
-            void init();
+            void init(int playerCount = 16);
 
             void applyFromGameInput(GameInput *gameInput);
 
@@ -39,8 +39,9 @@ namespace piga
 
             static const char* getInputSharedMemoryName();
             static const char* getStatusSharedMemoryName();
+            static const char* getPlayersSharedMemoryName();
         protected:
-            void createSharedMemory();
+            void createSharedMemory(int playerCount);
             void deleteSharedMemory();
         private:
             //Settings of the physical appearence of the console.

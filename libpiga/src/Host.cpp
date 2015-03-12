@@ -51,11 +51,11 @@ namespace piga
         if(m_enetHost != nullptr)
             enet_host_destroy(m_enetHost);
     }
-    void Host::init()
+    void Host::init(int playerCount)
     {
         m_sharedLibs.clear();
 
-        createSharedMemory();
+        createSharedMemory(playerCount);
 
         YAML::Node doc = YAML::LoadAllFromFile(m_configFile).front();
         if(doc["Hosts"])
@@ -236,7 +236,11 @@ namespace piga
     {
         return "PiGa_GameStatus";
     }
-    void Host::createSharedMemory()
+    const char *Host::getPlayersSharedMemoryName()
+    {
+        return "PiGa_GamePlayers";
+    }
+    void Host::createSharedMemory(int playerCount)
     {
         using namespace boost::interprocess;
 
@@ -256,11 +260,18 @@ namespace piga
                                   1024);
 
         shm_status.construct<Status>("Status")[1](false);
+
+        managed_shared_memory shm_players(create_only,
+                                          getPlayersSharedMemoryName(),
+                                          1024 + sizeof(Player) * playerCount);
+
+        shm_players.construct<Player>("Player")[playerCount]("Undefined", false);
     }
     void Host::deleteSharedMemory()
     {
         boost::interprocess::shared_memory_object::remove(getInputSharedMemoryName());
         boost::interprocess::shared_memory_object::remove(getStatusSharedMemoryName());
+        boost::interprocess::shared_memory_object::remove(getPlayersSharedMemoryName());
     }
     void Host::sendHandshakePacket(ENetPeer *peer)
     {
@@ -268,12 +279,16 @@ namespace piga
         {
             LibpigaHandshake handshake;
             handshake.set_name(m_name.c_str());
-            for(auto &player : m_playerManager->getPlayers())
+
+            for(int i = 0; i < m_playerManager->size(); ++i)
             {
+                Player *player = m_playerManager->getPlayer(i);
+
                 ::Player *playerPacket = handshake.add_player();
-                playerPacket->set_username(player.second->getName());
-                playerPacket->set_id(player.first);
-                cout << PIGA_DEBUG_PRESTRING << "Added the player " << player.second->getName() << " - ID: " << player.first << endl;
+                playerPacket->set_username(player->getName());
+                playerPacket->set_id(i);
+                playerPacket->set_active(player->isActive());
+                cout << PIGA_DEBUG_PRESTRING << "Added the player " << player->getName() << " - ID: " << i << endl;
             }
 
             //This is a handshake packet.
@@ -285,7 +300,6 @@ namespace piga
     }
     void Host::receivePacket(ENetPacket *packet, ENetPeer *peer)
     {
-        cout << PIGA_DEBUG_PRESTRING << "Message Received!" << endl;
         std::string buffer(packet->data, packet->data + packet->dataLength);
         std::string packetType = buffer.substr(0, 5);
         buffer.erase(0, 5);
@@ -321,7 +335,6 @@ namespace piga
             if(input.input() > 0)
                 state = true;
 
-            cout << PIGA_DEBUG_PRESTRING << "INPUT!!" << endl;
             setInput(input.playerid(), control, state);
         }
     }

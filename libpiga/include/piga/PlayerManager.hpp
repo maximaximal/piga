@@ -4,6 +4,8 @@
 #include <memory>
 #include <piga/Player.hpp>
 
+#include <boost/interprocess/managed_shared_memory.hpp>
+
 namespace piga
 {
     class PlayerManager
@@ -12,17 +14,15 @@ namespace piga
             PlayerManager();
             virtual ~PlayerManager();
 
-            void clear();
+            void init();
 
-            std::shared_ptr<Player> get(unsigned int playerID);
+            Player* getPlayer(int playerID);
 
-            void set(std::shared_ptr<Player> player, unsigned int id);
-
-            std::size_t size();
-
-            std::map<unsigned int, std::shared_ptr<Player> >& getPlayers();
+            int size();
         private:
-            std::map<unsigned int, std::shared_ptr<Player> > m_players;
+            boost::interprocess::managed_shared_memory *m_players = nullptr;
+            Player* m_mappedPlayers = nullptr;
+            int m_mappedPlayersNum = 0;
     };
 }
 

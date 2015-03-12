@@ -1,5 +1,6 @@
 #include <piga/PlayerManager.hpp>
 #include <piga/Definitions.hpp>
+#include <piga/Host.hpp>
 
 #include <iostream>
 using std::cout;
@@ -13,36 +14,30 @@ namespace piga
     }
     PlayerManager::~PlayerManager()
     {
+        if(m_players != nullptr)
+            delete m_players;
+    }
+    void PlayerManager::init()
+    {
+        if(m_players != nullptr)
+            delete m_players;
 
-    }
-    void PlayerManager::clear()
-    {
-        m_players.clear();
-    }
-    std::shared_ptr<Player> PlayerManager::get(unsigned int playerID)
-    {
-        if(m_players.count(playerID) > 0)
-            return m_players[playerID];
+        using namespace boost::interprocess;
+        m_players = new boost::interprocess::managed_shared_memory(open_only,
+                                                                   Host::getPlayersSharedMemoryName());
 
-        cout << PIGA_DEBUG_PRESTRING << "PlayerID " << playerID << " not found! Returning player 0." << endl;
+        std::pair<Player*, std::size_t> p =
+                m_players->find<Player>("Player");
 
-        return m_players[0];
+        m_mappedPlayers = p.first;
+        m_mappedPlayersNum = p.second;
     }
-    void PlayerManager::set(std::shared_ptr<Player> player, unsigned int id)
+    Player *PlayerManager::getPlayer(int playerID)
     {
-        if(m_players.count(id) > 0)
-        {
-            cout << PIGA_DEBUG_PRESTRING << "The player with the ID " << id << " already existed!" << endl;
-            cout << PIGA_DEBUG_PRESTRING << "Overriding player \"" << m_players[id]->getName() << "\" with player \"" << player->getName() << "\"." << endl;
-        }
-        m_players[id] = player;
+        return &m_mappedPlayers[playerID];
     }
-    std::size_t PlayerManager::size()
+    int PlayerManager::size()
     {
-        return m_players.size();
-    }
-    std::map<unsigned int, std::shared_ptr<Player> >& PlayerManager::getPlayers()
-    {
-        return m_players;
+        return m_mappedPlayersNum;
     }
 }

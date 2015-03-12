@@ -15,28 +15,33 @@ namespace piga
      * stats is to query this instance every frame.
      *
      * This class can be derived from to use it for your own needs. This is not recommended though,
-     * because the API may change.
+     * because the API might change.
      */
     class Player
     {
         public:
-            Player(int playerID, const std::string &username = "Unknown");
+            Player(const char *username = "Unknown", bool active = false);
 
             bool isAuthorized();
 
             void authorize(const std::string &password);
 
-			void setName(const std::string &name);
+            void setName(const char *name);
+            void setActive(bool active = true);
 
-            const std::string& getName();
+            const char* getName();
             int getPlayerID();
+
+            bool isActive();
         private:
-            std::string m_name = "Unknown";
+            char m_name[255];
             bool m_authorized = false;
             int m_playerID = 0;
+            bool m_active = false;
 
             boost::shared_mutex m_nameMutex;
             boost::shared_mutex m_authorizedMutex;
+            boost::shared_mutex m_activeMutex;
     };
 }
 

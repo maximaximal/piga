@@ -1,11 +1,16 @@
 #include <piga/Player.hpp>
+#include <piga/Definitions.hpp>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 namespace piga
 {
-    Player::Player(int playerID, const std::string &username)
-    	: m_playerID(playerID), m_name(username)
+    Player::Player(const char *username, bool active)
     {
-
+        setName(username);
+        m_active = active;
     }
     bool Player::isAuthorized()
     {
@@ -18,14 +23,29 @@ namespace piga
         boost::upgrade_lock<boost::shared_mutex> lock(m_authorizedMutex);
         boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
     }
-    void Player::setName(const std::string &name)
+    void Player::setName(const char *name)
     {
         boost::upgrade_lock<boost::shared_mutex> lock(m_nameMutex);
         boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
 
-        m_name = name;
+        if(strlen(name) > 255)
+        {
+            cout << PIGA_DEBUG_PRESTRING << "Username was longer than 255 characters! Truncated the name to fit the maximum size." << endl;
+            strncpy(m_name, name, 254);
+        }
+        else
+        {
+            strcpy(m_name, name);
+        }
     }
-    const std::string &Player::getName()
+    void Player::setActive(bool active)
+    {
+        boost::upgrade_lock<boost::shared_mutex> lock(m_activeMutex);
+        boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
+
+        m_active = active;
+    }
+    const char* Player::getName()
     {
         boost::shared_lock<boost::shared_mutex> lock(m_nameMutex);
 
@@ -34,5 +54,10 @@ namespace piga
     int Player::getPlayerID()
     {
         return m_playerID;
+    }
+    bool Player::isActive()
+    {
+        boost::shared_lock<boost::shared_mutex> lock(m_activeMutex);
+        return m_active;
     }
 }
