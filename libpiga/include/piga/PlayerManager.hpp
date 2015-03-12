@@ -11,18 +11,19 @@ namespace piga
     class PlayerManager
     {
         public:
-            PlayerManager();
+            PlayerManager(bool sharedMemory = true, int playerNum = 16);
             virtual ~PlayerManager();
 
             void init();
 
-            Player* getPlayer(int playerID);
+            Player *getPlayer(int playerID);
 
             int size();
         private:
             boost::interprocess::managed_shared_memory *m_players = nullptr;
             Player* m_mappedPlayers = nullptr;
             int m_mappedPlayersNum = 0;
+            bool m_sharedMemory = true;
     };
 }
 

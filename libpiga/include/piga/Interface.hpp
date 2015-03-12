@@ -5,6 +5,7 @@
 #include <piga/PlayerInput.hpp>
 #include <piga/GameInput.hpp>
 #include <piga/GameEvent.hpp>
+#include <piga/PlayerManager.hpp>
 
 namespace piga
 {
@@ -99,11 +100,21 @@ namespace piga
              * @return The remaining tickets after this operation.
              */
             int removeCredits(int amount = 1);
+            /**
+             * @brief Returns a manager class for managing the players in shared memory.
+             *
+             * The player inputs have to be created before the first player manager is requested! The player
+             * manager will allocate the required amount of players to fit all inputs.
+             *
+             * @return A player manager for this game, managing players from shared memory.
+             */
+            std::shared_ptr<PlayerManager> getPlayerManager();
         private:
 			std::deque<GameEvent> events;
             GameInput *externalGameInput = nullptr;
             bool m_selfhosted;
             std::vector<PlayerInputStruct> m_playerInputs;
+            std::shared_ptr<PlayerManager> m_playerManager;
     };
 }
 

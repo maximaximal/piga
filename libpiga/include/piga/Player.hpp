@@ -20,7 +20,7 @@ namespace piga
     class Player
     {
         public:
-            Player(const char *username = "Unknown", bool active = false);
+            Player(const char *username = "Unknown", bool active = false, int playerID = 0);
 
             bool isAuthorized();
 
@@ -28,6 +28,7 @@ namespace piga
 
             void setName(const char *name);
             void setActive(bool active = true);
+            void setPlayerID(int id);
 
             const char* getName();
             int getPlayerID();

@@ -192,4 +192,17 @@ namespace piga
     {
         return addCredits(-amount);
     }
+    std::shared_ptr<PlayerManager> Interface::getPlayerManager()
+    {
+        if(!m_playerManager)
+        {
+            if(m_selfhosted)
+                m_playerManager = std::make_shared<PlayerManager>(false, externalGameInput->getPlayerCount());
+            else
+                m_playerManager = std::make_shared<PlayerManager>();
+
+            m_playerManager->init();
+        }
+        return m_playerManager;
+    }
 }

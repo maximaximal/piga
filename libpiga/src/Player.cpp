@@ -7,10 +7,11 @@ using std::endl;
 
 namespace piga
 {
-    Player::Player(const char *username, bool active)
+    Player::Player(const char *username, bool active, int playerID)
     {
         setName(username);
         m_active = active;
+        m_playerID = playerID;
     }
     bool Player::isAuthorized()
     {
@@ -44,6 +45,10 @@ namespace piga
         boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
 
         m_active = active;
+    }
+    void Player::setPlayerID(int id)
+    {
+        m_playerID = id;
     }
     const char* Player::getName()
     {
