@@ -1,18 +1,18 @@
-#ifndef LIBPIGA_PIGA_EVENTS_PLAYERADDED_HPP_INCLUDED
-#define LIBPIGA_PIGA_EVENTS_PLAYERADDED_HPP_INCLUDED
+#ifndef LIBPIGA_PIGA_EVENTS_PLAYERREMOVED_HPP_INCLUDED
+#define LIBPIGA_PIGA_EVENTS_PLAYERREMOVED_HPP_INCLUDED
 
 namespace piga
 {
     namespace event
     {
         /**
-         * @brief The PlayerAdded event is fired when a player has been added to the system.
+         * @brief The PlayerRemoved event is fired when a player is removed from the system.
          */
-        class PlayerAdded
+        class PlayerRemoved
         {
             public:
-                PlayerAdded(int id = 0, const char* name = "");
-                ~PlayerAdded();
+                PlayerRemoved(int id = 0, const char* name = "");
+                ~PlayerRemoved();
 
                 void setName(const char* name);
                 const char* getName();

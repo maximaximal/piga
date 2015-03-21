@@ -2,7 +2,7 @@
 #include <string>
 #include <cstring>
 
-#include <piga/Events/PlayerAdded.hpp>
+#include <piga/Events/PlayerRemoved.hpp>
 #include <piga/Definitions.hpp>
 
 using std::cout;
@@ -12,16 +12,16 @@ namespace piga
 {
     namespace event
     {
-        PlayerAdded::PlayerAdded(int id, const char *name)
+        PlayerRemoved::PlayerRemoved(int id, const char *name)
             : m_id(id)
         {
             setName(name);
         }
-        PlayerAdded::~PlayerAdded()
+        PlayerRemoved::~PlayerRemoved()
         {
 
         }
-        void PlayerAdded::setName(const char *name)
+        void PlayerRemoved::setName(const char *name)
         {
             if(strlen(name) > 255)
             {
@@ -33,15 +33,15 @@ namespace piga
                 strcpy(m_name, name);
             }
         }
-        const char *PlayerAdded::getName()
+        const char *PlayerRemoved::getName()
         {
             return m_name;
         }
-        void PlayerAdded::setID(int id)
+        void PlayerRemoved::setID(int id)
         {
             m_id = id;
         }
-        int PlayerAdded::getID()
+        int PlayerRemoved::getID()
         {
             return m_id;
         }

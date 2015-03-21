@@ -55,7 +55,7 @@ namespace piga
                 /**
                  * @brief Destructor of the GameInput instance. 
                  */
-                virtual ~GameInput();
+                ~GameInput();
 
                 /**
                  * @brief Returns the state of the GameControl of the player. 

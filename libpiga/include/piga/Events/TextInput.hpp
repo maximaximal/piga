@@ -11,7 +11,7 @@ namespace piga
         {
             public:
                 TextInput(const std::string &text = "");
-                virtual ~TextInput();
+                ~TextInput();
 
                 void setText(const std::string &text);
 
