@@ -178,10 +178,10 @@ namespace piga
             std::ofstream tmp(".app_running.tmp");
 
             std::stringstream command;
-            command << "./" << getConfig(ProgramPath);
+            command << "(./" << getConfig(ProgramPath);
             command << " ";
             command << getConfig(Parameters);
-            command << " && rm .app_running.tmp &";
+            command << "; rm .app_running.tmp) &";
 
             std::string systemCmd = command.str();
             tmp << "" << endl;
