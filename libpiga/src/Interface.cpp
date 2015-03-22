@@ -141,7 +141,7 @@ namespace piga
     }
     void Interface::logToStatus(const std::string &message)
     {
-        if(m_selfhosted)
+        if(!m_selfhosted)
         {
             using namespace boost::interprocess;
             managed_shared_memory shm(open_only, piga::Host::getStatusSharedMemoryName());
@@ -150,6 +150,7 @@ namespace piga
                     shm.find<piga::Status>("Status");
 
             piga::Status *status = p.first;
+            status->log(message);
         }
     }
     int Interface::getRemainingCredits()

@@ -3,7 +3,12 @@
 
 #include <string>
 #include <boost/interprocess/sync/interprocess_mutex.hpp>
-#include <boost/interprocess/ipc/message_queue.hpp>
+#include <boost/interprocess/containers/deque.hpp>
+#include <boost/interprocess/containers/string.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+
+#include <piga/GameEvent.hpp>
 
 namespace piga
 {
@@ -59,11 +64,56 @@ namespace piga
              * @return The remaining tickets.
              */
             int removeCredits(int amount = 1);
+            /**
+             * @brief Adds a message to the internal log buffer.
+             *
+             * The log is read by the host application and will be displayed as configured.
+             * @param message The message to send.
+             */
+            void log(const std::string &message);
+            /**
+             * @brief Pushes an event to the internal event buffer. This function should only be used by the host program.
+             *
+             * The game/application can then read events with the popEvent() function.
+             *
+             * @param event The event to push.
+             */
+            void pushEvent(const GameEvent &event);
+            /**
+             * @brief Reads the newest event into the specified event ptr and pops the event from the internal buffer afterwards.
+             * @param e The event to be overwritten with the new one.
+             * @return True if an event happened, false otherwise. (For while() loops).
+             */
+            bool popEvent(GameEvent *e);
+            /**
+             * @brief Checks if events happened.
+             * @return True if the internal event buffer contains events, false otherwise.
+             */
+            bool hasEvents();
+            /**
+             * @brief Checks if there are log messages.
+             * @return True if the internal buffer contains log messages, false otherwise.
+             */
+            bool hasLogMessages();
+            /**
+             * @brief Returns the newest log message without modifying the internal buffer.
+             * @return The newest log message.
+             */
+            const char* getTopLogMessage();
+            /**
+             * @brief Reads the newest log message in the provided string and pops the message from the internal buffer afterwards.
+             * @param msg The string to write the new log message into.
+             * @return True if there was a message, false otherwise.
+             */
+            bool popLogMessage(std::string *msg);
         private:
             bool m_running;
             int m_creditCount;
             boost::interprocess::interprocess_mutex m_runningMutex;
             boost::interprocess::interprocess_mutex m_creditsMutex;
+
+            boost::interprocess::deque<boost::interprocess::string> m_log;
+            boost::interprocess::deque<GameEvent> m_events;
     };
 }
 
