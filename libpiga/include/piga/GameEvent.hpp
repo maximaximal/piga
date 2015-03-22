@@ -5,6 +5,8 @@
 
 #include <piga/Events/GameInput.hpp>
 #include <piga/Events/TextInput.hpp>
+#include <piga/Events/PlayerAdded.hpp>
+#include <piga/Events/PlayerRemoved.hpp>
 
 namespace piga
 {
@@ -24,6 +26,8 @@ namespace piga
             enum GameEventType {
                 GameInput,
                 TextInput,
+                PlayerAdded,
+                PlayerRemoved,
                 Undefined,
 
                 _COUNT
@@ -57,6 +61,18 @@ namespace piga
              */
             GameEvent(int playerID, const event::TextInput &textInput);
             /**
+             * @brief Constructs a GameEvent using a PlayerAdded instance.
+             *
+             * @param playerAdded The player added event to copy from.
+             */
+            GameEvent(const event::PlayerAdded &playerAdded);
+            /**
+             * @brief Constructs a GameEvent using a PlayerRemoved instance.
+             *
+             * @param playerRemoved The player removed event to copy from.
+             */
+            GameEvent(const event::PlayerRemoved &playerRemoved);
+            /**
              * @brief Destructs the GameEvent instance. 
              */
             virtual ~GameEvent();
@@ -87,6 +103,8 @@ namespace piga
             {
                 event::GameInput gameInput;
                 event::TextInput textInput;
+                event::PlayerAdded playerAdded;
+                event::PlayerRemoved playerRemoved;
             };
 
             GameEvent& operator=(const GameEvent &otherEvent);

@@ -33,7 +33,7 @@ namespace piga
                 strcpy(m_name, name);
             }
         }
-        const char *PlayerAdded::getName()
+        const char *PlayerAdded::getName() const
         {
             return m_name;
         }
@@ -41,9 +41,15 @@ namespace piga
         {
             m_id = id;
         }
-        int PlayerAdded::getID()
+        int PlayerAdded::getID() const
         {
             return m_id;
+        }
+        PlayerAdded& PlayerAdded::operator=(const PlayerAdded &other)
+        {
+            setID(other.getID());
+            setName(other.getName());
+            return *this;
         }
     }
 }

@@ -21,6 +21,16 @@ namespace piga
     {
 
     }
+    GameEvent::GameEvent(const event::PlayerAdded &playerAdded)
+        : playerAdded(playerAdded), m_type(GameEventType::PlayerAdded)
+    {
+
+    }
+    GameEvent::GameEvent(const event::PlayerRemoved &playerRemoved)
+        : playerRemoved(playerRemoved), m_type(GameEventType::PlayerRemoved)
+    {
+
+    }
     GameEvent::~GameEvent()
     {
 
@@ -48,6 +58,12 @@ namespace piga
                 break;
             case TextInput:
                 textInput = otherEvent.textInput;
+                break;
+            case PlayerAdded:
+                playerAdded = otherEvent.playerAdded;
+                break;
+            case PlayerRemoved:
+                playerRemoved = otherEvent.playerRemoved;
                 break;
             default:
                 //Do nothing

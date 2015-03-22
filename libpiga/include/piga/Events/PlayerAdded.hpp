@@ -15,10 +15,12 @@ namespace piga
                 ~PlayerAdded();
 
                 void setName(const char* name);
-                const char* getName();
+                const char* getName() const;
 
                 void setID(int id);
-                int getID();
+                int getID() const;
+
+                PlayerAdded& operator=(const PlayerAdded &other);
             private:
                 char m_name[255];
                 int m_id;
