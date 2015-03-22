@@ -40,19 +40,6 @@ namespace piga
             delete externalGameInput;
             cout << PIGA_DEBUG_PRESTRING << "Selfhosted GameInput instance deleted." << endl;
         }
-        else
-        {
-            using namespace boost::interprocess;
-            managed_shared_memory shm_status(open_only, piga::Host::getStatusSharedMemoryName());
-
-            std::pair<piga::Status*, std::size_t> p =
-                    shm_status.find<piga::Status>("Status");
-
-            piga::Status *status = p.first;
-
-            status->setRunning(false);
-            cout << PIGA_DEBUG_PRESTRING << "Status set to not running." << endl;
-        }
         cout << PIGA_DEBUG_PRESTRING << "Interface closed." << endl;
     }
     int Interface::getPlayerCount()
@@ -137,20 +124,6 @@ namespace piga
                     events.push_back(e);
                 }
             }
-        }
-    }
-    void Interface::logToStatus(const std::string &message)
-    {
-        if(!m_selfhosted)
-        {
-            using namespace boost::interprocess;
-            managed_shared_memory shm(open_only, piga::Host::getStatusSharedMemoryName());
-
-            std::pair<piga::Status*, std::size_t> p =
-                    shm.find<piga::Status>("Status");
-
-            piga::Status *status = p.first;
-            status->log(message);
         }
     }
     int Interface::getRemainingCredits()

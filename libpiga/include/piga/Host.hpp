@@ -4,6 +4,7 @@
 #include <piga/GameInput.hpp>
 #include <piga/SharedLibWrapper.hpp>
 #include <piga/PlayerManager.hpp>
+#include <piga/Status.hpp>
 #include <boost/interprocess/mapped_region.hpp>
 #include <vector>
 #include <enet/enet.h>
@@ -44,6 +45,14 @@ namespace piga
             void createSharedMemory(int playerCount);
             void deleteSharedMemory();
         private:
+            //Shared memory
+            boost::interprocess::managed_shared_memory *m_statusShm = nullptr;
+            boost::interprocess::managed_shared_memory *m_inputsShm = nullptr;
+
+            //Status mapping (in shared memory)
+            Status *m_status = nullptr;
+            PlayerInputStruct *m_playerInputStructs = nullptr;
+
             //Settings of the physical appearence of the console.
             unsigned int m_playerCount = 2;
             unsigned int m_buttonCount = 11;

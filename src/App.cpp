@@ -155,18 +155,16 @@ namespace pigaco
     }
     void App::onUpdate(float frametime)
     {
+        m_window->glClear();
+        SDL_SetRenderDrawColor(m_window->getSDLRenderer(), 0, 0, 0, 0);
+        SDL_RenderClear(m_window->getSDLRenderer());
         if(!m_isSleeping)
         {
             m_hudContainer->onUpdate(frametime);
 
-            m_window->glClear();
-            SDL_SetRenderDrawColor(m_window->getSDLRenderer(), 0, 0, 0, 0);
-            SDL_RenderClear(m_window->getSDLRenderer());
-
             m_hudContainer->onRender(m_window->getSDLRenderer(), PiH::FloatRect(0, 0, m_window->getSize().x, m_window->getSize().y));
-            SDL_RenderPresent(m_window->getSDLRenderer());
         }
-
+        SDL_RenderPresent(m_window->getSDLRenderer());
         
         if(m_isSleeping && !m_host->gameIsRunning())
         {

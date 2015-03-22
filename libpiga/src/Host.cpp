@@ -132,12 +132,17 @@ namespace piga
     void Host::setInput(unsigned int playerID, GameControl control, bool state)
     {
         using namespace boost::interprocess;
-        managed_shared_memory shm(open_only, getInputSharedMemoryName());
 
-        std::pair<PlayerInputStruct*, std::size_t> p =
-                shm.find<PlayerInputStruct>("PlayerInput");
+        if(m_playerInputStructs == nullptr)
+        {
+            std::pair<PlayerInputStruct*, std::size_t> p =
+                    m_inputsShm->find<PlayerInputStruct>("PlayerInput");
 
-        p.first[playerID].fromGameEvent(control, state);
+
+            m_playerInputStructs = p.first;
+        }
+
+        m_playerInputStructs[playerID].fromGameEvent(control, state);
         
         GameEvent e(playerID, event::GameInput(control, state));
         if(m_backcallingGameInput)
@@ -159,15 +164,13 @@ namespace piga
         {
             if(m_currentGameHost->isRunning())
             {
-                using namespace boost::interprocess;
-                managed_shared_memory shm(open_only, getStatusSharedMemoryName());
-
-                std::pair<Status*, std::size_t> p =
-                        shm.find<Status>("Status");
-
-                Status *status = p.first;
-
-                status->setRunning(true);
+                m_status->setRunning(true);
+                Player *player = nullptr;
+                for(int i = 0; i < m_playerManager->size(); ++i)
+                {
+                    player = m_playerManager->getPlayer(i);
+                    m_status->pushEvent(event::PlayerAdded(player->getPlayerID(), player->getName()));
+                }
             }
         }
     }
@@ -246,20 +249,25 @@ namespace piga
 
         deleteSharedMemory();
 
-        managed_shared_memory shm_input(create_only,
+        m_inputsShm = new managed_shared_memory(create_only,
                                   getInputSharedMemoryName(),
                                   1024);
 
         for(std::size_t i = 1; i < m_playerCount; ++i)
         {
-            shm_input.construct<PlayerInputStruct>("PlayerInput")[m_playerCount]();
+            m_inputsShm->construct<PlayerInputStruct>("PlayerInput")[m_playerCount]();
         }
 
-        managed_shared_memory shm_status(create_only,
+        m_statusShm = new managed_shared_memory(create_only,
                                   getStatusSharedMemoryName(),
-                                  1024);
+                                  1024 + sizeof(Status));
 
-        shm_status.construct<Status>("Status")[1](false);
+        m_statusShm->construct<Status>("Status")[1](false);
+
+        std::pair<Status*, std::size_t> p =
+                m_statusShm->find<Status>("Status");
+
+        m_status = p.first;
 
         managed_shared_memory shm_players(create_only,
                                           getPlayersSharedMemoryName(),
@@ -270,7 +278,12 @@ namespace piga
     void Host::deleteSharedMemory()
     {
         boost::interprocess::shared_memory_object::remove(getInputSharedMemoryName());
+        delete m_inputsShm;
+        m_inputsShm = nullptr;
         boost::interprocess::shared_memory_object::remove(getStatusSharedMemoryName());
+        delete m_statusShm;
+        m_statusShm = nullptr;
+        m_status = nullptr;
         boost::interprocess::shared_memory_object::remove(getPlayersSharedMemoryName());
     }
     void Host::sendHandshakePacket(ENetPeer *peer)
