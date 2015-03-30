@@ -4,7 +4,7 @@ Event System {#event_system}
 The event system is divided into several different modules:
 
   1. The piga::GameEvent class.
-  2. The piga::event Namespace and contained classes. (piga::event::GameInput, piga::event::TextInput)
+  2. The piga::event Namespace and contained classes. (piga::event::GameInput, piga::event::TextInput, piga::event::PlayerAdded, piga::event::PlayerRemoved)
   3. The piga::GameControl enumeration which provides the type of events. 
   4. The piga::Interface and piga::Host classes for event dispatching 
      between apps/games and the host application.
