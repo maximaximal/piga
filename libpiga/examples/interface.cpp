@@ -1,4 +1,7 @@
 #include <piga/Interface.hpp>
+#include <piga/PlayerManager.hpp>
+
+#include <memory>
 
 #include <Example.hpp>
 
@@ -10,6 +13,9 @@ int main()
     //This only works of a host is already running! The interface needs the shared memory 
     //provided by the Host class. 
     piga::Interface interface(false);
+
+    //Get the piga::PlayerManager with all players on this system.
+    std::shared_ptr<piga::PlayerManager> playerManager = interface.getPlayerManager();
 
     while(true)
     {
