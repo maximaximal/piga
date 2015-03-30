@@ -121,6 +121,7 @@ namespace piga
             {
                 while(p.first[i].pollEvents(m_playerInputs[i], e))
                 {
+                    e.setPlayerID(i);
                     events.push_back(e);
                 }
             }
