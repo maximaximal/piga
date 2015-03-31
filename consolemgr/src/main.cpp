@@ -1,8 +1,12 @@
 #include <iostream>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
 #include <QtQuick/QQuickWindow>
+#include <QQmlContext>
+#include <QtQml>
+
+#include <Client.hpp>
+#include <ClientManager.hpp>
 
 using namespace std;
 
@@ -10,7 +14,16 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine(QUrl::fromLocalFile("forms/MainView.qml"));
+    ClientManager mgr;
+    QQmlApplicationEngine engine;
+
+    qmlRegisterType<Client>("com.pigaco.networking", 1, 0, "Client");
+    engine.rootContext()->setContextProperty("clientMgr", &mgr);
+    engine.addImportPath("forms/");
+
+
+
+    engine.load(QUrl::fromLocalFile("forms/MainView.qml"));
 
     QObject *topLevel = engine.rootObjects().value(0);
     QQuickWindow *window = qobject_cast<QQuickWindow*>(topLevel);
