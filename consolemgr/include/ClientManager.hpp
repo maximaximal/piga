@@ -1,9 +1,9 @@
 #ifndef CLIENTMANAGER_HPP
 #define CLIENTMANAGER_HPP
 
+#include <Client.hpp>
 #include <QObject>
 #include <QList>
-#include <Client.hpp>
 
 class ClientManager : public QObject
 {
@@ -15,7 +15,7 @@ class ClientManager : public QObject
         explicit ClientManager(QObject *parent = 0);
         ~ClientManager();
 
-        Q_INVOKABLE Client* newConnection(const QString &host, const QString &user, const QString &pass);
+        Q_INVOKABLE Client* newConnection(const QString &host, int port, const QString &user, const QString &pass);
 
         ClientList getClients();
     signals:

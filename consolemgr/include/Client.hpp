@@ -1,7 +1,14 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
+#include <memory>
 #include <QObject>
+
+namespace NetworkedClient
+{
+    class Client;
+    class PlayerManager;
+}
 
 class Client : public QObject
 {
@@ -21,7 +28,7 @@ class Client : public QObject
         explicit Client(QObject *parent = 0);
         ~Client();
 
-        void connectToConsole(const QString &host, const QString &user, const QString &pass);
+        void connectToConsole(const QString &host, int port, const QString &user, const QString &pass);
 
         QString name() const;
         void setName(QString name);
@@ -30,6 +37,8 @@ class Client : public QObject
     public slots:
     private:
         QString m_name;
+        NetworkedClient::Client *m_netClient = nullptr;
+        std::shared_ptr<NetworkedClient::PlayerManager> m_netPlayerManager;
 };
 
 #endif // CLIENT_HPP

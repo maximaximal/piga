@@ -1,12 +1,15 @@
 #include <iostream>
-#include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QGuiApplication>
 #include <QtQuick/QQuickWindow>
 #include <QQmlContext>
 #include <QtQml>
-
 #include <Client.hpp>
 #include <ClientManager.hpp>
+
+#include <../../include/easylogging++.h>
+
+INITIALIZE_EASYLOGGINGPP
 
 using namespace std;
 

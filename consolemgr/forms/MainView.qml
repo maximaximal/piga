@@ -10,7 +10,17 @@ ApplicationWindow {
     id: root
     title: "Hello World!"
 
-    property variant connectionWindow;
+    //The connection window (if open)
+    property NewConnection connectionWindow
+
+    // The currently active client.
+    property Client currentClient
+
+    connectionWindow: NewConnection {
+        onDataEntered: {
+            clientMgr.newConnection(host, port, user, password)
+        }
+    }
 
     width: 800
     height: 600
@@ -28,8 +38,6 @@ ApplicationWindow {
             MenuItem {
                 text: "Connect to host"
                 onTriggered: {
-                    var conn = Qt.createComponent("NewConnection.qml")
-                    connectionWindow = conn.createObject(root)
                     connectionWindow.show()
                 }
             }

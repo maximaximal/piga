@@ -12,11 +12,11 @@ ClientManager::~ClientManager()
         client = nullptr;
     }
 }
-Client *ClientManager::newConnection(const QString &host, const QString &user, const QString &pass)
+Client *ClientManager::newConnection(const QString &host, int port, const QString &user, const QString &pass)
 {
     Client *client = new Client(this);
 
-    client->connectToConsole(host, user, pass);
+    client->connectToConsole(host, port, user, pass);
 
     m_clients.push_back(client);
 
