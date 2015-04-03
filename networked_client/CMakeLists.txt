@@ -14,13 +14,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/ ${CMAKE_CURRENT_BINARY_DIR}/piga/)
 
 SET(HDRS
-    ${HDR}/Application.hpp
-    ${HDR}/Client.hpp
+    ${HDR}/NetworkedClient/Application.hpp
+    ${HDR}/NetworkedClient/Client.hpp
+    ${HDR}/NetworkedClient/PlayerManager.hpp
 )
 
 SET(SRCS
     ${SRC}/Application.cpp
     ${SRC}/Client.cpp
+    ${SRC}/PlayerManager.cpp
 )
 
 find_package(Protobuf REQUIRED)
