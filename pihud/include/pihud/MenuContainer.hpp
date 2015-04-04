@@ -21,6 +21,7 @@ namespace PiH
 
             void setCurrentPage(const std::string &pageName);
             std::shared_ptr<HudContainer> getCurrentPage();
+            const std::string& getCurrentPageName();
 
             void addPage(std::shared_ptr<HudContainer> page, const std::string &pageName);
             void removePage(const std::string &pageName);
@@ -32,5 +33,6 @@ namespace PiH
         private:
 			std::map<std::string, std::shared_ptr<HudContainer>> m_pages;
             std::shared_ptr<HudContainer> m_currentPage;
+            std::string m_currentPageName;
     };
 }

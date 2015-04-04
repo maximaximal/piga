@@ -31,11 +31,18 @@ namespace PiH
     void MenuContainer::setCurrentPage(const std::string &pageName)
     {
         if(m_pages.count(pageName) > 0)
+        {
             m_currentPage = m_pages[pageName];
+            m_currentPageName = pageName;
+        }
     }
     std::shared_ptr<HudContainer> MenuContainer::getCurrentPage()
     {
         return m_currentPage;
+    }
+    const std::string &MenuContainer::getCurrentPageName()
+    {
+        return m_currentPageName;
     }
     void MenuContainer::addPage(std::shared_ptr<HudContainer> page, const std::string &pageName)
     {
