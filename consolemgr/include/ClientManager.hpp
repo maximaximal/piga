@@ -4,6 +4,7 @@
 #include <Client.hpp>
 #include <QObject>
 #include <QList>
+#include <QTimer>
 
 class ClientManager : public QObject
 {
@@ -15,15 +16,16 @@ class ClientManager : public QObject
         explicit ClientManager(QObject *parent = 0);
         ~ClientManager();
 
-        Q_INVOKABLE Client* newConnection(const QString &host, int port, const QString &user, const QString &pass);
+        Q_INVOKABLE Client* newConnection(const QString &host, int port);
 
         ClientList getClients();
     signals:
 
     public slots:
-
+        void update();
     private:
         ClientList m_clients;
+        QTimer *m_updateTimer;
 };
 
 #endif // CLIENTMANAGER_HPP

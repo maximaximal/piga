@@ -47,8 +47,6 @@ find_package(Qt5Quick)
 
 add_executable(ConsoleMGR ${SRCS} ${HDRS} ${RSCS} ${FORS})
 
-target_link_libraries(ConsoleMGR Qt5::Widgets Qt5::Qml Qt5::Quick)
-
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/ libpiga)
 target_link_libraries(ConsoleMGR piga)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/include)
@@ -57,6 +55,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/include)
 find_package(Protobuf REQUIRED)
 
 PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${SCHEMAS})
+
+# Include the protobuf headers
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/libpiga/)
+
+target_link_libraries(ConsoleMGR Qt5::Widgets Qt5::Qml Qt5::Quick)
+
 
 if(${PROTOBUF_FOUND})
     target_link_libraries(ConsoleMGR ${PROTOBUF_LIBRARIES})

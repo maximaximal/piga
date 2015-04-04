@@ -1,7 +1,10 @@
 import "gamecontrol.proto";
 
+// Packet-ID: "INPUT"
 message Input {
     required GameControl control = 1 [default = ACTION];
     required int32 playerID = 2;
+
+    // Stated in documentation - values between 0 and 100000. 
     required int32 input = 3;
 }

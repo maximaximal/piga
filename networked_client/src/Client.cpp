@@ -2,6 +2,7 @@
 
 #include <../../include/easylogging++.h>
 #include <libpiga_handshake.pb.h>
+#include <login.pb.h>
 #include <input.pb.h>
 
 namespace NetworkedClient
@@ -118,6 +119,19 @@ namespace NetworkedClient
     {
         return !m_connected;
     }
+    void Client::login(const std::string &user, int userID, const std::string &pass)
+    {
+        ::LoginRequest loginPacket;
+
+        loginPacket.set_user(user);
+        if(pass != "")
+            loginPacket.set_pass(pass);
+
+        if(userID != -1)
+            loginPacket.set_userid(userID);
+
+        sendPacket(loginPacket, "LOGRQ", true);
+    }
     Client::HandshakeCompletedSignal& Client::handshakeCompleted()
     {
         return m_handshakeCompleted;
@@ -172,10 +186,20 @@ namespace NetworkedClient
 
             inputPacket.set_control(controlEnum);
 
-            std::string buffer("INPUT" + inputPacket.SerializeAsString());
-            ENetPacket *packet = enet_packet_create(&buffer[0u], buffer.length(), ENET_PACKET_FLAG_RELIABLE);
-            enet_peer_send(m_serverPeer, 1, packet);
+            sendPacket(inputPacket, "INPUT", true);
         }
+    }
+    void Client::sendPacket(google::protobuf::Message &msg, const std::string &packetID, bool reliable)
+    {
+        std::string buffer(packetID + msg.SerializeAsString());
+
+        int enetFlags = 0;
+
+        if(reliable)
+            enetFlags = ENET_PACKET_FLAG_RELIABLE;
+
+        ENetPacket *packet = enet_packet_create(&buffer[0u], buffer.length(), enetFlags);
+        enet_peer_send(m_serverPeer, 1, packet);
     }
     void Client::receivePacket(ENetPacket *packet, ENetPeer *peer)
     {
@@ -200,6 +224,43 @@ namespace NetworkedClient
             }
 
             m_handshakeCompleted();
+        }
+        else if(messageType == "LOGRE")
+        {
+            ::LoginResponse response;
+            response.ParseFromString(buffer);
+
+            LOG(INFO) << "Received a login response packet from the server!";
+            LoginResponse loginStatus = NotConnected;
+
+            switch(response.response())
+            {
+                case ::LoginResponseEnum::LOGIN_SUCCESSFUL:
+                    loginStatus = LoginSuccessful;
+                    break;
+                case ::LoginResponseEnum::WRONG_CREDENTIALS:
+                    loginStatus = WrongCredentials;
+                    break;
+                case ::LoginResponseEnum::NO_LOGIN_POSSIBLE:
+                    loginStatus = NoLoginPossible;
+                    break;
+                case ::LoginResponseEnum::NO_MORE_TRIES:
+                    loginStatus = NoMoreTries;
+                    break;
+                case ::LoginResponseEnum::USER_ID_NOT_EXISTING:
+                    loginStatus = UserIDNotExisting;
+                    break;
+                case ::LoginResponseEnum::USER_ID_ALREADY_ACTIVE:
+                    loginStatus = UserIDAlreadyActive;
+                    break;
+                default:
+                    loginStatus = Unknown;
+                    break;
+            }
+
+            m_loginStatus = loginStatus;
+
+            m_loginResponse(loginStatus);
         }
     }
 }

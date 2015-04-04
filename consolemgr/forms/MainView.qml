@@ -18,7 +18,7 @@ ApplicationWindow {
 
     connectionWindow: NewConnection {
         onDataEntered: {
-            clientMgr.newConnection(host, port, user, password)
+            clientMgr.newConnection(host, port)
         }
     }
 

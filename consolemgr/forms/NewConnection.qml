@@ -9,7 +9,7 @@ Window {
     width: 250
     height: 200
 
-    signal dataEntered(string host, int port, string user, string password)
+    signal dataEntered(string host, int port)
 
     GridLayout {
         id: mainGrid
@@ -52,7 +52,7 @@ Window {
         }
         TextInput {
             id: port
-            text: qsTr(17010)
+            text: qsTr("17010")
             width: 80
             height: 20
             font.pixelSize: 12
@@ -61,41 +61,6 @@ Window {
 
             Layout.fillWidth: true
             KeyNavigation.tab: user
-        }
-
-        Text {
-            id: userLabel
-            text: qsTr("User")
-            font.pixelSize: 12
-            Layout.minimumWidth: 80
-        }
-        TextInput {
-            id: user
-            width: 80
-            height: 20
-            text: qsTr("Admin")
-            font.pixelSize: 12
-            selectByMouse: true
-
-            Layout.fillWidth: true
-            KeyNavigation.tab: password
-        }
-        TextInput {
-            id: passwordLabel
-            text: qsTr("Password")
-            font.pixelSize: 12
-            Layout.minimumWidth: 80
-        }
-        TextInput {
-            id: password
-            width: 80
-            height: 20
-            text: qsTr("Password")
-            font.pixelSize: 12
-            selectByMouse: true
-            echoMode: TextInput.Password
-
-            Layout.fillWidth: true
         }
     }
     RowLayout {
@@ -115,11 +80,11 @@ Window {
             isDefault: true
 
             Keys.onReturnPressed: {
-                dataEntered(host.text, port.text, user.text, password.text)
+                dataEntered(host.text, port.text)
             }
 
             onClicked: {
-                dataEntered(host.text, port.text, user.text, password.text)
+                dataEntered(host.text, port.text)
             }
         }
         Button {

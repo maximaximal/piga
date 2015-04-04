@@ -1,5 +1,6 @@
 import "player.proto";
 
+// Packet-ID: "HANDS"
 message LibpigaHandshake {
     optional string name = 1;
     

@@ -24,8 +24,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("clientMgr", &mgr);
     engine.addImportPath("forms/");
 
-
-
     engine.load(QUrl::fromLocalFile("forms/MainView.qml"));
 
     QObject *topLevel = engine.rootObjects().value(0);

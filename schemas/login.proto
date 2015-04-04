@@ -1,0 +1,26 @@
+enum LoginResponseEnum
+{
+    LOGIN_SUCCESSFUL = 1;
+    WRONG_CREDENTIALS = 2;
+    NO_LOGIN_POSSIBLE = 3;
+    NO_MORE_TRIES = 4;
+    USER_ID_NOT_EXISTING = 5;
+    USER_ID_ALREADY_ACTIVE = 6;
+}
+
+// Packet-ID: "LOGRQ"
+message LoginRequest
+{
+    required string user = 1;
+    optional string pass = 2; 
+
+    optional int32 userid = 3;
+}
+
+// Packet-ID: "LOGRE"
+message LoginResponse
+{
+    required LoginResponseEnum response = 1;
+
+    optional int32 userID = 2;
+}

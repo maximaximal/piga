@@ -18,9 +18,12 @@ class Client : public QObject
         enum StatusCode
         {
             Success,
-            ConnectionFailure,
-            CouldNotFindHost,
             WrongCredentials,
+            ConnectionFailure,
+            LoLoginPossible,
+            NoMoreTries,
+            UserIDNotExisting,
+            UserIDAlreadyActive,
 
             _COUNT
         };
@@ -28,17 +31,21 @@ class Client : public QObject
         explicit Client(QObject *parent = 0);
         ~Client();
 
-        void connectToConsole(const QString &host, int port, const QString &user, const QString &pass);
+        void connectToConsole(const QString &host, int port);
 
         QString name() const;
         void setName(QString name);
     signals:
         void clientConnected();
+        void loginResponse(StatusCode response);
     public slots:
+        void update();
     private:
         QString m_name;
         NetworkedClient::Client *m_netClient = nullptr;
         std::shared_ptr<NetworkedClient::PlayerManager> m_netPlayerManager;
+
+        void handshakeCompleted();
 };
 
 #endif // CLIENT_HPP
