@@ -8,6 +8,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 SET(SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 SET(HDR ${CMAKE_CURRENT_SOURCE_DIR}/include/pigaco/)
+set(RSC ${CMAKE_CURRENT_SOURCE_DIR}/Data/ressources)
+set(FOR ${CMAKE_CURRENT_SOURCE_DIR}/Data/forms)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -17,6 +19,8 @@ SET(HDRS
     ${HDR}/DirectoryScanner.hpp
     ${HDR}/GameChooser.hpp
     ${HDR}/GameBox.hpp
+
+    ${HDR}/Game.hpp
 )
 
 SET(SRCS
@@ -25,9 +29,29 @@ SET(SRCS
     ${SRC}/DirectoryScanner.cpp
     ${SRC}/GameChooser.cpp
     ${SRC}/GameBox.cpp
+
+    ${SRC}/Game.cpp
 )
 
-add_executable(pigaco ${SRCS} ${HDRS})
+set(RSCS
+    ${RSC}/main.qrc
+)
+
+set(FORS
+    ${FOR}/MainMenu.qml
+)
+
+# Find Qt
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt5Widgets)
+find_package(Qt5Qml)
+find_package(Qt5Quick)
+
+add_executable(pigaco ${SRCS} ${HDRS} ${RSCS} ${FORS})
+
+target_link_libraries(pigaco Qt5::Widgets Qt5::Qml Qt5::Quick)
 
 find_package(SDL2)
 if(${SDL2_FOUND})
@@ -100,7 +124,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/include)
 
 add_custom_command(TARGET pigaco
                    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/distributor.py
-                   POST_BUILD
                    COMMAND python
                    ARGS ${CMAKE_CURRENT_SOURCE_DIR}/distributor.py ${CMAKE_CURRENT_BINARY_DIR}/dist)
 

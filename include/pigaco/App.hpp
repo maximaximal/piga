@@ -9,9 +9,9 @@
 #include <piga/GameInput.hpp>
 #include <piga/PlayerManager.hpp>
 
-#include <pihud/TextureManager.hpp>
-#include <pihud/FontManager.hpp>
-#include <pihud/HudContainer.hpp>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQuickWindow>
 
 namespace pigaco
 {
@@ -24,9 +24,8 @@ namespace pigaco
             App();
             virtual ~App();
 
-            void run();
+            void run(int argc, char *argv[]);
 
-            void onEvent(const SDL_Event &e, float frametime);
             void onUpdate(float frametime);
 
             bool end();
@@ -42,13 +41,11 @@ namespace pigaco
             std::shared_ptr<piga::GameInput> m_gameInput;
             std::shared_ptr<piga::PlayerManager> m_playerManager;
             
-            std::shared_ptr<PiH::TextureManager> m_textureManager;
-            std::shared_ptr<PiH::FontManager> m_fontManager;
-
-            std::unique_ptr<Window> m_window;
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
             
-            PiH::HudContainer *m_hudContainer = nullptr;
+            QGuiApplication *m_guiApplication = nullptr;
+            QQmlApplicationEngine *m_qmlApplicationEngine = nullptr;
+            QQuickWindow *m_qQuickWindow = nullptr;
 
             bool m_end = false;
             bool m_isSleeping = false;
