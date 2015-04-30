@@ -18,8 +18,10 @@ namespace pigaco
     class Window;
     class DirectoryScanner;
 
-    class App : public piga::GameEventHandler
+    class App : public QObject, public piga::GameEventHandler
     {
+        Q_OBJECT
+
         public:
             App();
             virtual ~App();
@@ -35,6 +37,9 @@ namespace pigaco
         protected:
             void setEnd(bool state = true);
             virtual void onGameEvent(const piga::GameEvent &gameEvent, float frametime);
+
+        public slots:
+            void aboutToQuit();
 
         private:
             std::shared_ptr<piga::Host> m_host;

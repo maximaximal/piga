@@ -6,11 +6,8 @@
 #include <pigaco/Window.hpp>
 #include <pigaco/DirectoryScanner.hpp>
 #include <pigaco/GameChooser.hpp>
-#include <pihud/pihud.hpp>
-#include <pihud/Event.hpp>
-#include <pihud/HorizontalListLayout.hpp>
-#include <pihud/ParticleSource.hpp>
-#include <pihud/pihud.hpp>
+
+#include <pigaco/Game.hpp>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
@@ -36,13 +33,17 @@ namespace pigaco
 
         m_guiApplication = new QGuiApplication(argc, argv);
         m_qmlApplicationEngine = new QQmlApplicationEngine();
+        qmlRegisterType<Game>("com.pigaco.managing", 1, 0, "Game");
         m_qmlApplicationEngine->addImportPath("Data/forms/");
+
         m_qmlApplicationEngine->load(QUrl::fromLocalFile("Data/forms/MainMenu.qml"));
 
         QObject *topLevel = m_qmlApplicationEngine->rootObjects().value(0);
         m_qQuickWindow = qobject_cast<QQuickWindow*>(topLevel);
 
         m_qQuickWindow->showFullScreen();
+
+        connect(m_guiApplication, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
 
         m_guiApplication->exec();
 
@@ -136,7 +137,41 @@ namespace pigaco
     }
     void App::onGameEvent(const piga::GameEvent &gameEvent, float frametime)
     {
+        if(gameEvent.type() == piga::GameEvent::GameInput)
+        {
+            QEvent::Type type;
+            if(gameEvent.gameInput.state())
+            {
+                type = QEvent::KeyPress;
+            }
+            else
+            {
+                type = QEvent::KeyRelease;
+            }
+            switch(gameEvent.gameInput.control())
+            {
+                case piga::UP:
+                    QCoreApplication::postEvent(m_qmlApplicationEngine, new QKeyEvent(type, Qt::Key::Key_Up, Qt::NoModifier));
+                    break;
+                case piga::DOWN:
+                    QCoreApplication::postEvent(m_qmlApplicationEngine, new QKeyEvent(type, Qt::Key::Key_Down, Qt::NoModifier));
+                    break;
+                case piga::LEFT:
+                    QCoreApplication::postEvent(m_qmlApplicationEngine, new QKeyEvent(type, Qt::Key::Key_Left, Qt::NoModifier));
+                    break;
+                case piga::RIGHT:
+                    QCoreApplication::postEvent(m_qmlApplicationEngine, new QKeyEvent(type, Qt::Key::Key_Right, Qt::NoModifier));
+                    break;
+                case piga::ACTION:
+                    QCoreApplication::postEvent(m_qmlApplicationEngine, new QKeyEvent(type, Qt::Key::Key_Return, Qt::NoModifier));
+                    break;
+            }
+        }
+    }
 
+    void App::aboutToQuit()
+    {
+        this->setEnd(true);
     }
 }
 

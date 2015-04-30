@@ -39,6 +39,7 @@ set(RSCS
 
 set(FORS
     ${FOR}/MainMenu.qml
+    ${FOR}/GameBox.qml
 )
 
 # Find Qt

@@ -7,4 +7,9 @@ ApplicationWindow {
     id: root
     color: "#000000"
     title: "Hello World!"
+
+    GameBox {
+        x: 10
+        y: 20
+    }
 }
