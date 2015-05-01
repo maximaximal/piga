@@ -17,6 +17,27 @@ Rectangle {
             game.start();
     }
 
+    NumberAnimation on opacity {
+        id: fadeInOpacity
+        duration: 500
+        from: 0
+        to: 1
+    }
+    NumberAnimation on scale {
+        id: fadeInScale
+        duration: 800
+        from: 0
+        to: 1
+        easing.type: Easing.OutExpo
+    }
+
+    Component.onCompleted: {
+        fadeInScale.start()
+        fadeInOpacity.start()
+    }
+
+    opacity: 1
+
     Image {
         id: backgroundImage
         anchors.fill: parent
