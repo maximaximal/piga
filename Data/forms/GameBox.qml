@@ -108,5 +108,19 @@ Rectangle {
         anchors.bottomMargin: 10
         font.pixelSize: 12
     }
+
+    Image {
+        id: image1
+        x: 134
+        y: -16
+        width: 32
+        height: 32
+        fillMode: Image.PreserveAspectFit
+        anchors.right: parent.right
+        anchors.rightMargin: -16
+        anchors.top: parent.top
+        anchors.topMargin: -16
+        source: logoImage
+    }
 }
 
