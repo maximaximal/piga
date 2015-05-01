@@ -23,7 +23,8 @@ namespace pigaco
                 NameRole = Qt::UserRole + 1,
                 DescriptionRole,
                 AuthorRole,
-                VersionRole
+                VersionRole,
+                GameHostRole
             };
 
             QHash<int, QByteArray> roleNames() const;

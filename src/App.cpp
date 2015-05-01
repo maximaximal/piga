@@ -8,6 +8,7 @@
 #include <pigaco/Game.hpp>
 
 #include <QQmlContext>
+#include <QApplication>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
@@ -59,6 +60,7 @@ namespace pigaco
 
         m_directoryScanner = std::make_shared<DirectoryScanner>(m_host);
         m_directoryScanner->scanDirectory("Games");
+        m_directoryScanner->setHost(m_host);
 
         qmlRegisterType<Game>("com.pigaco.managing", 1, 0, "Game");
         m_qmlApplicationEngine->rootContext()->setContextProperty("dirScanner", m_directoryScanner.get());
@@ -125,10 +127,14 @@ namespace pigaco
     void App::sleepWindow()
     {
         m_isSleeping = true;
+        m_qQuickWindow->setKeyboardGrabEnabled(false);
     }
     void App::wakeupWindow()
     {
         m_isSleeping = false;
+        m_qQuickWindow->raise();
+        m_qQuickWindow->requestActivate();
+        m_qQuickWindow->setKeyboardGrabEnabled(true);
     }
     void App::setEnd(bool state)
     {

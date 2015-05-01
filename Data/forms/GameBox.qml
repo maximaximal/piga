@@ -10,6 +10,13 @@ Rectangle {
     border.width: activeFocus ? 5 : 0
     border.color: "blue"
 
+    property Game gameHost: game;
+
+    Keys.onReturnPressed: {
+        if(activeFocus)
+            game.start();
+    }
+
     Image {
         id: backgroundImage
         anchors.fill: parent

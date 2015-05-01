@@ -1,4 +1,5 @@
 #include <pigaco/Game.hpp>
+#include <easylogging++.h>
 
 namespace pigaco
 {

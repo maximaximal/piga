@@ -158,8 +158,10 @@ namespace piga
         {
             if(m_host)
             {
-                if(m_host->gameIsRunning())
+                if(m_host->gameIsRunning(true))
                 {
+                    cout << PIGA_DEBUG_PRESTRING << "Program \"" << getConfig(Name) << "\" in directory \"" << getConfig(Directory)
+                         << "\" is already running! (so says the host)" << endl;
                     return;
                 }
             }

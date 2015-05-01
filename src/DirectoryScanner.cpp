@@ -26,6 +26,7 @@ namespace pigaco
         roles[NameRole] = "name";
         roles[VersionRole] = "version";
         roles[AuthorRole] = "author";
+        roles[GameHostRole] = "game";
         return roles;
     }
     void DirectoryScanner::scanDirectory(const std::string &dir)
@@ -131,6 +132,9 @@ namespace pigaco
                 break;
             case DescriptionRole:
                 result = game->getConfig(Game::Description);
+                break;
+            case GameHostRole:
+                result.setValue(game.get());
                 break;
         }
 
