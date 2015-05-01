@@ -2,6 +2,8 @@
 #include <boost/filesystem.hpp>
 #include <easylogging++.h>
 
+#include <QDir>
+
 namespace fs = boost::filesystem;
 
 namespace pigaco
@@ -27,6 +29,8 @@ namespace pigaco
         roles[VersionRole] = "version";
         roles[AuthorRole] = "author";
         roles[GameHostRole] = "game";
+        roles[BackgroundImageRole] = "backgroundImage";
+        roles[LogoImageRole] = "logoImage";
         return roles;
     }
     void DirectoryScanner::scanDirectory(const std::string &dir)
@@ -135,6 +139,12 @@ namespace pigaco
                 break;
             case GameHostRole:
                 result.setValue(game.get());
+                break;
+            case BackgroundImageRole:
+                result = QDir::currentPath() + "/" + game->getConfig(Game::BackgroundImage);
+                break;
+            case LogoImageRole:
+                result = QDir::currentPath() + "/" + game->getConfig(Game::Logo);
                 break;
         }
 

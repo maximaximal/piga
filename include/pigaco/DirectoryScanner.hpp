@@ -24,7 +24,9 @@ namespace pigaco
                 DescriptionRole,
                 AuthorRole,
                 VersionRole,
-                GameHostRole
+                GameHostRole,
+                BackgroundImageRole,
+                LogoImageRole
             };
 
             QHash<int, QByteArray> roleNames() const;

@@ -39,8 +39,10 @@ Rectangle {
     opacity: 1
 
     Image {
-        id: backgroundImage
+        id: backgroundImg
+        fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
+        source: backgroundImage
     }
 
     Text {
