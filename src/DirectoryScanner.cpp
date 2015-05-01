@@ -6,8 +6,13 @@ namespace fs = boost::filesystem;
 
 namespace pigaco
 {
+    DirectoryScanner::DirectoryScanner(const DirectoryScanner &dirScanner)
+    {
+        m_host = dirScanner.getHost();
+        m_directory = dirScanner.getDirectory();
+    }
     DirectoryScanner::DirectoryScanner(std::shared_ptr<piga::Host> host)
-        : m_host(host)
+            : m_host(host)
     {
 
     }
@@ -15,18 +20,26 @@ namespace pigaco
     {
 
     }
+    QHash<int, QByteArray> DirectoryScanner::roleNames() const {
+        QHash<int, QByteArray> roles;
+        roles[DescriptionRole] = "description";
+        roles[NameRole] = "name";
+        roles[VersionRole] = "version";
+        roles[AuthorRole] = "author";
+        return roles;
+    }
     void DirectoryScanner::scanDirectory(const std::string &dir)
     {
         m_directory = dir;
         LOG(INFO) << "Scanning directory \"" << dir << "\".";
         if(!fs::exists(dir))
         {
-            LOG(FATAL) << "The path \"" << dir << "\" does not exist!";
+            LOG(FATAL) << "The path \"" << dir.c_str() << "\" does not exist!";
             return;
         }
         if(!fs::is_directory(dir))
         {
-            LOG(FATAL) << "The path \"" << dir << "\" is not a directory!";
+            LOG(FATAL) << "The path \"" << dir.c_str() << "\" is not a directory!";
             return;
         }
         fs::directory_iterator end_it;
@@ -41,33 +54,86 @@ namespace pigaco
     }
     void DirectoryScanner::addGame(const std::string &dir)
     {
-        std::shared_ptr<piga::GameHost> gameHost = std::make_shared<piga::GameHost>();
+        piga::GameHost *gameHost = new piga::GameHost();
         gameHost->loadFromDirectory(dir);
         gameHost->setHost(m_host);
-        m_games[dir] = gameHost;
+
+        std::shared_ptr<Game> game = std::make_shared<Game>(gameHost);
+
+        m_games.push_back(game);
     }
-    DirectoryScanner::GameMap &DirectoryScanner::getGames()
+    void DirectoryScanner::setHost(std::shared_ptr<piga::Host> host)
     {
-		return m_games;
+        m_host = host;
     }
-    std::shared_ptr<piga::GameHost> DirectoryScanner::getGame(const std::string &dir)
+    std::shared_ptr<Game> DirectoryScanner::getGame(const std::string &dir)
     {
-		if(m_games.count(dir) > 0)
+        return getGame(QString::fromStdString(dir));
+    }
+    std::shared_ptr<Game> DirectoryScanner::getGame(const QString &dir)
+    {
+        std::shared_ptr<Game> game;
+        game = lookupGame(dir);
+        if(game)
         {
-            return m_games[dir];
+            return game;
         }
-        if(m_games.count(m_directory + "/" + dir) > 0)
+        game = lookupGame(QString::fromStdString(m_directory) + "/" + dir);
+        if(game)
         {
-            return m_games[m_directory + "/" + dir];
+            return game;
         }
-        for(auto &game : m_games)
+        for(auto &gameO : m_games)
         {
-            if(game.second->getConfig(piga::GameHost::Name) == dir)
+            if(QString::fromStdString(gameO->getConfig(piga::GameHost::Name)) == dir)
             {
-                return game.second;
+                return gameO;
             }
         }
-        LOG(FATAL) << "Game in \"" << dir << "\" not found! Returning the first game.";
-        return (*m_games.begin()).second;
+        LOG(FATAL) << "Game in \"" << dir.toStdString() << "\" not found! Returning the first game.";
+        return m_games.first();
+    }
+    std::shared_ptr<Game> DirectoryScanner::lookupGame(const QString &dir)
+    {
+        for(auto &game : m_games)
+        {
+            if(game->getConfig(Game::Directory) == dir)
+                return game;
+        }
+    }
+    std::shared_ptr<piga::Host> DirectoryScanner::getHost() const
+    {
+        return m_host;
+    }
+    const std::string &DirectoryScanner::getDirectory() const
+    {
+        return m_directory;
+    }
+    int DirectoryScanner::rowCount(const QModelIndex &parent) const
+    {
+        return m_games.size();
+    }
+
+    QVariant DirectoryScanner::data(const QModelIndex &index, int role) const
+    {
+        QVariant result;
+        std::shared_ptr<Game> game = m_games[index.row()];
+        switch(role)
+        {
+            case NameRole:
+                result = game->getConfig(Game::Name);
+                break;
+            case VersionRole:
+                result = game->getConfig(Game::Version);
+                break;
+            case AuthorRole:
+                result = game->getConfig(Game::Author);
+                break;
+            case DescriptionRole:
+                result = game->getConfig(Game::Description);
+                break;
+        }
+
+        return result;
     }
 }

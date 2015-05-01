@@ -3,11 +3,11 @@
 #include <chrono>
 #include <thread>
 
-#include <pigaco/Window.hpp>
 #include <pigaco/DirectoryScanner.hpp>
-#include <pigaco/GameChooser.hpp>
 
 #include <pigaco/Game.hpp>
+
+#include <QQmlContext>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
@@ -33,19 +33,6 @@ namespace pigaco
 
         m_guiApplication = new QGuiApplication(argc, argv);
         m_qmlApplicationEngine = new QQmlApplicationEngine();
-        qmlRegisterType<Game>("com.pigaco.managing", 1, 0, "Game");
-        m_qmlApplicationEngine->addImportPath("Data/forms/");
-
-        m_qmlApplicationEngine->load(QUrl::fromLocalFile("Data/forms/MainMenu.qml"));
-
-        QObject *topLevel = m_qmlApplicationEngine->rootObjects().value(0);
-        m_qQuickWindow = qobject_cast<QQuickWindow*>(topLevel);
-
-        m_qQuickWindow->showFullScreen();
-
-        connect(m_guiApplication, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
-
-        m_guiApplication->exec();
 
         m_playerManager = std::make_shared<piga::PlayerManager>();
         m_host = std::make_shared<piga::Host>("config.yml", m_playerManager);
@@ -69,11 +56,24 @@ namespace pigaco
         std::chrono::time_point<std::chrono::high_resolution_clock> frameTimePoint = std::chrono::high_resolution_clock::now();
         float frametime = 0;
         std::chrono::milliseconds desiredFrametime((long) (1 / 60.f * 1000));
-        SDL_Event e;
 
         m_directoryScanner = std::make_shared<DirectoryScanner>(m_host);
         m_directoryScanner->scanDirectory("Games");
 
+        qmlRegisterType<Game>("com.pigaco.managing", 1, 0, "Game");
+        m_qmlApplicationEngine->rootContext()->setContextProperty("dirScanner", m_directoryScanner.get());
+        m_qmlApplicationEngine->addImportPath("Data/forms/");
+
+        m_qmlApplicationEngine->load(QUrl::fromLocalFile("Data/forms/MainMenu.qml"));
+
+        QObject *topLevel = m_qmlApplicationEngine->rootObjects().value(0);
+        m_qQuickWindow = qobject_cast<QQuickWindow*>(topLevel);
+
+        m_qQuickWindow->showFullScreen();
+
+        connect(m_guiApplication, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
+
+        m_guiApplication->exec();
 
         piga::GameEvent gameEvent;
         
@@ -83,7 +83,6 @@ namespace pigaco
         {
             frameTimePoint = std::chrono::high_resolution_clock::now();
 
-            SDL_PumpEvents();
             m_gameInput->update();
             m_host->update(frametime);
             while(m_gameInput->pollEvent(gameEvent))

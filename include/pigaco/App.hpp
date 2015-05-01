@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include <SDL2/SDL_events.h>
-
 #include <piga/Host.hpp>
 #include <piga/GameEventHandler.hpp>
 #include <piga/GameInput.hpp>

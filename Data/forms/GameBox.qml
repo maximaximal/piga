@@ -3,12 +3,9 @@ import com.pigaco.managing 1.0
 
 Rectangle {
     id: gameBox
-    width: 150
-    height: 300
-
-    Game {
-        id: gameHost
-    }
+    width: 150;
+    height: 300;
+    color: "white"
 
     Image {
         id: backgroundImage
@@ -16,11 +13,11 @@ Rectangle {
     }
 
     Text {
-        id: gameTitle
+        id: gameTitleText
         x: 10
         y: 10
         height: 14
-        text: qsTr("Game Title")
+        text: name
         font.bold: true
         anchors.right: parent.right
         anchors.rightMargin: 10
@@ -37,14 +34,14 @@ Rectangle {
         x: 10
         y: 30
         height: 14
-        text: "This description is very long and interesting."
+        text: description
         textFormat: Text.AutoText
         verticalAlignment: Text.AlignTop
         horizontalAlignment: Text.AlignLeft
         anchors.right: parent.right
         anchors.rightMargin: 10
         wrapMode: Text.WordWrap
-        anchors.top: gameTitle.bottom
+        anchors.top: gameTitleText.bottom
         anchors.topMargin: 10
         anchors.left: parent.left
         anchors.leftMargin: 10
@@ -52,11 +49,11 @@ Rectangle {
     }
 
     Text {
-        id: author
+        id: authorText
         x: 10
         y: 256
-        text: qsTr("Author")
-        anchors.bottom: version.top
+        text: "Made by " + author
+        anchors.bottom: versionText.top
         anchors.bottomMargin: 10
         anchors.right: parent.right
         anchors.rightMargin: 10
@@ -66,10 +63,10 @@ Rectangle {
     }
 
     Text {
-        id: version
+        id: versionText
         x: 10
         y: 276
-        text: qsTr("V0.1")
+        text: "Version " + version
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.left: parent.left

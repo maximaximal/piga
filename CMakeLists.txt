@@ -15,20 +15,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 SET(HDRS
     ${HDR}/App.hpp
-    ${HDR}/Window.hpp
     ${HDR}/DirectoryScanner.hpp
-    ${HDR}/GameChooser.hpp
-    ${HDR}/GameBox.hpp
 
     ${HDR}/Game.hpp
 )
 
 SET(SRCS
     ${SRC}/App.cpp
-    ${SRC}/Window.cpp
     ${SRC}/DirectoryScanner.cpp
-    ${SRC}/GameChooser.cpp
-    ${SRC}/GameBox.cpp
 
     ${SRC}/Game.cpp
 )
