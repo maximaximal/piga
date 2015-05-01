@@ -18,6 +18,7 @@ ApplicationWindow {
         height: parent.height / 2
         orientation: ListView.Horizontal
         spacing: 20
+        focus: true
 
         model: dirScanner
         delegate: GameBox {

@@ -7,6 +7,9 @@ Rectangle {
     height: 300;
     color: "white"
 
+    border.width: activeFocus ? 5 : 0
+    border.color: "blue"
+
     Image {
         id: backgroundImage
         anchors.fill: parent
