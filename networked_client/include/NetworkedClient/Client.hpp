@@ -34,8 +34,8 @@ namespace NetworkedClient
             void setServerAddress(const std::string &adress);
             void setServerPort(int port);
 
-            const std::string& getServerAddress();
-            int getServerPort();
+            const std::string& getServerAddress() const;
+            int getServerPort() const;
 
             void connect();
             void update();

@@ -5,8 +5,9 @@
 #include <QObject>
 #include <QList>
 #include <QTimer>
+#include <QAbstractListModel>
 
-class ClientManager : public QObject
+class ClientManager : public QAbstractListModel
 {
         Q_OBJECT
         Q_PROPERTY(ClientList clients READ getClients)
@@ -16,13 +17,23 @@ class ClientManager : public QObject
         explicit ClientManager(QObject *parent = 0);
         ~ClientManager();
 
+        enum ClientRoles {
+            AddressRole = Qt::UserRole + 1,
+            NameRole
+        };
+
         Q_INVOKABLE Client* newConnection(const QString &host, int port);
 
         ClientList getClients();
+
+        virtual int rowCount(const QModelIndex &parent) const;
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QHash<int, QByteArray> roleNames() const;
     signals:
 
     public slots:
         void update();
+        void clientDataChanged();
     private:
         ClientList m_clients;
         QTimer *m_timer;

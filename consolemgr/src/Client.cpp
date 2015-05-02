@@ -33,6 +33,16 @@ QString Client::name() const
 {
     return m_name;
 }
+
+QString Client::address() const
+{
+    return QString::fromStdString(m_netClient->getServerAddress());
+}
+
+int Client::port() const
+{
+    return m_netClient->getServerPort();
+}
 void Client::setName(QString name)
 {
     m_name = name;

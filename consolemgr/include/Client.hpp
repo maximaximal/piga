@@ -34,6 +34,8 @@ class Client : public QObject
         void connectToConsole(const QString &host, int port);
 
         QString name() const;
+        QString address() const;
+        int port() const;
         void setName(QString name);
         void update();
     signals:

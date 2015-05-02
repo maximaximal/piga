@@ -61,11 +61,11 @@ namespace NetworkedClient
     {
         m_serverPort = port;
     }
-    const std::string &Client::getServerAddress()
+    const std::string &Client::getServerAddress() const
     {
         return m_serverAdress;
     }
-    int Client::getServerPort()
+    int Client::getServerPort() const
     {
         return m_serverPort;
     }

@@ -62,9 +62,7 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.minimumWidth: 80
 
-            model: ListModel {
-                id: connectionsListModel
-            }
+            model: clientMgr
 
             delegate: Text {
                 text: name
