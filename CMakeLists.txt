@@ -33,7 +33,11 @@ set(RSCS
 
 set(FORS
     ${FOR}/MainMenu.qml
+    ${FOR}/MainMenuHeader.qml
     ${FOR}/GameBox.qml
+
+    ${FOR}/Pages/Store/Main.qml
+    ${FOR}/Pages/Settings/Main.qml
 )
 
 # Find Qt

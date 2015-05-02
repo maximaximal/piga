@@ -7,9 +7,6 @@ Rectangle {
     height: 300;
     color: "white"
 
-    border.width: activeFocus ? 5 : 0
-    border.color: "blue"
-
     property Game gameHost: game;
 
     Keys.onReturnPressed: {
@@ -17,19 +14,31 @@ Rectangle {
             game.start();
     }
 
-    NumberAnimation on opacity {
+    NumberAnimation {
         id: fadeInOpacity
+        properties: "opacitiy"
         duration: 500
         from: 0
         to: 1
     }
-    NumberAnimation on scale {
+    NumberAnimation {
         id: fadeInScale
+        properties: "scale"
         duration: 800
         from: 0
         to: 1
         easing.type: Easing.OutExpo
     }
+    Behavior on scale {
+        NumberAnimation {
+            target: gameBox
+            properties: "scale"
+            duration: 300
+            easing.type: Easing.OutBack
+        }
+    }
+
+    scale: activeFocus ? 1.05 : 1
 
     Component.onCompleted: {
         fadeInScale.start()
@@ -40,6 +49,10 @@ Rectangle {
 
     Image {
         id: backgroundImg
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
         fillMode: Image.PreserveAspectCrop
         anchors.fill: parent
         source: backgroundImage
@@ -51,6 +64,8 @@ Rectangle {
         y: 10
         height: 14
         text: name
+        styleColor: "#ffffff"
+        style: Text.Outline
         font.bold: true
         anchors.right: parent.right
         anchors.rightMargin: 10
