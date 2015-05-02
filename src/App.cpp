@@ -71,6 +71,10 @@ namespace pigaco
         QObject *topLevel = m_qmlApplicationEngine->rootObjects().value(0);
         m_qQuickWindow = qobject_cast<QQuickWindow*>(topLevel);
 
+        QSurfaceFormat format;
+        format.setSamples(8);
+        m_qQuickWindow->setFormat(format);
+
         m_qQuickWindow->showFullScreen();
 
         connect(m_guiApplication, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
