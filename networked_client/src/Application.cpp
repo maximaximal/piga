@@ -23,41 +23,50 @@ namespace NetworkedClient
         LOG(INFO) << "Parsing config file \"" << configFile << "\".";
         auto node = YAML::LoadAllFromFile(configFile);
         YAML::Node config;
+
         if(node.size() > 0)
         {
             config = node.front();
         }
 
-        if(config["ServerAddress"])
+        if(config)
         {
-            m_client->setServerAddress(config["ServerAddress"].as<std::string>());
-        }
-        else
-        {
-            LOG(WARNING) << "The \"ServerAddress\" property was not defined!";
-        }
-        if(config["ServerPort"])
-        {
-            m_client->setServerPort(config["ServerPort"].as<int>());
-        }
-        else
-        {
-            LOG(WARNING) << "The \"ServerPort\" property was not defined!";
-        }
-        if(config["Hosts"])
-        {
-            for(YAML::const_iterator it = config["Hosts"].begin(); it != config["Hosts"].end(); ++it)
+            if(config["ServerAddress"])
             {
-                LOG(INFO) << "Loading \"" << (*it).as<std::string>() << "\".";
-                std::unique_ptr<piga::SharedLibWrapper> sharedLib(new piga::SharedLibWrapper((*it).as<std::string>()));
-                LOG(INFO) << "Loaded \"" << sharedLib->getName() << "\" by " << sharedLib->getAuthor() << ". It will be initialized when the connection to the server was successful.";
-                m_libs.push_back(std::move(sharedLib));
+                m_client->setServerAddress(config["ServerAddress"].as<std::string>());
+            }
+            else
+            {
+                LOG(WARNING) << "The \"ServerAddress\" property was not defined!";
+            }
+            if(config["ServerPort"])
+            {
+                m_client->setServerPort(config["ServerPort"].as<int>());
+            }
+            else
+            {
+                LOG(WARNING) << "The \"ServerPort\" property was not defined!";
+            }
+            if(config["Hosts"])
+            {
+                for(YAML::const_iterator it = config["Hosts"].begin(); it != config["Hosts"].end(); ++it)
+                {
+                    LOG(INFO) << "Loading \"" << (*it).as<std::string>() << "\".";
+                    std::unique_ptr<piga::SharedLibWrapper> sharedLib(new piga::SharedLibWrapper((*it).as<std::string>()));
+                    LOG(INFO) << "Loaded \"" << sharedLib->getName() << "\" by " << sharedLib->getAuthor() << ". It will be initialized when the connection to the server was successful.";
+                    m_libs.push_back(std::move(sharedLib));
+                }
+            }
+            else
+            {
+                LOG(WARNING) << "This client has no \"Hosts\" section in its config! No inputs will be processed.";
             }
         }
         else
         {
-            LOG(WARNING) << "This client has no \"Hosts\" section in its config! No inputs will be processed.";
+            LOG(WARNING) << "The config file was either not found or wrongly formatted!";
         }
+
     }
     void Application::init()
     {

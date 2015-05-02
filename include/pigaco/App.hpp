@@ -10,6 +10,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+#include <QTimer>
 
 namespace pigaco
 {
@@ -38,6 +39,7 @@ namespace pigaco
 
         public slots:
             void aboutToQuit();
+            void update();
 
         private:
             std::shared_ptr<piga::Host> m_host;
@@ -49,6 +51,7 @@ namespace pigaco
             QGuiApplication *m_guiApplication = nullptr;
             QQmlApplicationEngine *m_qmlApplicationEngine = nullptr;
             QQuickWindow *m_qQuickWindow = nullptr;
+            QTimer *m_loopTimer = nullptr;
 
             bool m_end = false;
             bool m_isSleeping = false;

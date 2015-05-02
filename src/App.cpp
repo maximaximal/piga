@@ -77,36 +77,16 @@ namespace pigaco
 
         m_qQuickWindow->showFullScreen();
 
+        m_loopTimer = new QTimer(this);
+
+        connect(m_loopTimer, SIGNAL(timeout()), this, SLOT(update()));
         connect(m_guiApplication, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
 
-        m_guiApplication->exec();
-
-        piga::GameEvent gameEvent;
-        
         LOG(INFO) << "Starting the App-Loop.";
+        m_loopTimer->start(16);
 
-        while(!end())
-        {
-            frameTimePoint = std::chrono::high_resolution_clock::now();
-
-            m_gameInput->update();
-            m_host->update(frametime);
-            while(m_gameInput->pollEvent(gameEvent))
-            {
-                if(!m_isSleeping)
-                {
-                    onGameEvent(gameEvent, frametime);
-                }
-            }
-            onUpdate(frametime);
-
-            frametime = std::chrono::duration_cast<std::chrono::milliseconds>(frameTimePoint - frameTimePointPast).count();
-
-            if(frametime < desiredFrametime.count())
-                std::this_thread::sleep_for(desiredFrametime - std::chrono::duration_cast<std::chrono::milliseconds>(frameTimePoint - frameTimePointPast));
-
-            frameTimePointPast = frameTimePoint;
-        }
+        LOG(INFO) << "Starting the QApplication.";
+        m_guiApplication->exec();
     }
     void App::onUpdate(float frametime)
     {
@@ -181,6 +161,21 @@ namespace pigaco
     void App::aboutToQuit()
     {
         this->setEnd(true);
+    }
+
+    void App::update()
+    {
+        piga::GameEvent gameEvent;
+        m_gameInput->update();
+        m_host->update(0.016);
+        while(m_gameInput->pollEvent(gameEvent))
+        {
+            if(!m_isSleeping)
+            {
+                onGameEvent(gameEvent, 0.016);
+            }
+        }
+        onUpdate(0.016);
     }
 }
 

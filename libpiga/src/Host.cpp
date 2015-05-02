@@ -113,6 +113,10 @@ namespace piga
             {
                 cout << PIGA_DEBUG_PRESTRING << "ENet host could not be created!" << endl;
             }
+            else
+            {
+                cout << PIGA_DEBUG_PRESTRING << "ENet host created successfully!" << endl;
+            }
         }
     }
     void Host::applyFromGameInput(GameInput *gameInput)

@@ -1,10 +1,11 @@
 #include <ClientManager.hpp>
+#include <QDebug>
 
 ClientManager::ClientManager(QObject *parent) : QObject(parent)
 {
-    m_updateTimer = new QTimer(this);
-    connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
-    m_updateTimer->start(16.666);
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(update()));
+    m_timer->start(16);
 }
 ClientManager::~ClientManager()
 {
@@ -13,7 +14,7 @@ ClientManager::~ClientManager()
         delete client;
         client = nullptr;
     }
-    delete m_updateTimer;
+    delete m_timer;
 }
 Client *ClientManager::newConnection(const QString &host, int port)
 {
@@ -31,9 +32,9 @@ ClientManager::ClientList ClientManager::getClients()
 }
 void ClientManager::update()
 {
-    for(auto &client : m_clients)
+    for(std::size_t i = 0; i < m_clients.size(); ++i)
     {
-        client->update();
+        m_clients[i]->update();
     }
 }
 

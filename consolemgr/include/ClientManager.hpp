@@ -25,7 +25,7 @@ class ClientManager : public QObject
         void update();
     private:
         ClientList m_clients;
-        QTimer *m_updateTimer;
+        QTimer *m_timer;
 };
 
 #endif // CLIENTMANAGER_HPP

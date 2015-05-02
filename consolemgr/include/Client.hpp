@@ -35,11 +35,10 @@ class Client : public QObject
 
         QString name() const;
         void setName(QString name);
+        void update();
     signals:
         void clientConnected();
         void loginResponse(StatusCode response);
-    public slots:
-        void update();
     private:
         QString m_name;
         NetworkedClient::Client *m_netClient = nullptr;

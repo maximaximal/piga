@@ -1,6 +1,8 @@
 #include <NetworkedClient/Client.hpp>
 #include <Client.hpp>
 
+#include <QDebug>
+
 namespace NetCl = NetworkedClient;
 
 Client::Client(QObject *parent) : QObject(parent)
