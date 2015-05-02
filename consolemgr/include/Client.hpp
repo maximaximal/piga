@@ -13,7 +13,7 @@ namespace NetworkedClient
 class Client : public QObject
 {
         Q_OBJECT
-        Q_PROPERTY(QString name READ name WRITE setName)
+        Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     public:
         enum StatusCode
         {
@@ -37,10 +37,11 @@ class Client : public QObject
         QString address() const;
         int port() const;
         void setName(QString name);
-        void update();
+        bool update();
     signals:
         void clientConnected();
         void loginResponse(StatusCode response);
+        void nameChanged(QString name);
     private:
         QString m_name;
         NetworkedClient::Client *m_netClient = nullptr;

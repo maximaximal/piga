@@ -57,6 +57,10 @@ namespace NetworkedClient
     {
         m_serverAdress = adress;
     }
+    void Client::setServerName(const std::string &name)
+    {
+        m_serverName = name;
+    }
     void Client::setServerPort(int port)
     {
         m_serverPort = port;
@@ -64,6 +68,10 @@ namespace NetworkedClient
     const std::string &Client::getServerAddress() const
     {
         return m_serverAdress;
+    }
+    const std::string &Client::getServerName() const
+    {
+        return m_serverName;
     }
     int Client::getServerPort() const
     {
@@ -86,8 +94,9 @@ namespace NetworkedClient
             m_connected = false;
         }
     }
-    void Client::update()
+    bool Client::update()
     {
+        bool dataChanged = false;
         ENetEvent event;
 
         while(enet_host_service(m_client, &event, 10))
@@ -98,22 +107,25 @@ namespace NetworkedClient
                     LOG(INFO) << "Client connected successfully to " << event.peer->address.host
                               << ":" << event.peer->address.port << ".";
                     m_connected = true;
+                    dataChanged = true;
                     break;
                 case ENET_EVENT_TYPE_DISCONNECT:
                     event.peer->data = nullptr;
                     LOG(INFO) << "Client disconnected.";
                     m_serverPeer = nullptr;
                     m_connected = false;
+                    dataChanged = true;
                     break;
                 case ENET_EVENT_TYPE_NONE:
                     //Nothing happened
                     break;
                 case ENET_EVENT_TYPE_RECEIVE:
-                    receivePacket(event.packet, event.peer);
+                    dataChanged = receivePacket(event.packet, event.peer);
                     enet_packet_destroy(event.packet);
                     break;
             }
         }
+        return dataChanged;
     }
     bool Client::disconnected()
     {
@@ -201,8 +213,9 @@ namespace NetworkedClient
         ENetPacket *packet = enet_packet_create(&buffer[0u], buffer.length(), enetFlags);
         enet_peer_send(m_serverPeer, 1, packet);
     }
-    void Client::receivePacket(ENetPacket *packet, ENetPeer *peer)
+    bool Client::receivePacket(ENetPacket *packet, ENetPeer *peer)
     {
+        bool dataChanged = false;
         std::string buffer(packet->data, packet->data + packet->dataLength);
         std::string messageType = buffer.substr(0, 5);
         buffer.erase(0, 5);
@@ -222,8 +235,10 @@ namespace NetworkedClient
                 LOG(INFO) << "Adding the player \"" << player->getName() << "\" (ID: " << player->getPlayerID() << ").";
                 m_playerManager->set(player, player->getPlayerID());
             }
+            m_serverName = handshake.name();
 
             m_handshakeCompleted();
+            dataChanged = true;
         }
         else if(messageType == "LOGRE")
         {
@@ -261,7 +276,9 @@ namespace NetworkedClient
             m_loginStatus = loginStatus;
 
             m_loginResponse(loginStatus);
+            dataChanged = true;
         }
+        return dataChanged;
     }
 }
 

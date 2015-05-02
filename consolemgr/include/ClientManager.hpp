@@ -33,7 +33,6 @@ class ClientManager : public QAbstractListModel
 
     public slots:
         void update();
-        void clientDataChanged();
     private:
         ClientList m_clients;
         QTimer *m_timer;

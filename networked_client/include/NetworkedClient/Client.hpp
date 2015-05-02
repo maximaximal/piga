@@ -32,13 +32,15 @@ namespace NetworkedClient
             ~Client();
 
             void setServerAddress(const std::string &adress);
+            void setServerName(const std::string &name);
             void setServerPort(int port);
 
             const std::string& getServerAddress() const;
+            const std::string& getServerName() const;
             int getServerPort() const;
 
             void connect();
-            void update();
+            bool update();
             bool disconnected();
 
             void login(const std::string &user, int userID = -1, const std::string &pass = "");
@@ -53,10 +55,11 @@ namespace NetworkedClient
             HandshakeCompletedSignal m_handshakeCompleted;
             LoginResponseSignal m_loginResponse;
 
-            void receivePacket(ENetPacket *packet, ENetPeer *peer);
+            bool receivePacket(ENetPacket *packet, ENetPeer *peer);
             ENetHost *m_client = nullptr;
             ENetPeer *m_serverPeer = nullptr;
             std::string m_serverAdress;
+            std::string m_serverName;
             int m_serverPort;
             bool m_connected = false;
             LoginResponse m_loginStatus = NotConnected;

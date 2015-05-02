@@ -46,13 +46,16 @@ int Client::port() const
 void Client::setName(QString name)
 {
     m_name = name;
+    nameChanged(name);
 }
-void Client::update()
+bool Client::update()
 {
     if(m_netClient != nullptr)
-        m_netClient->update();
+        return m_netClient->update();
+    return false;
 }
 void Client::handshakeCompleted()
 {
+    setName(QString::fromStdString(m_netClient->getServerName()));
     this->clientConnected();
 }

@@ -61,8 +61,16 @@ QHash<int, QByteArray> ClientManager::roleNames() const
 }
 void ClientManager::update()
 {
+    bool update = false;
     for(std::size_t i = 0; i < m_clients.size(); ++i)
     {
-        m_clients[i]->update();
+        update = m_clients[i]->update();
+        if(update)
+        {
+            //The data of the client has been changed!
+            //Issue the dataChanged signal, so the Model updates its views.
+
+            dataChanged(QModelIndex(), QModelIndex());
+        }
     }
 }
