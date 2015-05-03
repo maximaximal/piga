@@ -1,6 +1,8 @@
 Piga Console {#mainpage}
 ============
 
+[![Build Status](http://root.maximaximal.com/jenkins/buildStatus/icon?job=Piga&build=27)](http://root.maximaximal.com/jenkins/job/Piga/27/)
+
 This is the official repository for the piga source code. The piga project 
 is aimed to create a new arcade console together with its own games using 
 a Raspberry Pi and some arcade buttons in combination with arcade joysticks
