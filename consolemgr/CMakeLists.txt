@@ -15,16 +15,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../networked_client/include)
 set(HDRS
     ${HDR}/Client.hpp
     ${HDR}/ClientManager.hpp
+    ${HDR}/Player.hpp
 )
 
 set(SRCS
     ${SRC}/main.cpp
     ${SRC}/Client.cpp
     ${SRC}/ClientManager.cpp
-
-    # The Client source file
-    ${CMAKE_CURRENT_SOURCE_DIR}/../networked_client/src/Client.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../networked_client/src/PlayerManager.cpp
+    ${SRC}/Player.cpp
 )
 
 set(RSCS
@@ -34,6 +32,7 @@ set(RSCS
 set(FORS
     ${FOR}/MainView.qml
     ${FOR}/NewConnection.qml
+    ${FOR}/ClientView.qml
 )
 
 include_directories(${HDR})
@@ -47,20 +46,12 @@ find_package(Qt5Quick)
 
 add_executable(ConsoleMGR ${SRCS} ${HDRS} ${RSCS} ${FORS})
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/ libpiga)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../networked_client/ networked_client)
 target_link_libraries(ConsoleMGR piga)
+target_link_libraries(ConsoleMGR networked_client)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../libpiga/include)
 
-# Add google protocol buffers
-find_package(Protobuf REQUIRED)
-
-PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${SCHEMAS})
-
-# Include the protobuf headers
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/libpiga/)
-
 target_link_libraries(ConsoleMGR Qt5::Widgets Qt5::Qml Qt5::Quick)
-
 
 if(${PROTOBUF_FOUND})
     target_link_libraries(ConsoleMGR ${PROTOBUF_LIBRARIES})
@@ -84,17 +75,6 @@ if(${SIGC++_FOUND})
 elseif()
     message(STATUS "Did not find Sigc++2! Please install it before you try to compile again.")
 endif()
-
-ExternalProject_Add(GLM_Project
-    PREFIX glm
-    GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG 0.9.5.4
-    UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-    CMAKE_ARGS -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-)
 
 add_dependencies(ConsoleMGR GLM_Project)
 

@@ -34,10 +34,13 @@ namespace NetworkedClient
             void setServerAddress(const std::string &adress);
             void setServerName(const std::string &name);
             void setServerPort(int port);
+            void setLoginStatus(LoginResponse response);
 
             const std::string& getServerAddress() const;
             const std::string& getServerName() const;
             int getServerPort() const;
+            LoginResponse getLoginStatus() const;
+            std::shared_ptr<PlayerManager> getPlayerManager() const;
 
             void connect();
             bool update();

@@ -65,6 +65,10 @@ namespace NetworkedClient
     {
         m_serverPort = port;
     }
+    void Client::setLoginStatus(Client::LoginResponse response)
+    {
+        m_loginStatus = response;
+    }
     const std::string &Client::getServerAddress() const
     {
         return m_serverAdress;
@@ -76,6 +80,14 @@ namespace NetworkedClient
     int Client::getServerPort() const
     {
         return m_serverPort;
+    }
+    Client::LoginResponse Client::getLoginStatus() const
+    {
+        return m_loginStatus;
+    }
+    std::shared_ptr<PlayerManager> Client::getPlayerManager() const
+    {
+        return m_playerManager;
     }
     void Client::connect()
     {
@@ -99,7 +111,7 @@ namespace NetworkedClient
         bool dataChanged = false;
         ENetEvent event;
 
-        while(enet_host_service(m_client, &event, 10))
+        while(enet_host_service(m_client, &event, 2))
         {
             switch(event.type)
             {

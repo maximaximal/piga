@@ -49,6 +49,9 @@ QVariant ClientManager::data(const QModelIndex &index, int role) const
         case NameRole:
             result = client->name();
             break;
+        case NetworkClient:
+            result.setValue(client);
+            break;
     }
     return result;
 }
@@ -57,6 +60,7 @@ QHash<int, QByteArray> ClientManager::roleNames() const
     QHash<int, QByteArray> roles;
     roles[AddressRole] = "address";
     roles[NameRole] = "name";
+    roles[NetworkClient] = "netClient";
     return roles;
 }
 void ClientManager::update()
@@ -70,7 +74,7 @@ void ClientManager::update()
             //The data of the client has been changed!
             //Issue the dataChanged signal, so the Model updates its views.
 
-            dataChanged(QModelIndex(), QModelIndex());
+            //dataChanged(QModelIndex(), QModelIndex());
         }
     }
 }

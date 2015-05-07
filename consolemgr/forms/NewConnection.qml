@@ -36,7 +36,7 @@ Window {
             id: host
             width: 80
             height: 20
-            text: qsTr("pigaco.console.org")
+            text: qsTr("localhost")
             font.pixelSize: 12
             selectByMouse: true
             inputMethodHints: Qt.ImhUrlCharactersOnly

@@ -15,11 +15,13 @@ class ClientManager : public QAbstractListModel
         typedef QList<Client*> ClientList;
 
         explicit ClientManager(QObject *parent = 0);
+        ClientManager(const ClientManager &other);
         ~ClientManager();
 
         enum ClientRoles {
             AddressRole = Qt::UserRole + 1,
-            NameRole
+            NameRole,
+            NetworkClient
         };
 
         Q_INVOKABLE Client* newConnection(const QString &host, int port);
@@ -29,9 +31,7 @@ class ClientManager : public QAbstractListModel
         virtual int rowCount(const QModelIndex &parent) const;
         virtual QVariant data(const QModelIndex &index, int role) const;
         virtual QHash<int, QByteArray> roleNames() const;
-    signals:
-
-    public slots:
+    public Q_SLOTS:
         void update();
     private:
         ClientList m_clients;
