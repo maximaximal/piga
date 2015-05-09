@@ -14,8 +14,8 @@
 
 namespace pigaco
 {
-    class Window;
     class DirectoryScanner;
+    class Players;
 
     class App : public QObject, public piga::GameEventHandler
     {
@@ -47,6 +47,7 @@ namespace pigaco
             std::shared_ptr<piga::PlayerManager> m_playerManager;
             
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
+            std::shared_ptr<Players> m_players;
             
             QGuiApplication *m_guiApplication = nullptr;
             QQmlApplicationEngine *m_qmlApplicationEngine = nullptr;

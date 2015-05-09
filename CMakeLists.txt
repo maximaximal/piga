@@ -16,6 +16,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 SET(HDRS
     ${HDR}/App.hpp
     ${HDR}/DirectoryScanner.hpp
+    ${HDR}/Players.hpp
 
     ${HDR}/Game.hpp
 )
@@ -23,6 +24,7 @@ SET(HDRS
 SET(SRCS
     ${SRC}/App.cpp
     ${SRC}/DirectoryScanner.cpp
+    ${SRC}/Players.cpp
 
     ${SRC}/Game.cpp
 )
@@ -38,6 +40,8 @@ set(FORS
 
     ${FOR}/Pages/Store/Main.qml
     ${FOR}/Pages/Settings/Main.qml
+    ${FOR}/Pages/Settings/Players.qml
+    ${FOR}/Pages/Settings/PlayerDelegate.qml
 )
 
 # Find Qt

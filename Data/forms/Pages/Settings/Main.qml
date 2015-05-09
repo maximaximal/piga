@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
 
 Rectangle {
     id: root
@@ -35,7 +36,22 @@ Rectangle {
         styleColor: "#779bd6"
         style: activeFocus ? Text.Outline : Text.Normal
         Keys.onReturnPressed: root.parent.source = ""
+
+        KeyNavigation.down: playerSettings
     }
 
+
+    Players {
+        id: playerSettings
+        height: 324
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.top: header.bottom
+        anchors.topMargin: 10
+
+        KeyNavigation.up: backButton
+    }
 }
 

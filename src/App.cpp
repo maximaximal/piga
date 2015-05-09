@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <pigaco/DirectoryScanner.hpp>
+#include <pigaco/Players.hpp>
 
 #include <pigaco/Game.hpp>
 
@@ -47,6 +48,8 @@ namespace pigaco
         m_playerManager->getPlayer(1)->setName("Player 2");
         m_playerManager->getPlayer(1)->setActive(true);
 
+        m_players = std::make_shared<Players>(m_playerManager);
+
         m_gameInput = std::make_shared<piga::GameInput>();
         
         m_host->setBackcallingGameInput(m_gameInput);
@@ -64,6 +67,7 @@ namespace pigaco
 
         qmlRegisterType<Game>("com.pigaco.managing", 1, 0, "Game");
         m_qmlApplicationEngine->rootContext()->setContextProperty("dirScanner", m_directoryScanner.get());
+        m_qmlApplicationEngine->rootContext()->setContextProperty("playerManager", m_players.get());
         m_qmlApplicationEngine->addImportPath("Data/forms/");
 
         m_qmlApplicationEngine->load(QUrl::fromLocalFile("Data/forms/MainMenu.qml"));
