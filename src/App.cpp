@@ -120,9 +120,9 @@ namespace pigaco
     void App::wakeupWindow()
     {
         m_isSleeping = false;
+        m_qQuickWindow->setKeyboardGrabEnabled(true);
         m_qQuickWindow->raise();
         m_qQuickWindow->requestActivate();
-        m_qQuickWindow->setKeyboardGrabEnabled(true);
     }
     void App::setEnd(bool state)
     {

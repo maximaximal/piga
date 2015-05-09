@@ -33,7 +33,7 @@ Rectangle {
         font.pixelSize: 32
         style: activeFocus ? Text.Outline : Text.Normal
 
-        KeyNavigation.right: store
+        KeyNavigation.right: quit
         KeyNavigation.left: store
 
         Keys.onReturnPressed: {
@@ -67,7 +67,7 @@ Rectangle {
         style: activeFocus ? Text.Outline : Text.Normal
 
         KeyNavigation.right: settings
-        KeyNavigation.left: settings
+        KeyNavigation.left: quit
 
         Keys.onReturnPressed: {
             storeClicked();
@@ -82,6 +82,31 @@ Rectangle {
             }
         }
         scale: activeFocus ? 1.05 : 1
+    }
+
+    Text {
+        id: quit
+        x: 249
+        y: 2
+        text: qsTr("Quit")
+        scale: activeFocus ? 1.05 : 1
+        anchors.bottomMargin: 56
+        anchors.top: parent.top
+        anchors.leftMargin: 60
+        font.bold: true
+        anchors.bottom: parent.bottom
+        styleColor: "#779bd6"
+        anchors.left: settings.right
+        style: activeFocus ? Text.Outline : Text.Normal
+        anchors.topMargin: 56
+        font.pixelSize: 32
+
+        KeyNavigation.right: store
+        KeyNavigation.left: settings
+
+        Keys.onReturnPressed: {
+            Qt.quit();
+        }
     }
 
 }
