@@ -59,7 +59,7 @@ namespace pigaco
     }
     void DirectoryScanner::addGame(const std::string &dir)
     {
-        piga::GameHost *gameHost = new piga::GameHost();
+        GameHostStarter *gameHost = new GameHostStarter();
         gameHost->loadFromDirectory(dir);
         gameHost->setHost(m_host);
 

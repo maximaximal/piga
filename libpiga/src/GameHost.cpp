@@ -177,26 +177,9 @@ namespace piga
             m_currentPath = boost::filesystem::current_path().string();
             boost::filesystem::current_path(getConfig(Directory));
 
-            std::ofstream tmp(".app_running.tmp");
-
-            std::stringstream command;
-            command << "(./" << getConfig(ProgramPath);
-            command << " ";
-            command << getConfig(Parameters);
-            command << "; rm .app_running.tmp) &";
-
-            std::string systemCmd = command.str();
-            tmp << "" << endl;
-            tmp.close();
-
-            cout << PIGA_DEBUG_PRESTRING << "Using Command: \"" << systemCmd << "\"" << endl;
-
-            system(systemCmd.c_str());
-            m_running = true;
+            startGame(getConfig(ProgramPath), getConfig(Parameters));
 
             boost::filesystem::current_path(m_currentPath);
-
-            cout << PIGA_DEBUG_PRESTRING << "======= Command Executed! =======" << endl;
             
             if(m_host)
             {
@@ -266,5 +249,18 @@ namespace piga
                 }
             }
         }
+    }
+    void GameHost::startGame(const std::string &command, const std::string &arguments)
+    {
+        cout << PIGA_DEBUG_PRESTRING << "Using Command: \"" << "(./" + command + " " + arguments + "; rm .app_running.tmp) &" << "\"" << endl;
+
+        std::ofstream tmp(".app_running.tmp");
+        tmp << "" << endl;
+        tmp.close();
+
+        system(("(./" + command + " " + arguments + "; rm .app_running.tmp) &").c_str());
+        m_running = true;
+
+        cout << PIGA_DEBUG_PRESTRING << "======= Command Executed! =======" << endl;
     }
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <piga/GameHost.hpp>
+#include <pigaco/GameHostStarter.hpp>
 
 namespace pigaco
 {
@@ -33,14 +33,14 @@ class Game : public QObject
 
         Game();
         Game(const Game &game);
-        Game(piga::GameHost *gameHost);
+        Game(GameHostStarter *gameHost);
         virtual ~Game();
 
         bool isRunning(bool fsCheck = false);
         bool isValid();
 
         void setRunning(bool state);
-        piga::GameHost *getGameHost() const;
+        GameHostStarter *getGameHost() const;
 
         Q_INVOKABLE void start();
         Q_INVOKABLE void exit();
@@ -55,7 +55,7 @@ class Game : public QObject
         QString getVersion() const;
         QString getAuthor() const;
     private:
-        mutable piga::GameHost *m_gameHost = nullptr;
+        mutable GameHostStarter *m_gameHost = nullptr;
 };
 }
 

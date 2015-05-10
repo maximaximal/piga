@@ -17,6 +17,7 @@ SET(HDRS
     ${HDR}/App.hpp
     ${HDR}/DirectoryScanner.hpp
     ${HDR}/Players.hpp
+    ${HDR}/GameHostStarter.hpp
 
     ${HDR}/Game.hpp
 )
@@ -25,6 +26,7 @@ SET(SRCS
     ${SRC}/App.cpp
     ${SRC}/DirectoryScanner.cpp
     ${SRC}/Players.cpp
+    ${SRC}/GameHostStarter.cpp
 
     ${SRC}/Game.cpp
 )

@@ -5,8 +5,6 @@ Rectangle {
     width: 300
     height: 400
     color: "transparent"
-    border.color: playerList.activeFocus ? "steelblue" : "transparent"
-    border.width: 3
 
     onFocusChanged: {
         if(focus) {

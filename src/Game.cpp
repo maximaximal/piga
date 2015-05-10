@@ -6,13 +6,13 @@ namespace pigaco
 
 Game::Game()
 {
-    m_gameHost = new piga::GameHost();
+    m_gameHost = new GameHostStarter();
 }
 Game::Game(const Game &game)
 {
     m_gameHost = game.getGameHost();
 }
-Game::Game(piga::GameHost *gameHost)
+Game::Game(GameHostStarter *gameHost)
 {
     m_gameHost = gameHost;
 }
@@ -32,7 +32,7 @@ void Game::setRunning(bool state)
 {
     m_gameHost->setRunning(state);
 }
-piga::GameHost *Game::getGameHost() const
+GameHostStarter *Game::getGameHost() const
 {
     return m_gameHost;
 }

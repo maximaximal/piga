@@ -40,18 +40,33 @@ Rectangle {
         KeyNavigation.down: playerSettings
     }
 
+    ListModel {
+        id: settingsModel
+        ListElement {
+            settingsElement: Players {
+                id: playerSettings
+                height: 324
+                width: parent.width
+            }
+        }
+    }
 
-    Players {
-        id: playerSettings
-        height: 324
+    ListView {
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.right: parent.right
         anchors.rightMargin: 0
         anchors.top: header.bottom
         anchors.topMargin: 10
+        anchors.bottom: parent.bottom
 
         KeyNavigation.up: backButton
+        model: settingsModel
+
+        delegate: Component {
+
+        }
     }
+
 }
 

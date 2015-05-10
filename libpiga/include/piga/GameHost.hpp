@@ -43,7 +43,7 @@ namespace piga
             void exit();
 
             bool isValid();
-            bool isRunning(bool fsCheck = false);
+            virtual bool isRunning(bool fsCheck = false);
             void invalidate(bool state = false);
             void setRunning(bool state);
 
@@ -51,12 +51,15 @@ namespace piga
             void setConfig(ConfigValue id, const std::string &value);
             
             void sendGameEvent(const piga::GameEvent &event);
+
+        protected:
+            virtual void startGame(const std::string &command, const std::string &arguments);
+            bool m_running = false;
         private:
             std::map<ConfigValue, std::string> m_config;
             std::map<int, std::map<piga::GameControl, std::string>> m_keyboardMappings;
             std::shared_ptr<Host> m_host;
             bool m_valid = true;
-            bool m_running = false;
             std::string m_currentPath;
     };
 }
