@@ -40,6 +40,7 @@ namespace pigaco
             std::shared_ptr<Game> lookupGame(const QString &dir);
             std::shared_ptr<piga::Host> getHost() const;
             const std::string& getDirectory() const;
+            QList<std::shared_ptr<Game>>& getGames();
 
             virtual int rowCount(const QModelIndex &parent) const;
             virtual QVariant data(const QModelIndex &index, int role) const;

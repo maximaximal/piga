@@ -26,7 +26,6 @@ WebPlayers::WebPlayers(App *app, Wt::WContainerWidget *parent)
         playersTable->elementAt(i + 1, 0)->addWidget(new Wt::WText(std::to_string(player->getPlayerID())));
         playersTable->elementAt(i + 1, 1)->addWidget(new Wt::WText(player->getName()));
     }
-
 }
 WebPlayers::~WebPlayers()
 {

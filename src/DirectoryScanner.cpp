@@ -114,6 +114,10 @@ namespace pigaco
     {
         return m_directory;
     }
+    QList<std::shared_ptr<Game> > &DirectoryScanner::getGames()
+    {
+        return m_games;
+    }
     int DirectoryScanner::rowCount(const QModelIndex &parent) const
     {
         return m_games.size();

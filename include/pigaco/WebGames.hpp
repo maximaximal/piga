@@ -1,10 +1,12 @@
 #pragma once
 
+#include <memory>
 #include <Wt/WContainerWidget>
 
 namespace pigaco
 {
 class App;
+class DirectoryScanner;
 
 class WebGames : public Wt::WContainerWidget
 {
@@ -14,5 +16,6 @@ class WebGames : public Wt::WContainerWidget
 
     private:
         App *m_app;
+        std::shared_ptr<DirectoryScanner> m_dirScanner;
 };
 }
