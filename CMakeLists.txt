@@ -18,8 +18,16 @@ SET(HDRS
     ${HDR}/DirectoryScanner.hpp
     ${HDR}/Players.hpp
     ${HDR}/GameHostStarter.hpp
+    ${HDR}/WebAdmin.hpp
+    ${HDR}/WebNavigationBar.hpp
+    ${HDR}/WebGames.hpp
+    ${HDR}/WebPlayers.hpp
+    ${HDR}/WebInputs.hpp
 
     ${HDR}/Game.hpp
+
+    ${HDR}/packaging/Package.hpp
+    ${HDR}/packaging/PackageManager.hpp
 )
 
 SET(SRCS
@@ -27,8 +35,16 @@ SET(SRCS
     ${SRC}/DirectoryScanner.cpp
     ${SRC}/Players.cpp
     ${SRC}/GameHostStarter.cpp
+    ${SRC}/WebAdmin.cpp
+    ${SRC}/WebNavigationBar.cpp
+    ${SRC}/WebGames.cpp
+    ${SRC}/WebPlayers.cpp
+    ${SRC}/WebInputs.cpp
 
     ${SRC}/Game.cpp
+
+    ${SRC}/packaging/Package.cpp
+    ${SRC}/packaging/PackageManager.cpp
 )
 
 set(RSCS
@@ -55,6 +71,9 @@ find_package(Qt5Qml)
 find_package(Qt5Quick)
 
 add_executable(pigaco ${SRCS} ${HDRS} ${RSCS} ${FORS})
+
+# Compatability with Wt and boost
+ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
 
 target_link_libraries(pigaco Qt5::Widgets Qt5::Qml Qt5::Quick)
 
@@ -118,7 +137,26 @@ if(${YAMLCPP_FOUND})
 elseif()
     message(STATUS "Did not find Yaml-Cpp! Please install it before you try to compile again.")
 endif()
- 
+
+find_package(QuaZip)
+if(${QUAZIP_FOUND})
+    target_link_libraries(pigaco ${QUAZIP_LIBRARIES})
+    include_directories(${QUAZIP_INCLUDE_DIRS})
+endif()
+
+find_package(Crypto++)
+if(${CRYPTO++_FOUND_TRUE})
+    target_link_libraries(pigaco ${CRYPTO++_LIBRARY})
+    include_directories(${CRYPTO++_INCLUDE_DIR})
+endif()
+
+# Link to Wt for built in webserver support.
+find_package(Wt REQUIRED)
+if(${Wt_FOUND})
+    target_link_libraries(pigaco ${Wt_LIBRARY} ${Wt_HTTP_LIBRARY})
+    include_directories(${Wt_INCLUDE_DIR})
+endif()
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libpiga/)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pihud/)
 add_dependencies(pigaco piga)

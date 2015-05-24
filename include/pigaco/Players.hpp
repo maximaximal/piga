@@ -28,7 +28,7 @@ class Players : public QAbstractListModel
         virtual QVariant data(const QModelIndex &index, int role) const;
 
         std::shared_ptr<piga::PlayerManager> getPlayerManager() const;
-    public slots:
+    public Q_SLOTS:
         void playerNameChanged(QString name, int playerID);
     private:
         std::shared_ptr<piga::PlayerManager> m_playerManager;

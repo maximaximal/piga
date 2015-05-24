@@ -12,6 +12,11 @@
 #include <QQuickWindow>
 #include <QTimer>
 
+namespace Wt
+{
+    class WServer;
+}
+
 namespace pigaco
 {
     class DirectoryScanner;
@@ -33,11 +38,18 @@ namespace pigaco
 
             void sleepWindow();
             void wakeupWindow();
+
+            std::shared_ptr<piga::Host> getHost();
+            std::shared_ptr<piga::GameInput> getGameInput();
+            std::shared_ptr<piga::PlayerManager> getPlayerManager();
+
+            std::shared_ptr<DirectoryScanner> getDirectoryScanner();
+            std::shared_ptr<Players> getPlayers();
         protected:
             void setEnd(bool state = true);
             virtual void onGameEvent(const piga::GameEvent &gameEvent, float frametime);
 
-        public slots:
+        public Q_SLOTS:
             void aboutToQuit();
             void update();
 
@@ -45,14 +57,16 @@ namespace pigaco
             std::shared_ptr<piga::Host> m_host;
             std::shared_ptr<piga::GameInput> m_gameInput;
             std::shared_ptr<piga::PlayerManager> m_playerManager;
-            
+
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
             std::shared_ptr<Players> m_players;
-            
+
             QGuiApplication *m_guiApplication = nullptr;
             QQmlApplicationEngine *m_qmlApplicationEngine = nullptr;
             QQuickWindow *m_qQuickWindow = nullptr;
             QTimer *m_loopTimer = nullptr;
+
+            Wt::WServer *m_webServer = nullptr;
 
             bool m_end = false;
             bool m_isSleeping = false;

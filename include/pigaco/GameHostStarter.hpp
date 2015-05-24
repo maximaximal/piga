@@ -15,7 +15,7 @@ class GameHostStarter : public QObject, public piga::GameHost
         virtual bool isRunning(bool fsCheck);
     protected:
         virtual void startGame(const std::string &command, const std::string &arguments);
-    public slots:
+    public Q_SLOTS:
         void gameEnded(int code, QProcess::ExitStatus status);
         void gameStarted();
         void gameError(QProcess::ProcessError error);

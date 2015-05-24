@@ -278,6 +278,13 @@ namespace piga
                                           1024 + sizeof(Player) * playerCount);
 
         shm_players.construct<Player>("Player")[playerCount]("Undefined", false);
+
+        //Set the IDs of the players.
+        std::pair<Player*, std::size_t> players = shm_players.find<Player>("Player");
+        for(std::size_t i = 0; i < players.second; ++i)
+        {
+            players.first[i].setPlayerID((int) i);
+        }
     }
     void Host::deleteSharedMemory()
     {

@@ -10,9 +10,13 @@
 
 #include <QQmlContext>
 #include <QApplication>
+#include <QDir>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
+
+#include <Wt/WServer>
+#include <pigaco/WebAdmin.hpp>
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -28,6 +32,8 @@ namespace pigaco
             delete m_qmlApplicationEngine;
         if(m_guiApplication != nullptr)
             delete m_guiApplication;
+        if(m_webServer != nullptr)
+            delete m_webServer;
     }
     void App::run(int argc, char* argv[])
     {
@@ -81,10 +87,32 @@ namespace pigaco
 
         m_qQuickWindow->showFullScreen();
 
+        LOG(DEBUG) << "Creating the Wt HTTP server.";
+
+        try {
+            m_webServer = new Wt::WServer("Pigaco", "Data/Config/wt_config.xml");
+            m_webServer->setServerConfiguration(argc, argv, "Data/Config/wthttpd.conf");
+
+            boost::function<Wt::WApplication* (const Wt::WEnvironment&)> createServer = [&](const Wt::WEnvironment &env){
+                LOG(DEBUG) << "Creating the HTTP admin-app class. (Server successfully initialised.)";
+                WebAdmin *admin = new WebAdmin(env, this);
+                return admin;
+            };
+            m_webServer->addEntryPoint(Wt::Application, createServer);
+            LOG(DEBUG) << "Starting the Wt HTTP server.";
+            m_webServer->start();
+        } catch(Wt::WServer::Exception &e) {
+            LOG(WARNING) << "The Wt HTTP server could not be started/created and has thrown an exception:\n" << e.what();
+            delete m_webServer;
+            m_webServer = nullptr;
+            LOG(DEBUG) << "Cleaned up the Wt Webserver classes after the crash.";
+        }
+
+
         m_loopTimer = new QTimer(this);
 
-        connect(m_loopTimer, SIGNAL(timeout()), this, SLOT(update()));
-        connect(m_guiApplication, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
+        connect(m_loopTimer, &QTimer::timeout, this, &App::update);
+        connect(m_guiApplication, &QGuiApplication::aboutToQuit, this, &App::aboutToQuit);
 
         LOG(INFO) << "Starting the App-Loop.";
         m_loopTimer->start(16);
@@ -123,6 +151,26 @@ namespace pigaco
         m_qQuickWindow->setKeyboardGrabEnabled(true);
         m_qQuickWindow->raise();
         m_qQuickWindow->requestActivate();
+    }
+    std::shared_ptr<piga::Host> App::getHost()
+    {
+        return m_host;
+    }
+    std::shared_ptr<piga::GameInput> App::getGameInput()
+    {
+        return m_gameInput;
+    }
+    std::shared_ptr<piga::PlayerManager> App::getPlayerManager()
+    {
+        return m_playerManager;
+    }
+    std::shared_ptr<DirectoryScanner> App::getDirectoryScanner()
+    {
+        return m_directoryScanner;
+    }
+    std::shared_ptr<Players> App::getPlayers()
+    {
+        return m_players;
     }
     void App::setEnd(bool state)
     {
