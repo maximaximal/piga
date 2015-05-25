@@ -115,6 +115,27 @@ namespace piga
                 else
                     setRight(0);
                 break;
+            case GameControl::BUTTON1:
+                setButton1(state);
+                break;
+            case GameControl::BUTTON2:
+                setButton2(state);
+                break;
+            case GameControl::BUTTON3:
+                setButton3(state);
+                break;
+            case GameControl::BUTTON4:
+                setButton4(state);
+                break;
+            case GameControl::BUTTON5:
+                setButton5(state);
+                break;
+            case GameControl::BUTTON6:
+                setButton6(state);
+                break;
+            default:
+                //Nothing to do; control is not handled by the automatic conversion.
+                break;
         }
     }
     bool PlayerInputStruct::pollEvents(PlayerInputStruct &oldInputs, GameEvent &e)
