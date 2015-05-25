@@ -34,7 +34,7 @@ namespace PiH
             {
                 if(e.focus.direction == LEFT)
                 {
-                    if(m_currentlyFocused - 1 >= 0 && m_currentlyFocused != 0)
+                    if((m_currentlyFocused - 1) >= 0 && m_currentlyFocused != 0)
                     {
                         m_currentlyFocused -= 1;
                         e.focus.setHandled();
