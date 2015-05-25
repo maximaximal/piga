@@ -5,6 +5,6 @@
 
 #define PIGA_MAJOR_VERSION 0
 #define PIGA_MINOR_VERSION 2
-#define PIGA_MINI_VERSION 0
+#define PIGA_MINI_VERSION 1
 
 #endif

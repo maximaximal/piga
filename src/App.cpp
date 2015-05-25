@@ -6,11 +6,14 @@
 #include <pigaco/DirectoryScanner.hpp>
 #include <pigaco/Players.hpp>
 
+#include <piga/Definitions.hpp>
 #include <pigaco/Game.hpp>
 
 #include <QQmlContext>
 #include <QApplication>
 #include <QDir>
+
+#include <QCommandLineParser>
 
 #define ELPP_NO_DEFAULT_LOG_FILE
 #include <../../include/easylogging++.h>
@@ -24,7 +27,7 @@ namespace pigaco
 {
     App::App()
     {
-        LOG(INFO) << "Initializing PiGaCo app.";
+
     }
     App::~App()
     {
@@ -37,14 +40,54 @@ namespace pigaco
     }
     void App::run(int argc, char* argv[])
     {
-        LOG(INFO) << "Starting PiGaCo.";
 
         m_guiApplication = new QGuiApplication(argc, argv);
+
+        //Parse command line arguments for eventual operations.
+        QCommandLineParser cmdParser;
+        cmdParser.setApplicationDescription("This is the main executable of the piga project. This          \n"
+                                            "program aims to create an environment for developers to        \n"
+                                            "play and publish their games on arcade-console-like            \n"
+                                            "machines. These machines can be easily managed by store-owners \n"
+                                            "too, if they like to do so.\n"
+                                            "\n"
+                                            "For more information, please see the GitHub page or the        \n"
+                                            "documentation distributed with this program.                   \n"
+                                            "\n"
+                                            "GitHub: https://github.com/maximaximal/piga\n"
+                                            "\n"
+                                            "Compiled with piga-library version: " + QString::number(PIGA_MAJOR_VERSION) + "."
+                                            + QString::number(PIGA_MINOR_VERSION) + "." + QString::number(PIGA_MINI_VERSION));
+
+        QCommandLineOption helpOption = cmdParser.addHelpOption();
+        cmdParser.addOptions({
+                                 {{"pack-folder", "p"},
+                                    m_guiApplication->translate("main", "Package the specified folder.")},
+                                 {{"o", "output"},
+                                    m_guiApplication->translate("main", "Output Path/File.")}
+                             });
+
+        cmdParser.parse(m_guiApplication->arguments());
+
+        if(cmdParser.isSet("pack-folder"))
+        {
+            LOG(INFO) << "[PACKAGING] Folder packaging mode selected.";
+            return;
+        }
+        if(cmdParser.isSet(helpOption))
+        {
+            cmdParser.showHelp();
+            return;
+        }
+
+        //Further initialize the app.
+        LOG(INFO) << "Initializing PiGaCo App-Class.";
         m_qmlApplicationEngine = new QQmlApplicationEngine();
 
         m_playerManager = std::make_shared<piga::PlayerManager>();
         m_host = std::make_shared<piga::Host>("config.yml", m_playerManager);
 
+        LOG(INFO) << "Starting the piga host.";
         m_host->init();
 
         m_playerManager->init();
