@@ -35,10 +35,10 @@ namespace PiH
         }
         else if(gameEvent.type() == piga::GameEvent::GameInput)
         {
-            if(gameEvent.gameInput.control() == piga::DOWN
+            if((gameEvent.gameInput.control() == piga::DOWN
                     || gameEvent.gameInput.control() == piga::LEFT
                     || gameEvent.gameInput.control() == piga::RIGHT
-                    || gameEvent.gameInput.control() == piga::UP
+                    || gameEvent.gameInput.control() == piga::UP)
                     && focusEvent)
             {
                 type = EventType::Focus;
