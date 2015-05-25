@@ -105,6 +105,7 @@ namespace pigaco
             if(game->getConfig(Game::Directory) == dir)
                 return game;
         }
+        return std::shared_ptr<Game>(nullptr);
     }
     std::shared_ptr<piga::Host> DirectoryScanner::getHost() const
     {
