@@ -12,6 +12,7 @@ namespace piga
         setName(username);
         m_active = active;
         m_playerID = playerID;
+        m_edited = false;
     }
     bool Player::isAuthorized()
     {
@@ -38,6 +39,8 @@ namespace piga
         {
             strcpy(m_name, name);
         }
+
+        setEdited(true);
     }
     void Player::setActive(bool active)
     {
@@ -45,10 +48,13 @@ namespace piga
         boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
 
         m_active = active;
+        setEdited(true);
     }
     void Player::setPlayerID(int id)
     {
         m_playerID = id;
+
+        setEdited(true);
     }
     const char* Player::getName()
     {
@@ -64,5 +70,18 @@ namespace piga
     {
         boost::shared_lock<boost::shared_mutex> lock(m_activeMutex);
         return m_active;
+    }
+    void Player::setEdited(bool state)
+    {
+        boost::upgrade_lock<boost::shared_mutex> lock(m_editedMutex);
+        boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
+
+        m_edited = state;
+    }
+    bool Player::edited()
+    {
+        boost::shared_lock<boost::shared_mutex> lock(m_editedMutex);
+
+        return m_edited;
     }
 }

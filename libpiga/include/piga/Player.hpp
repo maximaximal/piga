@@ -34,15 +34,19 @@ namespace piga
             int getPlayerID();
 
             bool isActive();
+            void setEdited(bool state);
+            bool edited();
         private:
             char m_name[255];
             bool m_authorized = false;
             int m_playerID = 0;
             bool m_active = false;
+            bool m_edited = false;
 
             boost::shared_mutex m_nameMutex;
             boost::shared_mutex m_authorizedMutex;
             boost::shared_mutex m_activeMutex;
+            boost::shared_mutex m_editedMutex;
     };
 }
 
