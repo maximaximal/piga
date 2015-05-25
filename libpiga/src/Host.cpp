@@ -352,6 +352,24 @@ namespace piga
                 case ::GameControl::RIGHT:
                     control = piga::GameControl::RIGHT;
                     break;
+                case BUTTON1:
+                    control = piga::GameControl::BUTTON1;
+                    break;
+                case BUTTON2:
+                    control = piga::GameControl::BUTTON2;
+                    break;
+                case BUTTON3:
+                    control = piga::GameControl::BUTTON3;
+                    break;
+                case BUTTON4:
+                    control = piga::GameControl::BUTTON4;
+                    break;
+                case BUTTON5:
+                    control = piga::GameControl::BUTTON5;
+                    break;
+                case BUTTON6:
+                    control = piga::GameControl::BUTTON6;
+                    break;
             }
 
             bool state = false;
