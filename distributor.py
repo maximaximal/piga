@@ -34,6 +34,7 @@ def copyBinaries(path):
     
 def copyData(path):
     copytree(currentPath + "/Data", path + "/Data/")
+    copytree(currentPath + "/Data/Docroot/", path + "/")
 
 path = "dist"
 

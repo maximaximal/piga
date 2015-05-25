@@ -13,7 +13,9 @@ namespace pigaco
 WebAdmin::WebAdmin(const Wt::WEnvironment &env, App *app)
     : Wt::WApplication(env), m_app(app)
 {
-    setTheme(new Wt::WBootstrapTheme());
+    Wt::WBootstrapTheme *bsTheme = new Wt::WBootstrapTheme();
+    bsTheme->setVersion(Wt::WBootstrapTheme::Version3);
+    setTheme(bsTheme);
 
     m_root = new Wt::WContainerWidget();
     this->addGlobalWidget(m_root);
