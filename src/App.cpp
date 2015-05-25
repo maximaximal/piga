@@ -206,6 +206,22 @@ namespace pigaco
                 case piga::ACTION:
                     QCoreApplication::postEvent(m_qmlApplicationEngine, new QKeyEvent(type, Qt::Key::Key_Return, Qt::NoModifier));
                     break;
+
+                case piga::BUTTON1:
+                    break;
+                case piga::BUTTON2:
+                    break;
+                case piga::BUTTON3:
+                    break;
+                case piga::BUTTON4:
+                    break;
+                case piga::BUTTON5:
+                    break;
+                case piga::BUTTON6:
+                    break;
+                default:
+                    //Event unhandled.
+                    break;
             }
         }
     }
