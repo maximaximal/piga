@@ -1,6 +1,8 @@
 #include <pigaco/App.hpp>
 #include <pigaco/DirectoryScanner.hpp>
 #include <QList>
+#include <Wt/WTable>
+#include <Wt/WText>
 
 #include <pigaco/WebGames.hpp>
 
@@ -22,10 +24,12 @@ WebGames::WebGames(App *app, Wt::WContainerWidget *parent)
 
     for(int i = 0; i < m_dirScanner->getGames().count(); ++i)
     {
-        piga::Player *player = m_playerManager->getPlayer(i);
+        Game *game = m_dirScanner->getGames()[i].get();
 
-        playersTable->elementAt(i + 1, 0)->addWidget(new Wt::WText(std::to_string(player->getPlayerID())));
-        playersTable->elementAt(i + 1, 1)->addWidget(new Wt::WText(player->getName()));
+        gamesTable->elementAt(i + 1, 0)->addWidget(new Wt::WText(game->getConfig(piga::GameHost::Name)));
+        gamesTable->elementAt(i + 1, 1)->addWidget(new Wt::WText(game->getConfig(piga::GameHost::Description)));
+        gamesTable->elementAt(i + 1, 2)->addWidget(new Wt::WText(game->getConfig(piga::GameHost::Author)));
+        gamesTable->elementAt(i + 1, 3)->addWidget(new Wt::WText(game->getConfig(piga::GameHost::Version)));
     }
 }
 WebGames::~WebGames()
