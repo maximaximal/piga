@@ -244,6 +244,8 @@ namespace pigaco
             }
         }
         onUpdate(0.016);
+
+        m_playerManager->resetEdited();
     }
 }
 

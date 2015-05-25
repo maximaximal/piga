@@ -52,11 +52,35 @@ namespace piga
              * @return The maximum number of players.
              */
             int size();
+
+            /**
+             * @brief Resets all the edited flags of the players.
+             *
+             * When this function is run, it checks if a player has been edited. If
+             * a player changed, the internal m_playerEdited flag is set and can be checked through the
+             * playerEdited() function.
+             *
+             * This function should only be used by the host at the end of the update loop!
+             */
+            void resetEdited();
+
+            /**
+             * @brief Returns the internal m_playerEdited flag.
+             * @return True if a player has been edited, false otherwise.
+             */
+            bool playerEdited();
+
+            /**
+             * @brief setPlayerEdited Sets the internal m_playerEdited flag to the specified state.
+             * @param state The state the internal m_playerEdited flag should be set to.
+             */
+            void setPlayerEdited(bool state);
         private:
             boost::interprocess::managed_shared_memory *m_players = nullptr;
             Player* m_mappedPlayers = nullptr;
             int m_mappedPlayersNum = 0;
             bool m_sharedMemory = true;
+            bool m_playerEdited = false;
     };
 }
 

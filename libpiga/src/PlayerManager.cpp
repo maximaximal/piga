@@ -57,4 +57,24 @@ namespace piga
     {
         return m_mappedPlayersNum;
     }
+    void PlayerManager::resetEdited()
+    {
+        for(int i = 0; i < size(); ++i)
+        {
+            Player* player = getPlayer(i);
+            if(player->edited())
+            {
+                player->setEdited(false);
+                m_playerEdited = true;
+            }
+        }
+    }
+    bool PlayerManager::playerEdited()
+    {
+        return m_playerEdited;
+    }
+    void PlayerManager::setPlayerEdited(bool state)
+    {
+        m_playerEdited = state;
+    }
 }
