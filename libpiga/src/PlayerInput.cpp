@@ -61,7 +61,7 @@ namespace piga
             }
         }
     }
-    int PlayerInput::setInputMethod(InputMethod *method, GameControl control)
+    void PlayerInput::setInputMethod(InputMethod *method, GameControl control)
     {
         m_inputMethods[control] = method;
     }

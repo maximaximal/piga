@@ -95,7 +95,7 @@ namespace piga
             bool getInput(GameControl control) const;
             bool pollEvent(GameEvent &gameEvent);
             void setPlayerID(int playerID);
-            int setInputMethod(InputMethod *method, GameControl control);
+            void setInputMethod(InputMethod *method, GameControl control);
         protected:
             void update();
 
