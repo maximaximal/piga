@@ -50,7 +50,7 @@ namespace PiH
         {
             //Check if the member can be casted into a layout
             std::shared_ptr<Layout> layout;
-            if(layout = std::dynamic_pointer_cast<Layout>(widget))
+            if((layout = std::dynamic_pointer_cast<Layout>(widget)))
             {
                 if(layout->memberInFocus())
                     return true;
