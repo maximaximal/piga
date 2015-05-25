@@ -4,6 +4,9 @@
 #include <pigaco/WebPlayers.hpp>
 #include <Wt/WTable>
 #include <Wt/WText>
+#include <Wt/WInPlaceEdit>
+
+#include <functional>
 
 namespace pigaco
 {
@@ -23,8 +26,17 @@ WebPlayers::WebPlayers(App *app, Wt::WContainerWidget *parent)
     {
         piga::Player *player = m_playerManager->getPlayer(i);
 
+        Wt::WInPlaceEdit *inPlaceEdit = new Wt::WInPlaceEdit();
+        inPlaceEdit->setText(player->getName());
+
+        std::function<void(Wt::WInPlaceEdit*, piga::Player*)> editAction= [](Wt::WInPlaceEdit *inPlace, piga::Player *pigaPlayer) {
+            pigaPlayer->setName(inPlace->text().toUTF8().c_str());
+        };
+
+        inPlaceEdit->valueChanged().connect(std::bind(editAction, inPlaceEdit, player));
+
         playersTable->elementAt(i + 1, 0)->addWidget(new Wt::WText(std::to_string(player->getPlayerID())));
-        playersTable->elementAt(i + 1, 1)->addWidget(new Wt::WText(player->getName()));
+        playersTable->elementAt(i + 1, 1)->addWidget(inPlaceEdit);
     }
 }
 WebPlayers::~WebPlayers()
