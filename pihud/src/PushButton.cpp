@@ -152,5 +152,6 @@ namespace PiH
         {
             return m_normalTextureRect;
         }
+        return m_normalTextureRect;
     }
 }
