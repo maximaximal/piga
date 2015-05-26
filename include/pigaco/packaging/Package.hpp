@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <pigaco/packaging/Version.hpp>
 
 namespace pigaco
 {
@@ -21,6 +22,8 @@ class Package
         void loadSpecs(const std::string &yamlString, bool autocorrect = false);
         void install();
 
+        void saveToPPK(const std::string &destination);
+
         void fromDirectory(const std::string &dir);
 
         enum ConfigVar {
@@ -28,6 +31,8 @@ class Package
             ID,
             PPKPath,
             Author,
+            Version,
+            Directory,
 
             _CONFIG_COUNT
         };
@@ -40,6 +45,8 @@ class Package
             HasAuthor,
             HasName,
             HasID,
+            HasVersion,
+            HasDirectory,
 
             _FLAG_COUNT
         };
@@ -52,14 +59,18 @@ class Package
         void disableFlag(Flag flag);
         bool flagActive(Flag flag);
         bool operator[](Flag flag);
+        const packaging::Version& getVersion();
 
         void setPackageManager(PackageManager *pkgMgr);
         PackageManager* getPackageManager();
 
+        static const char* getConfigVarName(ConfigVar var);
     private:
         std::map<ConfigVar, std::string> m_configVars;
         std::map<Flag, bool> m_flags;
         PackageManager *m_packageManager = nullptr;
+
+        packaging::Version m_version;
 
         void autocorrectSpecs();
 };

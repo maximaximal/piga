@@ -28,6 +28,7 @@ SET(HDRS
 
     ${HDR}/packaging/Package.hpp
     ${HDR}/packaging/PackageManager.hpp
+    ${HDR}/packaging/Version.hpp
 )
 
 SET(SRCS
@@ -45,6 +46,7 @@ SET(SRCS
 
     ${SRC}/packaging/Package.cpp
     ${SRC}/packaging/PackageManager.cpp
+    ${SRC}/packaging/Version.cpp
 )
 
 set(RSCS
