@@ -52,7 +52,7 @@ class Package
         };
 
         const std::string& getConfigVar(ConfigVar id);
-        void setConfigVar(ConfigVar id, const std::string var);
+        void setConfigVar(ConfigVar id, const std::string &var);
         std::string& operator[](ConfigVar id);
 
         void activateFlag(Flag flag);

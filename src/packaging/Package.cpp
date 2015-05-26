@@ -57,29 +57,24 @@ void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
     if(specs["PPKPath"])
     {
         setConfigVar(PPKPath, specs["PPKPath"].as<std::string>());
-        activateFlag(HasPPK);
     }
     if(specs["Author"])
     {
         setConfigVar(Author, specs["Author"].as<std::string>());
-        activateFlag(HasAuthor);
     }
     if(specs["Name"])
     {
         setConfigVar(Name, specs["Name"].as<std::string>());
-        activateFlag(HasName);
     }
     if(specs["Version"])
     {
         setConfigVar(Version, specs["Version"].as<std::string>());
-        activateFlag(HasVersion);
 
         m_version = packaging::Version(getConfigVar(Version));
     }
     if(specs["ID"])
     {
         setConfigVar(ID, specs["ID"].as<std::string>());
-        activateFlag(HasID);
     }
 
     if(autocorrect)
@@ -115,6 +110,7 @@ void Package::saveToPPK(const std::string &destination)
 
     YAML::Emitter out;
     out << YAML::BeginSeq;
+    out << YAML::BeginMap;
 
     for(auto &configVar : m_configVars)
     {
@@ -122,11 +118,14 @@ void Package::saveToPPK(const std::string &destination)
         out << YAML::Value << configVar.second;
     }
 
+    out << YAML::EndMap;
     out << YAML::EndSeq;
 
     std::ofstream outConfigFile(getConfigVar(Directory) + "/PackageSpecs.yml");
     outConfigFile << out.c_str();
     outConfigFile.close();
+
+    LOG(INFO) << "Compressing PPK with destination \"" << destination << "\" and source \"" << getConfigVar(Directory) << "\".";
 
     JlCompress::compressDir(QString::fromStdString(destination),
                             QString::fromStdString(getConfigVar(Directory)),
@@ -151,9 +150,33 @@ const std::string &Package::getConfigVar(Package::ConfigVar id)
 {
     return m_configVars[id];
 }
-void Package::setConfigVar(Package::ConfigVar id, const std::string var)
+void Package::setConfigVar(Package::ConfigVar id, const std::string &var)
 {
     m_configVars[id] = var;
+    switch(id)
+    {
+        case pigaco::packaging::Package::Name:
+            activateFlag(HasName);
+            break;
+        case pigaco::packaging::Package::ID:
+            activateFlag(HasID);
+            break;
+        case pigaco::packaging::Package::PPKPath:
+            activateFlag(HasPPK);
+            break;
+        case pigaco::packaging::Package::Author:
+            activateFlag(HasAuthor);
+            break;
+        case pigaco::packaging::Package::Version:
+            activateFlag(HasVersion);
+            m_version = packaging::Version(var);
+            break;
+        case pigaco::packaging::Package::Directory:
+            activateFlag(HasDirectory);
+            break;
+        default:
+            break;
+    }
 }
 std::string &Package::operator[](Package::ConfigVar id)
 {
@@ -219,17 +242,14 @@ void Package::autocorrectSpecs()
     if(!flagActive(HasName))
     {
         setConfigVar(Name, "Undefined Name");
-        activateFlag(HasName);
     }
     if(!flagActive(HasID))
     {
         setConfigVar(ID, "---");
-        activateFlag(HasID);
     }
     if(!flagActive(HasAuthor))
     {
         setConfigVar(Author, "No author given");
-        activateFlag(HasAuthor);
     }
 }
 

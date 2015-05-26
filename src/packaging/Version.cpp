@@ -46,7 +46,6 @@ void Version::parseVersion(const std::string &versionString, int &majorVersion, 
     bool buildFound = false;
 
     std::string numberCache;
-    numberCache.resize(10);
 
     for(std::size_t i = 0; i < versionString.size(); ++i)
     {

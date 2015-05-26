@@ -21,6 +21,8 @@
 #include <Wt/WServer>
 #include <pigaco/WebAdmin.hpp>
 
+#include <pigaco/packaging/Package.hpp>
+
 INITIALIZE_EASYLOGGINGPP
 
 namespace pigaco
@@ -62,9 +64,20 @@ namespace pigaco
         QCommandLineOption helpOption = cmdParser.addHelpOption();
         cmdParser.addOptions({
                                  {{"pack-folder", "p"},
-                                    m_guiApplication->translate("main", "Package the specified folder.")},
-                                 {{"o", "output"},
-                                    m_guiApplication->translate("main", "Output Path/File.")}
+                                    m_guiApplication->translate("main", "Package the specified folder."),
+                                    m_guiApplication->translate("main", "package folder")},
+                                 {"package-name",
+                                    m_guiApplication->translate("main", "The package name. (optional)"),
+                                    m_guiApplication->translate("main", "package name")},
+                                 {"package-version",
+                                    m_guiApplication->translate("main", "The package version. (optional)"),
+                                    m_guiApplication->translate("main", "package version")},
+                                 {"package-author",
+                                    m_guiApplication->translate("main", "The package version. (optional)"),
+                                    m_guiApplication->translate("main", "package author")},
+                                 {"package-output",
+                                    m_guiApplication->translate("main", "The package output file. (required when creating packages)"),
+                                    m_guiApplication->translate("main", "package output file")}
                              });
 
         cmdParser.parse(m_guiApplication->arguments());
@@ -72,6 +85,31 @@ namespace pigaco
         if(cmdParser.isSet("pack-folder"))
         {
             LOG(INFO) << "[PACKAGING] Folder packaging mode selected.";
+
+            if(!cmdParser.isSet("package-output"))
+            {
+                LOG(FATAL) << "[PACKAGING] An output filename has to be defined!";
+                return;
+            }
+
+            std::shared_ptr<packaging::Package> package = std::make_shared<packaging::Package>();
+
+            package->setConfigVar(packaging::Package::Directory, cmdParser.value("pack-folder").toStdString());
+            if(cmdParser.isSet("package-name"))
+            {
+                package->setConfigVar(packaging::Package::Name, cmdParser.value("package-name").toStdString());
+            }
+            if(cmdParser.isSet("package-version"))
+            {
+                package->setConfigVar(packaging::Package::Version, cmdParser.value("package-version").toStdString());
+            }
+            if(cmdParser.isSet("package-author"))
+            {
+                package->setConfigVar(packaging::Package::Author, cmdParser.value("package-author").toStdString());
+            }
+
+            package->saveToPPK(cmdParser.value("package-output").toStdString());
+
             return;
         }
         if(cmdParser.isSet(helpOption))
