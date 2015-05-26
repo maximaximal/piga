@@ -77,7 +77,10 @@ namespace pigaco
                                     m_guiApplication->translate("main", "package author")},
                                  {"package-output",
                                     m_guiApplication->translate("main", "The package output file. (required when creating packages)"),
-                                    m_guiApplication->translate("main", "package output file")}
+                                    m_guiApplication->translate("main", "package output file")},
+                                 {"read-package",
+                                    m_guiApplication->translate("main", "Reads a package and lists the information found about it."),
+                                    m_guiApplication->translate("main", "Path to the package to read.")},
                              });
 
         cmdParser.parse(m_guiApplication->arguments());
@@ -109,6 +112,25 @@ namespace pigaco
             }
 
             package->saveToPPK(cmdParser.value("package-output").toStdString());
+
+            return;
+        }
+        if(cmdParser.isSet("read-package"))
+        {
+            LOG(INFO) << "[PACKAGING] Package reading mode selected.";
+
+            std::shared_ptr<packaging::Package> package = std::make_shared<packaging::Package>();
+
+            package->fromPPK(cmdParser.value("read-package").toStdString());
+
+            LOG(INFO) << "[PACKAGING] The name of the package in \"" << cmdParser.value("read-package").toStdString() << "\" is \""
+                      << package->getConfigVar(packaging::Package::Name) << "\"";
+
+            if(package->flagActive(packaging::Package::HasAuthor))
+                LOG(INFO) << "[PACKAGING] The author is \"" << package->getConfigVar(packaging::Package::Author) << "\"";
+
+            if(package->flagActive(packaging::Package::HasVersion))
+                LOG(INFO) << "[PACKAGING] The version is \"" << package->getConfigVar(packaging::Package::Version) << "\"";
 
             return;
         }

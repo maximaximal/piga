@@ -12,6 +12,7 @@
 
 #include <QFileDevice>
 #include <QDir>
+#include <QTextStream>
 
 namespace pigaco
 {
@@ -39,15 +40,14 @@ void Package::clearFlags()
 void Package::fromPPK(const std::string &filePath)
 {
     activateFlag(IsLoadedFromPPK);
-    QuaZip ppk;
-
-    QFile file(QString::fromStdString(filePath));
-    ppk.setIoDevice(&file);
+    QuaZip ppk(QString::fromStdString(filePath));
+    ppk.open(QuaZip::mdUnzip);
 
     ppk.setCurrentFile("PackageSpecs.yml");
-    QuaZipFile specsFile;
-    specsFile.setZip(&ppk);
-    loadSpecs(specsFile.readAll().toStdString());
+    QuaZipFile specsFile(&ppk);
+    specsFile.open(QIODevice::ReadOnly);
+    QTextStream specsFileContents(&specsFile);
+    loadSpecs(QString(specsFileContents.readAll()).toStdString());
 }
 void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
 {
@@ -69,8 +69,6 @@ void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
     if(specs["Version"])
     {
         setConfigVar(Version, specs["Version"].as<std::string>());
-
-        m_version = packaging::Version(getConfigVar(Version));
     }
     if(specs["ID"])
     {
@@ -109,7 +107,6 @@ void Package::saveToPPK(const std::string &destination)
 
 
     YAML::Emitter out;
-    out << YAML::BeginSeq;
     out << YAML::BeginMap;
 
     for(auto &configVar : m_configVars)
@@ -119,7 +116,6 @@ void Package::saveToPPK(const std::string &destination)
     }
 
     out << YAML::EndMap;
-    out << YAML::EndSeq;
 
     std::ofstream outConfigFile(getConfigVar(Directory) + "/PackageSpecs.yml");
     outConfigFile << out.c_str();
