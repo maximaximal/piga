@@ -66,6 +66,9 @@ class Package
 
         static const char* getConfigVarName(ConfigVar var);
     private:
+        void archiveInstall();
+        void directoryInstall();
+        
         std::map<ConfigVar, std::string> m_configVars;
         std::map<Flag, bool> m_flags;
         PackageManager *m_packageManager = nullptr;

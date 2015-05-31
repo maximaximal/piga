@@ -82,7 +82,15 @@ void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
 }
 void Package::install()
 {
-
+    if(activateFlag(IsLoadedFromPPK))
+    {
+        //Install from archive
+        
+    }
+    else
+    {
+        //Install from directory
+    }
 }
 void Package::saveToPPK(const std::string &destination)
 {
@@ -247,6 +255,19 @@ void Package::autocorrectSpecs()
     {
         setConfigVar(Author, "No author given");
     }
+}
+void Package::archiveInstall()
+{
+    if(m_packageManager != nullptr)
+    {
+        //Check if the package already exists. 
+        m_packageManager->isPackageInstalled(
+    }
+    JlCompress::extractDir(QString::fromStdString(getConfigVar(PPKPath)), QDir::currentPath() + "/Games/" + QString::fromStdString(getConfigVar(Name));
+}
+void Package::directoryInstall()
+{
+
 }
 
 }

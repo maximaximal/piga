@@ -10,11 +10,25 @@ PackageManager::PackageManager()
 {
 
 }
-
 PackageManager::~PackageManager()
 {
 
 }
+
+PackagePtr PackageManager::getPackageFromID(const std::string &id)
+{
+
+}
+PackageList PackageManager::getPackageFromName(const std::string &name)
+{
+
+}
+
+void PackageManager::installPackage(Package *package)
+{
+    
+}
+
 
 }
 }
