@@ -21,6 +21,13 @@ Version::Version(int major, int minor, int mini, int build)
     m_mini = mini;
     m_build = build;
 }
+Version::Version(const Version &other)
+{
+    m_major = other.getMajor();
+    m_minor = other.getMinor();
+    m_mini = other.getMini();
+    m_build = other.getBuild();
+}
 Version::~Version()
 {
 

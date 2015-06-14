@@ -22,17 +22,9 @@ class PackageManager
         virtual ~PackageManager();
 
         /**
-         * @brief Returns a package by its unique ID. 
-         * 
-         * Does not take versions into consideration. 
-         */
-        PackagePtr getPackageFromID(const std::string &id);
-        /**
          * @brief Returns the package by its name. 
-         * 
-         * Not guaranteed to be unique. 
          */
-        PackageList getPackageFromName(const std::string &name);
+        PackagePtr getPackageFromName(const std::string &name);
         
         void installPackage(Package *package);
     private:

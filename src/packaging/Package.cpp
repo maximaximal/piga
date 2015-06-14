@@ -37,9 +37,24 @@ void Package::clearFlags()
         m_flags[flag] = false;
     }
 }
+void Package::fromPath(const std::string &path)
+{
+    setConfigVar(Directory, path);
+    QFileInfo file(QString::fromStdString(path));
+    if(file.isDir())
+    {
+        fromDirectory(path);
+    }
+    else
+    {
+        fromPPK(path);
+    }
+}
 void Package::fromPPK(const std::string &filePath)
 {
+    LOG(INFO) << "Reading package from PPK \"" << filePath << "\".";
     activateFlag(IsLoadedFromPPK);
+    setConfigVar(PPKPath, filePath);
     QuaZip ppk(QString::fromStdString(filePath));
     ppk.open(QuaZip::mdUnzip);
 
@@ -82,14 +97,36 @@ void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
 }
 void Package::install()
 {
-    if(activateFlag(IsLoadedFromPPK))
+    if(m_packageManager != nullptr)
+    {
+        //Check if the package already exists. 
+        PackagePtr package = m_packageManager->getPackageFromName(getConfigVar(Name));
+        
+        //Compare the versions if older version exist.
+        if(package)
+        {
+            LOG(INFO) << "The package named \"" << getConfigVar(Name) << "\" is already installed. (Version: " << package->getVersion().asString() << ").";
+            packaging::Version oldVersion = package->getVersion();
+            if(oldVersion < getVersion())
+            {
+                LOG(INFO) << "Replacing older version " << package->getVersion().asString() << " of package \"" << getConfigVar(Name) << "\" with newer version " << getVersion().asString() << ".";
+            }
+            else
+            {
+                LOG(INFO) << "Replacing newer version " << package->getVersion().asString() << " of package \"" << getConfigVar(Name) << "\" with older version " << getVersion().asString() << ".";
+            }
+        }
+    }
+    
+    if(flagActive(IsLoadedFromPPK))
     {
         //Install from archive
-        
+        archiveInstall();
     }
     else
     {
         //Install from directory
+        directoryInstall();
     }
 }
 void Package::saveToPPK(const std::string &destination)
@@ -137,6 +174,7 @@ void Package::saveToPPK(const std::string &destination)
 }
 void Package::fromDirectory(const std::string &dir)
 {
+    LOG(INFO) << "Reading package from directory \"" << dir << "\".";
     setConfigVar(Directory, dir);
     activateFlag(HasDirectory);
 
@@ -258,16 +296,38 @@ void Package::autocorrectSpecs()
 }
 void Package::archiveInstall()
 {
-    if(m_packageManager != nullptr)
-    {
-        //Check if the package already exists. 
-        m_packageManager->isPackageInstalled(
-    }
-    JlCompress::extractDir(QString::fromStdString(getConfigVar(PPKPath)), QDir::currentPath() + "/Games/" + QString::fromStdString(getConfigVar(Name));
+    LOG(INFO) << "Extracting the package \"" << getConfigVar(PPKPath) << "\" named \"" << getConfigVar(Name) << "\" to \"" 
+        << QDir::currentPath().toStdString() + "/Games/" + getConfigVar(Name) << "\".";
+    JlCompress::extractDir(QString::fromStdString(getConfigVar(PPKPath)), QDir::currentPath() + "/Games/" + QString::fromStdString(getConfigVar(Name)));
+    LOG(INFO) << "Successfully installed package named \"" << getConfigVar(Name) << "\" with version " << getVersion().asString() << ".";
 }
 void Package::directoryInstall()
 {
-
+    QString srcFilePath = QString::fromStdString(getConfigVar(Directory));
+    QString tgtFilePath = QDir::currentPath() + "/Games/" + QString::fromStdString(getConfigVar(Name)); 
+    
+    LOG(INFO) << "Installing \"" << getConfigVar(Name) << "\" with version " << getVersion().asString() << " from \"" 
+        << srcFilePath.toStdString() << "\" to \"" << tgtFilePath.toStdString() << "\".";
+    
+    QFileInfo srcFileInfo(srcFilePath);
+    
+    if (srcFileInfo.isDir()) {
+        QDir targetDir(tgtFilePath);
+        targetDir.cdUp();
+        if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
+            LOG(FATAL) << "Install failure: Could not create target directory.";
+        QDir sourceDir(srcFilePath);
+        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+        Q_FOREACH(const QString &fileName, fileNames) {
+            const QString newSrcFilePath
+                    = srcFilePath + QLatin1Char('/') + fileName;
+            const QString newTgtFilePath
+                    = tgtFilePath + QLatin1Char('/') + fileName;
+        }
+    } else {
+        if (!QFile::copy(srcFilePath, tgtFilePath))
+            LOG(FATAL) << "Install failure.";
+    }
 }
 
 }

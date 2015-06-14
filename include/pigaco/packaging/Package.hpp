@@ -18,6 +18,7 @@ class Package
 
         void clearFlags();
 
+        void fromPath(const std::string &path);
         void fromPPK(const std::string &filePath);
         void loadSpecs(const std::string &yamlString, bool autocorrect = false);
         void install();

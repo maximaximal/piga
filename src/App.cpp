@@ -22,6 +22,7 @@
 #include <pigaco/WebAdmin.hpp>
 
 #include <pigaco/packaging/Package.hpp>
+#include <pigaco/packaging/PackageManager.hpp>
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -66,6 +67,9 @@ namespace pigaco
                                  {{"pack-folder", "p"},
                                     m_guiApplication->translate("main", "Package the specified folder."),
                                     m_guiApplication->translate("main", "package folder")},
+                                 {{"install-package", "i"},
+                                    m_guiApplication->translate("main", "Install a package."),
+                                    m_guiApplication->translate("main", "path to the PPK file or the directory.")},
                                  {"package-name",
                                     m_guiApplication->translate("main", "The package name. (optional)"),
                                     m_guiApplication->translate("main", "package name")},
@@ -75,10 +79,10 @@ namespace pigaco
                                  {"package-author",
                                     m_guiApplication->translate("main", "The package version. (optional)"),
                                     m_guiApplication->translate("main", "package author")},
-                                 {"package-output",
+                                 {{"package-output", "o"},
                                     m_guiApplication->translate("main", "The package output file. (required when creating packages)"),
                                     m_guiApplication->translate("main", "package output file")},
-                                 {"read-package",
+                                 {{"read-package", "r"},
                                     m_guiApplication->translate("main", "Reads a package and lists the information found about it."),
                                     m_guiApplication->translate("main", "Path to the package to read.")},
                              });
@@ -96,6 +100,7 @@ namespace pigaco
             }
 
             std::shared_ptr<packaging::Package> package = std::make_shared<packaging::Package>();
+            package->fromDirectory(cmdParser.value("pack-folder").toStdString());
 
             package->setConfigVar(packaging::Package::Directory, cmdParser.value("pack-folder").toStdString());
             if(cmdParser.isSet("package-name"))
@@ -130,8 +135,20 @@ namespace pigaco
                 LOG(INFO) << "[PACKAGING] The author is \"" << package->getConfigVar(packaging::Package::Author) << "\"";
 
             if(package->flagActive(packaging::Package::HasVersion))
-                LOG(INFO) << "[PACKAGING] The version is \"" << package->getConfigVar(packaging::Package::Version) << "\"";
+                LOG(INFO) << "[PACKAGING] The version is \"" << package->getConfigVar(packaging::Package::Version) << "\", which equates to \"" << package->getVersion().asString() << "\".";
 
+            return;
+        }
+        if(cmdParser.isSet("install-package"))
+        {
+            LOG(INFO) << "[PACKAGING] Package install mode selected.";
+            std::shared_ptr<packaging::PackageManager> pkgManager = std::make_shared<packaging::PackageManager>();
+            packaging::Package *package = new packaging::Package();
+            package->fromPath(cmdParser.value("install-package").toStdString());
+            
+            LOG(INFO) << "[PACKAGING] Trying to install package.";
+            pkgManager->installPackage(package);
+            
             return;
         }
         if(cmdParser.isSet(helpOption))

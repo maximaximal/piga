@@ -14,21 +14,20 @@ PackageManager::~PackageManager()
 {
 
 }
-
-PackagePtr PackageManager::getPackageFromID(const std::string &id)
+PackagePtr PackageManager::getPackageFromName(const std::string &name)
 {
-
+    if(m_localPackages.count(name) > 0)
+        return m_localPackages[name];
+    else 
+        return PackagePtr(nullptr);
 }
-PackageList PackageManager::getPackageFromName(const std::string &name)
-{
-
-}
-
 void PackageManager::installPackage(Package *package)
 {
+    PackagePtr pack(package);
     
+    pack->install();
+    m_localPackages[pack->getConfigVar(Package::Name)] = std::move(pack);
 }
-
 
 }
 }

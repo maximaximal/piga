@@ -17,6 +17,7 @@ class Version
         Version();
         Version(const std::string &stringRepresentation);
         Version(int major, int minor = 0, int mini = 0, int build = 0);
+        Version(const Version &other);
         virtual ~Version();
 
         std::string asString() const;
