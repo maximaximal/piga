@@ -66,7 +66,7 @@ extern "C"
  */
 extern "C"
 {
-    void setCallbackFunc(void (*inputHappened)(int, int));
+    void setCallbackFunc(void (*inputHappened)(int, int, int));
 }
 
 /**
@@ -81,15 +81,15 @@ extern "C"
 
 extern "C"
 {
-    int getMajorVersion()
+    int getPigaMajorVersion()
     {
         return HOST_VERSION_MAJOR;
     }
-    int getMinorVersion()
+    int getPigaMinorVersion()
     {
         return HOST_VERSION_MINOR;
     }
-    int getMiniVersion()
+    int getPigaMiniVersion()
     {
         return HOST_VERSION_MINI;
     }

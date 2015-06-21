@@ -16,15 +16,20 @@ namespace piga
     SharedLibWrapper::SharedLibWrapper(const std::string &sharedObject)
         : m_sharedObject(sharedObject)
     {
+        //Save the @ref inputCallback function into the internal m_inputCallbackFunction 
+        //variable to make it usable as a callback.
+        m_inputCallbackFunction = std::bind(&SharedLibWrapper::inputCallback, this, 
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3); 
+        
         //Try to open the handle.
         m_dlHandle = dlopen(sharedObject.c_str(), RTLD_LAZY);
 
         if(m_dlHandle != nullptr)
         {
             //Load informational functions.
-            m_getMajorVersion = dlsym(m_dlHandle, "getMajorVersion");
-            m_getMinorVersion = dlsym(m_dlHandle, "getMinorVersion");
-            m_getMiniVersion = dlsym(m_dlHandle, "getMiniVersion");
+            m_getPigaMajorVersion = dlsym(m_dlHandle, "getPigaMajorVersion");
+            m_getPigaMinorVersion = dlsym(m_dlHandle, "getPigaMinorVersion");
+            m_getPigaMiniVersion = dlsym(m_dlHandle, "getPigaMiniVersion");
             m_getName = dlsym(m_dlHandle, "getName");
             m_getDescription = dlsym(m_dlHandle, "getDescription");
             m_getAuthor = dlsym(m_dlHandle, "getAuthor");
@@ -49,9 +54,9 @@ namespace piga
         m_setGameInput = dlsym(m_dlHandle, "setGameInput");
         m_init = dlsym(m_dlHandle, "init");
         m_destroy = dlsym(m_dlHandle, "destroy");
-        m_getMajorVersion = dlsym(m_dlHandle, "getMajorVersion");
-        m_getMinorVersion = dlsym(m_dlHandle, "getMinorVersion");
-        m_getMiniVersion = dlsym(m_dlHandle, "getMiniVersion");
+        m_getPigaMajorVersion = dlsym(m_dlHandle, "getPigaMajorVersion");
+        m_getPigaMinorVersion = dlsym(m_dlHandle, "getPigaMinorVersion");
+        m_getPigaMiniVersion = dlsym(m_dlHandle, "getPigaMiniVersion");
         m_getName = dlsym(m_dlHandle, "getName");
         m_getDescription = dlsym(m_dlHandle, "getDescription");
         m_getAuthor = dlsym(m_dlHandle, "getAuthor");
@@ -138,15 +143,15 @@ namespace piga
             m_setInputCallback = nullptr;
         }
     }
-    int SharedLibWrapper::getMajorVersion()
+    int SharedLibWrapper::getPigaMajorVersion()
     {
         return ((GetMajorVersion) m_getMajorVersion)();
     }
-    int SharedLibWrapper::getMinorVersion()
+    int SharedLibWrapper::getPigaMinorVersion()
     {
         return ((GetMinorVersion) m_getMinorVersion)();
     }
-    int SharedLibWrapper::getMiniVersion()
+    int SharedLibWrapper::getPigaMiniVersion()
     {
         return ((GetMiniVersion) m_getMiniVersion)();
     }

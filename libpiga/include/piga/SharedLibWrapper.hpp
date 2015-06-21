@@ -34,9 +34,9 @@ namespace piga
             bool test();
             void destroy();
 
-            int getMajorVersion();
-            int getMinorVersion();
-            int getMiniVersion();
+            int getPigaMajorVersion();
+            int getPigaMinorVersion();
+            int getPigaMiniVersion();
 
             const char* getName();
             const char* getDescription();
@@ -50,9 +50,9 @@ namespace piga
         private:
             std::vector<std::map<GameControl, int> > m_controls;
             std::string m_sharedObject;
-            typedef int (*GetMajorVersion)();
-            typedef int (*GetMinorVersion)();
-            typedef int (*GetMiniVersion)();
+            typedef int (*GetPigaMajorVersion)();
+            typedef int (*GetPigaMinorVersion)();
+            typedef int (*GetPigaMiniVersion)();
             typedef int (*Init)();
             typedef void (*Destroy)();
             typedef int (*GetButtonState)(int, int);
@@ -61,9 +61,9 @@ namespace piga
             typedef void (*InputCallbackFunctionType)(int, int, int);
             typedef void (*SetInputCallback)(InputCallbackFunctionType*);
 
-            void *m_getMajorVersion = nullptr;
-            void *m_getMinorVersion = nullptr;
-            void *m_getMiniVersion = nullptr;
+            void *m_getPigaMajorVersion = nullptr;
+            void *m_getPigaMinorVersion = nullptr;
+            void *m_getPigaMiniVersion = nullptr;
             void *m_init = nullptr;
             void *m_destroy = nullptr;
             void *m_getButtonState = nullptr;
