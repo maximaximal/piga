@@ -114,6 +114,16 @@ extern "C"
     void setGameInput(piga::GameInput *gameInput)
     {
         //Nothing to do, using the fixed function pipeline.
+        //This serves only as an example.
+    }
+}
+
+extern "C"
+{
+    void setCallbackFunc(void (*callback)(int, int, int))
+    {
+        //Nothing to do, using the fixed funtion pipeline.
+        //This serves only as an example.
     }
 }
 
