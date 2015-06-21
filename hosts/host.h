@@ -23,6 +23,7 @@
 
 #define HOST_RETURNCODE_USEFIXEDFUNCTION 0
 #define HOST_RETURNCODE_USEINPUTMETHODS 1
+#define HOST_RETURNCODE_USECALLBACK 2
 
 #include "../libpiga/include/piga/GameInput.hpp"
 
@@ -54,6 +55,18 @@ extern "C"
 extern "C"
 {
     void setGameInput(piga::GameInput *gameInput);
+}
+
+
+/**
+ * @brief Sets a callback function to be called when an input happens.
+ *
+ * This function will only be called when @ref HOST_RETURNCODE_USECALLBACK
+ * is set.
+ */
+extern "C"
+{
+    void setCallbackFunc(void (*inputHappened)(int, int));
 }
 
 /**

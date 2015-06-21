@@ -73,10 +73,18 @@ namespace piga
                             control.second = 0;
                         }
                     }
+                    cout << PIGA_DEBUG_PRESTRING << "Loading host library with the fixed function pipeline." << endl;
                     break;
                 case HOST_RETURNCODE_USEINPUTMETHODS:
+                    cout << PIGA_DEBUG_PRESTRING << "Loading host library with the input method pipeline." << endl;
                     m_type = InputMethods;
                     m_controls.clear();
+                    break;
+                case HOST_RETURNCODE_USECALLBACK:
+                    cout << PIGA_DEBUG_PRESTRING << "Loading host library with the callback pipeline." << endl;
+                    m_type = InputCallback;
+                    m_setInputCallback = dlsym(m_dlHandle, "setInputCallback");
+                    setInputCallback(m_inputCallbackFunction);
                     break;
                 default:
                     m_type = Undefined;
@@ -127,6 +135,7 @@ namespace piga
             m_getName = nullptr;
             m_getDescription = nullptr;
             m_getAuthor = nullptr;
+            m_setInputCallback = nullptr;
         }
     }
     int SharedLibWrapper::getMajorVersion()
@@ -184,5 +193,14 @@ namespace piga
     int SharedLibWrapper::getButtonState(int playerID, GameControl button)
     {
         return ((GetButtonState) m_getButtonState)(playerID, GameControlToHostDefine(button));
+    }
+    void SharedLibWrapper::setInputCallback(InputCallbackFunction &callback)
+    {
+        // Convert the internal function pointer to the input callback handler function to a C-style function pointer.
+        ((SetInputCallback) m_setInputCallback)(m_inputCallbackFunction.target<InputCallbackFunctionType>());
+    }
+    void SharedLibWrapper::inputCallback(int controlCode, int playerID, int value)
+    {
+        m_controls[playerID][HostDefineToGameControl(controlCode)] = value;
     }
 }

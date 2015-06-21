@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <functional>
 
 #include <piga/GameControl.hpp>
 
@@ -16,10 +17,12 @@ namespace piga
     class SharedLibWrapper
     {
         public:
+            typedef std::function<void(int, int, int)> InputCallbackFunction;
             enum Type {
                 Undefined,
                 FixedFunction,
                 InputMethods,
+                InputCallback,
 
                 _COUNT
             };
@@ -41,6 +44,9 @@ namespace piga
 
             void query(Host* host, int playerID, GameControl input);
             int getButtonState(int playerID, GameControl button);
+            void setInputCallback(InputCallbackFunction &callback);
+
+            void inputCallback(int controlCode, int playerID, int value);
         private:
             std::vector<std::map<GameControl, int> > m_controls;
             std::string m_sharedObject;
@@ -52,6 +58,8 @@ namespace piga
             typedef int (*GetButtonState)(int, int);
             typedef void (*SetGameInput)(piga::GameInput);
             typedef const char*(*GetString)(void);
+            typedef void (*InputCallbackFunctionType)(int, int, int);
+            typedef void (*SetInputCallback)(InputCallbackFunctionType*);
 
             void *m_getMajorVersion = nullptr;
             void *m_getMinorVersion = nullptr;
@@ -60,12 +68,15 @@ namespace piga
             void *m_destroy = nullptr;
             void *m_getButtonState = nullptr;
             void *m_setGameInput = nullptr;
+            void *m_setInputCallback = nullptr;
 
             void *m_getName = nullptr;
             void *m_getDescription = nullptr;
             void *m_getAuthor = nullptr;
 
             void *m_dlHandle = nullptr;
+
+            InputCallbackFunction m_inputCallbackFunction;
 
             Type m_type = Undefined;
     };
