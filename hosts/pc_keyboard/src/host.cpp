@@ -135,7 +135,7 @@ extern "C"
     }
     const char* getDescription()
     {
-        return "This host maps the normal keyboard to piga controls.";
+        return "This host maps the normal keyboard to piga controls (using SDL).";
     }
     const char* getAuthor()
     {
