@@ -84,6 +84,26 @@ WebGames::WebGames(App *app, Wt::WContainerWidget *parent)
     newPackageUpload->fileTooLarge().connect(std::bind([=]() {
     
     }));
+
+    Wt::WText *packagesListHeading = new Wt::WText("<h3>Installed Packages</h3>", this);
+
+    Wt::WTable *packagesTable = new Wt::WTable(this);
+    packagesTable->setHeaderCount(1);
+
+    packagesTable->elementAt(0, 0)->addWidget(new Wt::WText("Name"));
+    packagesTable->elementAt(0, 1)->addWidget(new Wt::WText("Author"));
+    packagesTable->elementAt(0, 2)->addWidget(new Wt::WText("Version"));
+
+    int i = 0;
+
+    for(auto package : m_app->getPackageManager()->getPackages())
+    {
+        ++i;
+
+        packagesTable->elementAt(i, 0)->addWidget(new Wt::WText(package.second->getConfigVar(packaging::Package::Name)));
+        packagesTable->elementAt(i, 1)->addWidget(new Wt::WText(package.second->getConfigVar(packaging::Package::Author)));
+        packagesTable->elementAt(i, 2)->addWidget(new Wt::WText(package.second->getVersion().asString()));
+    }
 }
 WebGames::~WebGames()
 {
