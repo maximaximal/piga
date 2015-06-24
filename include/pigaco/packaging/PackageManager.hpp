@@ -51,7 +51,7 @@ class PackageManager
         void deleteTempPackage(const std::string &path);
     private:
         PackageMap m_localPackages;
-        PackageMap m_tempPackages;
+        std::unordered_map<std::string, std::weak_ptr<Package> > m_tempPackages;
 };
 }
 }

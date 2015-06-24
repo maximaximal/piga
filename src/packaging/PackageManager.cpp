@@ -81,7 +81,7 @@ PackagePtr PackageManager::getTempPackage(const std::string &path)
 {
     if(tempPackageExists(path))
     {
-        return m_tempPackages[path];
+        return m_tempPackages[path].lock();
     }
     PackagePtr pack(new Package());
     pack->fromPath(path);

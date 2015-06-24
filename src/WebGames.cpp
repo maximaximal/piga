@@ -111,7 +111,8 @@ WebGames::~WebGames()
 }
 void WebGames::processUploadedFile(const std::string &filepath)
 {
-    packaging::PackagePtr package = m_app->getPackageManager()->getTempPackage(filepath);
+    packaging::Package *package = new packaging::Package();
+    package->fromPath(filepath);
 
     if(!package->isValid()) 
     {
@@ -128,6 +129,7 @@ void WebGames::processUploadedFile(const std::string &filepath)
             delete messageBox;
         }));
 
+        delete package;
         return;
     }
 
@@ -144,8 +146,11 @@ void WebGames::processUploadedFile(const std::string &filepath)
     messageBox->buttonClicked().connect(std::bind([=]() {
         if(messageBox->buttonResult() == Wt::Yes)
         {
-            m_app->getPackageManager()->installPackage(package.get());
-
+            m_app->getPackageManager()->installPackage(package);
+        }
+        else 
+        {
+            delete package;
         }
         QFile::remove(QString::fromStdString(filepath));
 

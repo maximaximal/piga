@@ -245,9 +245,6 @@ namespace pigaco
 
         LOG(DEBUG) << "Starting the QApplication.";
         m_guiApplication->exec();
-
-        LOG(DEBUG) << "Saving the package manager data.";
-        m_packageManager->saveData("Packages.yml");
     }
     void App::onUpdate(float frametime)
     {
