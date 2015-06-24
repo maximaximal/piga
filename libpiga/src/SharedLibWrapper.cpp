@@ -95,27 +95,27 @@ namespace piga
                     m_type = Undefined;
                     break;
             }
-            cout << PIGA_DEBUG_PRESTRING << "Loaded shared object \"" << getName() << "\" with the API-Version " << getMajorVersion() << "." << getMinorVersion() << "." << getMiniVersion()
+            cout << PIGA_DEBUG_PRESTRING << "Loaded shared object \"" << getName() << "\" with the API-Version " << getPigaMajorVersion() << "." << getPigaMinorVersion() << "." << getPigaMiniVersion()
                  << " - piga is running on " << HOST_VERSION_MAJOR << "." << HOST_VERSION_MINOR << "." << HOST_VERSION_MINI << "." << endl;
         }
         else
         {
             cout << PIGA_DEBUG_PRESTRING << "Shared object \"" << m_sharedObject << "\" could not be loaded because of an API version mismatch!" << endl;
-            cout << PIGA_DEBUG_PRESTRING << "The shared object was compiled with Piga Host API-Version " << getMajorVersion() << "." << getMinorVersion() << "." << getMiniVersion()
+            cout << PIGA_DEBUG_PRESTRING << "The shared object was compiled with Piga Host API-Version " << getPigaMajorVersion() << "." << getPigaMinorVersion() << "." << getPigaMiniVersion()
                  << ", while piga is running on " << HOST_VERSION_MAJOR << "." << HOST_VERSION_MINOR << "." << HOST_VERSION_MINI << "." << endl;
         }
     }
     bool SharedLibWrapper::test()
     {
-        if(HOST_VERSION_MAJOR != getMajorVersion())
+        if(HOST_VERSION_MAJOR != getPigaMajorVersion())
         {
             return false;
         }
-        if(HOST_VERSION_MINOR != getMinorVersion())
+        if(HOST_VERSION_MINOR != getPigaMinorVersion())
         {
             return false;
         }
-        if(HOST_VERSION_MINI != getMiniVersion())
+        if(HOST_VERSION_MINI != getPigaMiniVersion())
         {
             return true;
         }
@@ -130,9 +130,9 @@ namespace piga
             dlclose(m_dlHandle);
             m_dlHandle = nullptr;
 
-            m_getMajorVersion = nullptr;
-            m_getMinorVersion = nullptr;
-            m_getMiniVersion = nullptr;
+            m_getPigaMajorVersion = nullptr;
+            m_getPigaMinorVersion = nullptr;
+            m_getPigaMiniVersion = nullptr;
             m_init = nullptr;
             m_destroy = nullptr;
             m_getButtonState = nullptr;
@@ -145,15 +145,15 @@ namespace piga
     }
     int SharedLibWrapper::getPigaMajorVersion()
     {
-        return ((GetMajorVersion) m_getMajorVersion)();
+        return ((GetPigaMajorVersion) m_getPigaMajorVersion)();
     }
     int SharedLibWrapper::getPigaMinorVersion()
     {
-        return ((GetMinorVersion) m_getMinorVersion)();
+        return ((GetPigaMinorVersion) m_getPigaMinorVersion)();
     }
     int SharedLibWrapper::getPigaMiniVersion()
     {
-        return ((GetMiniVersion) m_getMiniVersion)();
+        return ((GetPigaMiniVersion) m_getPigaMiniVersion)();
     }
     const char* SharedLibWrapper::getName()
     {

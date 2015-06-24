@@ -1,5 +1,7 @@
 #include <pigaco/DirectoryScanner.hpp>
 #include <boost/filesystem.hpp>
+#include <pigaco/packaging/PackageManager.hpp>
+#include <pigaco/packaging/Package.hpp>
 #include <easylogging++.h>
 
 #include <QDir>
@@ -33,29 +35,14 @@ namespace pigaco
         roles[LogoImageRole] = "logoImage";
         return roles;
     }
-    void DirectoryScanner::scanDirectory(const std::string &dir)
+    void DirectoryScanner::readPackages(std::shared_ptr<packaging::PackageManager> pkgmgr)
     {
-        m_directory = dir;
-        LOG(INFO) << "Scanning directory \"" << dir << "\".";
-        if(!fs::exists(dir))
+        m_packageManager = pkgmgr;
+        auto packages = pkgmgr->getPackages();
+        for(auto package : packages)
         {
-            LOG(FATAL) << "The path \"" << dir.c_str() << "\" does not exist!";
-            return;
+            addGame(package.second->getConfigVar(packaging::Package::Directory));
         }
-        if(!fs::is_directory(dir))
-        {
-            LOG(FATAL) << "The path \"" << dir.c_str() << "\" is not a directory!";
-            return;
-        }
-        fs::directory_iterator end_it;
-		for(fs::directory_iterator it(dir); it != end_it; ++it)
-        {
-            if(fs::is_directory(it->status()))
-            {
-                addGame(it->path().string());
-            }
-        }
-        LOG(INFO) << "Scan completed!";
     }
     void DirectoryScanner::addGame(const std::string &dir)
     {

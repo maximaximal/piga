@@ -1,5 +1,7 @@
 #include <piga/GameInput.hpp>
 
+#include <boost/thread/locks.hpp>
+
 namespace piga
 {
     GameInput::GameInput()
@@ -26,6 +28,9 @@ namespace piga
     }
     void GameInput::pushGameEvent(const GameEvent &e)
     {
+        boost::upgrade_lock<boost::shared_mutex> lock(m_eventMutex);
+        boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
+
         m_gameEvents.push_back(e);
     }
     int GameInput::getPlayerCount()
@@ -41,6 +46,9 @@ namespace piga
     }
     bool GameInput::pollEvent(GameEvent &gameEvent)
     {
+        boost::upgrade_lock<boost::shared_mutex> lock(m_eventMutex);
+        boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
+
         while(m_gameEvents.size() > 0)
         {
             gameEvent = m_gameEvents.front();

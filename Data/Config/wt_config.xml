@@ -1,6 +1,7 @@
 <server>
     <application-settings location="*">
-	<web-sockets>true</web-sockets>
-	<progressive-bootstrap>true</progressive-bootstrap>
+        <web-sockets>true</web-sockets>
+        <progressive-bootstrap>true</progressive-bootstrap>
+        <max-request-size>99000000</max-request-size>
     </application-settings>
 </server>

@@ -66,6 +66,9 @@ void Package::fromPPK(const std::string &filePath)
 }
 void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
 {
+    if(yamlString.length() < 5)
+        m_isValid = false;
+
     activateFlag(SpecsLoaded);
 
     YAML::Node specs = YAML::Load(yamlString);
@@ -88,6 +91,10 @@ void Package::loadSpecs(const std::string &yamlString, bool autocorrect)
     if(specs["ID"])
     {
         setConfigVar(ID, specs["ID"].as<std::string>());
+    }
+    if(specs["IsInMainGamesList"])
+    {
+        activateFlag(IsInMainGamesList);
     }
 
     if(autocorrect)
@@ -128,6 +135,10 @@ void Package::install()
         //Install from directory
         directoryInstall();
     }
+}
+bool Package::isValid() 
+{
+    return m_isValid;
 }
 void Package::saveToPPK(const std::string &destination)
 {
@@ -179,6 +190,7 @@ void Package::fromDirectory(const std::string &dir)
     activateFlag(HasDirectory);
 
     QFile specsFile(QString::fromStdString(dir + "/PackageSpecs.yml"));
+    specsFile.open(QFile::ReadOnly);
     if(specsFile.isReadable())
     {
         loadSpecs(specsFile.readAll().toStdString());
@@ -186,6 +198,7 @@ void Package::fromDirectory(const std::string &dir)
     else
     {
         LOG(WARNING) << "The package in the directory \"" << dir << "\" has no \"PackageSpecs.yml\" file!";
+        m_isValid = false;
     }
 }
 const std::string &Package::getConfigVar(Package::ConfigVar id)

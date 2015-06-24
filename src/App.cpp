@@ -187,9 +187,15 @@ namespace pigaco
         float frametime = 0;
         std::chrono::milliseconds desiredFrametime((long) (1 / 60.f * 1000));
 
+        LOG(DEBUG) << "Starting the package manager.";
+        m_packageManager = std::make_shared<packaging::PackageManager>();
+        LOG(DEBUG) << "Reading package data.";
+        m_packageManager->readData("Packages.yml", "Games");
+
+        LOG(DEBUG) << "Starting the directory scanner with data from the package manager.";
         m_directoryScanner = std::make_shared<DirectoryScanner>(m_host);
-        m_directoryScanner->scanDirectory("Games");
         m_directoryScanner->setHost(m_host);
+        m_directoryScanner->readPackages(m_packageManager);
 
         qmlRegisterType<Game>("com.pigaco.managing", 1, 0, "Game");
         m_qmlApplicationEngine->rootContext()->setContextProperty("dirScanner", m_directoryScanner.get());
@@ -234,11 +240,14 @@ namespace pigaco
         connect(m_loopTimer, &QTimer::timeout, this, &App::update);
         connect(m_guiApplication, &QGuiApplication::aboutToQuit, this, &App::aboutToQuit);
 
-        LOG(INFO) << "Starting the App-Loop.";
+        LOG(DEBUG) << "Starting the App-Loop.";
         m_loopTimer->start(16);
 
-        LOG(INFO) << "Starting the QApplication.";
+        LOG(DEBUG) << "Starting the QApplication.";
         m_guiApplication->exec();
+
+        LOG(DEBUG) << "Saving the package manager data.";
+        m_packageManager->saveData("Packages.yml");
     }
     void App::onUpdate(float frametime)
     {
@@ -283,6 +292,10 @@ namespace pigaco
     std::shared_ptr<piga::PlayerManager> App::getPlayerManager()
     {
         return m_playerManager;
+    }
+    std::shared_ptr<packaging::PackageManager> App::getPackageManager()
+    {
+        return m_packageManager;
     }
     std::shared_ptr<DirectoryScanner> App::getDirectoryScanner()
     {

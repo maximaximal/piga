@@ -14,6 +14,7 @@ class WebGames : public Wt::WContainerWidget
         WebGames(App *app, Wt::WContainerWidget *parent = 0);
         virtual ~WebGames();
 
+        void processUploadedFile(const std::string &filepath);
     private:
         App *m_app;
         std::shared_ptr<DirectoryScanner> m_dirScanner;

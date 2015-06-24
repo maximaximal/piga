@@ -22,6 +22,7 @@ class Package
         void fromPPK(const std::string &filePath);
         void loadSpecs(const std::string &yamlString, bool autocorrect = false);
         void install();
+        bool isValid();
 
         void saveToPPK(const std::string &destination);
 
@@ -41,6 +42,7 @@ class Package
             IsInstalled,
             IsLoadedFromPPK,
             SpecsLoaded,
+            IsInMainGamesList,
 
             HasPPK,
             HasAuthor,
@@ -77,6 +79,7 @@ class Package
         packaging::Version m_version;
 
         void autocorrectSpecs();
+        bool m_isValid = true;
 };
 }
 }

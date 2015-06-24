@@ -22,6 +22,11 @@ namespace pigaco
     class DirectoryScanner;
     class Players;
 
+    namespace packaging
+    {
+        class PackageManager;
+    }
+
     class App : public QObject, public piga::GameEventHandler
     {
         Q_OBJECT
@@ -42,6 +47,7 @@ namespace pigaco
             std::shared_ptr<piga::Host> getHost();
             std::shared_ptr<piga::GameInput> getGameInput();
             std::shared_ptr<piga::PlayerManager> getPlayerManager();
+            std::shared_ptr<packaging::PackageManager> getPackageManager();
 
             std::shared_ptr<DirectoryScanner> getDirectoryScanner();
             std::shared_ptr<Players> getPlayers();
@@ -57,6 +63,7 @@ namespace pigaco
             std::shared_ptr<piga::Host> m_host;
             std::shared_ptr<piga::GameInput> m_gameInput;
             std::shared_ptr<piga::PlayerManager> m_playerManager;
+            std::shared_ptr<packaging::PackageManager> m_packageManager;
 
             std::shared_ptr<DirectoryScanner> m_directoryScanner;
             std::shared_ptr<Players> m_players;

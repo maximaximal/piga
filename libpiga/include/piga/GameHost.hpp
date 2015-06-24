@@ -30,6 +30,7 @@ namespace piga
                 Directory,
                 BackgroundImage,
                 Logo,
+                InMainGamesList,
 
                 _COUNT
             };

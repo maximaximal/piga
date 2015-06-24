@@ -9,6 +9,10 @@
 
 namespace pigaco
 {
+    namespace packaging
+    {
+        class PackageManager;
+    }
     class DirectoryScanner : public QAbstractListModel
     {
         Q_OBJECT
@@ -26,12 +30,12 @@ namespace pigaco
                 VersionRole,
                 GameHostRole,
                 BackgroundImageRole,
-                LogoImageRole
+                LogoImageRole,
             };
 
             QHash<int, QByteArray> roleNames() const;
 
-            void scanDirectory(const std::string &dir);
+            void readPackages(std::shared_ptr<packaging::PackageManager> pkgMgr);
 			void addGame(const std::string &dir);
 
             void setHost(std::shared_ptr<piga::Host> host);
@@ -45,6 +49,7 @@ namespace pigaco
             virtual int rowCount(const QModelIndex &parent) const;
             virtual QVariant data(const QModelIndex &index, int role) const;
 		private:
+            std::shared_ptr<packaging::PackageManager> m_packageManager;
             std::string m_directory = "";
             std::shared_ptr<piga::Host> m_host;
             QList<std::shared_ptr<Game> > m_games;

@@ -7,6 +7,7 @@
 
 #include <piga/PlayerInput.hpp>
 #include <piga/GameEvent.hpp>
+#include <boost/thread/shared_mutex.hpp>
 
 namespace piga 
 {
@@ -31,6 +32,8 @@ namespace piga
         private:
             std::map<int, std::shared_ptr<PlayerInput> > m_playerInputs;
             std::deque<GameEvent> m_gameEvents;
+
+            boost::shared_mutex m_eventMutex;
             
             int m_playerInputIdCounter = 0;
     };
