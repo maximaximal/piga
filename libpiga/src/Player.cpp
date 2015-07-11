@@ -14,17 +14,6 @@ namespace piga
         m_playerID = playerID;
         m_edited = false;
     }
-    bool Player::isAuthorized()
-    {
-        boost::shared_lock<boost::shared_mutex> lock(m_authorizedMutex);
-
-        return m_authorized;
-    }
-    void Player::authorize(const std::string &password)
-    {
-        boost::upgrade_lock<boost::shared_mutex> lock(m_authorizedMutex);
-        boost::upgrade_to_unique_lock<boost::shared_mutex> uniqueLock(lock);
-    }
     void Player::setName(const char *name)
     {
         boost::upgrade_lock<boost::shared_mutex> lock(m_nameMutex);

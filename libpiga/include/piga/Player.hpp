@@ -22,10 +22,6 @@ namespace piga
         public:
             Player(const char *username = "Unknown", bool active = false, int playerID = 0);
 
-            bool isAuthorized();
-
-            void authorize(const std::string &password);
-
             void setName(const char *name);
             void setActive(bool active = true);
             void setPlayerID(int id);
